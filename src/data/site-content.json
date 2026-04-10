@@ -1,0 +1,208 @@
+{
+  "site": {
+    "brandName": "Carte Fidelis",
+    "metaTitle": "Carte Fidelis | Carte premium et avantages partenaires",
+    "metaDescription": "Site one-page Carte Fidelis avec CMS global pour gerer les textes, images, couleurs, animations, menu et reseaux sociaux.",
+    "footerText": "Carte Fidelis - carte premium de fidelite et avantages partenaires."
+  },
+  "theme": {
+    "background": "#08111d",
+    "foreground": "#f5f7fb",
+    "muted": "rgba(245,247,251,0.72)",
+    "accent": "#f2b544",
+    "accentText": "#111111",
+    "surface": "rgba(255,255,255,0.06)",
+    "surfaceSoft": "rgba(255,255,255,0.04)",
+    "border": "rgba(255,255,255,0.12)",
+    "menuBackground": "rgba(5,10,17,0.62)"
+  },
+  "animation": {
+    "heroCard": "tilt",
+    "reveal": "fade-up",
+    "media": "parallax"
+  },
+  "sizing": {
+    "heroTitle": "clamp(3.1rem, 7vw, 6.2rem)",
+    "sectionTitle": "clamp(2.2rem, 5vw, 4rem)",
+    "bodyText": "1.05rem",
+    "heroCardWidth": "440px",
+    "benefitsImageHeight": "560px",
+    "processImageHeight": "320px",
+    "impactImageHeight": "320px"
+  },
+  "menu": [
+    {
+      "id": "home",
+      "label": "Accueil",
+      "href": "#top",
+      "enabled": true
+    },
+    {
+      "id": "benefits",
+      "label": "Avantages",
+      "href": "#avantages",
+      "enabled": true
+    },
+    {
+      "id": "process",
+      "label": "Parcours",
+      "href": "#parcours",
+      "enabled": true
+    },
+    {
+      "id": "impact",
+      "label": "Impact",
+      "href": "#impact",
+      "enabled": true
+    },
+    {
+      "id": "contact",
+      "label": "Contact",
+      "href": "#contact",
+      "enabled": true
+    }
+  ],
+  "socials": [
+    {
+      "id": "facebook",
+      "label": "Facebook",
+      "url": "https://facebook.com/"
+    },
+    {
+      "id": "instagram",
+      "label": "Instagram",
+      "url": "https://instagram.com/"
+    },
+    {
+      "id": "whatsapp",
+      "label": "WhatsApp",
+      "url": "https://wa.me/221700000000"
+    }
+  ],
+  "hero": {
+    "eyebrow": "Fidelite premium pour clients exigeants",
+    "title": "Une seule carte. Plus d'avantages. Moins de friction.",
+    "description": "Carte Fidelis transforme une simple carte de fidelite en experience premium: reductions instantanees, partenaires selectionnes, suivi des gains et acces rapide aux bons plans du quotidien.",
+    "primaryCtaLabel": "Commander maintenant",
+    "primaryCtaHref": "#contact",
+    "secondaryCtaLabel": "Voir les avantages",
+    "secondaryCtaHref": "#avantages",
+    "cardImage": "/carte-fidelis.jpeg",
+    "partnerBadge": "+25 partenaires de confiance",
+    "savingsLabel": "+4 500 FCFA d'economies en moyenne sur les premiers achats",
+    "stats": [
+      {
+        "id": "stat-1",
+        "value": "25+",
+        "label": "partenaires deja actifs"
+      },
+      {
+        "id": "stat-2",
+        "value": "4 500 FCFA",
+        "label": "economies moyennes observees"
+      },
+      {
+        "id": "stat-3",
+        "value": "48 h",
+        "label": "pour recevoir sa carte"
+      }
+    ]
+  },
+  "benefits": {
+    "eyebrow": "Pourquoi Fidelis",
+    "title": "Un service plus ambitieux qu'une carte classique.",
+    "description": "Le projet repose sur trois promesses simples: une valeur claire pour le client, une activation rapide et une marque suffisamment premium pour etre desiree, montree et gardee.",
+    "image": "/couple-carte.png",
+    "imageTitle": "Une carte que l'on montre avec fierte.",
+    "imageDescription": "L'image humanise le produit et aide a projeter la carte dans une situation reelle de confiance, de partage et de satisfaction.",
+    "items": [
+      {
+        "id": "benefit-1",
+        "title": "Remises immediates",
+        "description": "Le client beneficie d'avantages visibles sans attendre un cumul de points obscur ou une activation compliquee."
+      },
+      {
+        "id": "benefit-2",
+        "title": "Reseau partenaire",
+        "description": "Restaurants, boutiques, services et offres selectionnees dans un seul ecosysteme simple a comprendre."
+      },
+      {
+        "id": "benefit-3",
+        "title": "Image premium",
+        "description": "La carte valorise la marque et donne l'impression d'appartenir a un club prive accessible."
+      },
+      {
+        "id": "benefit-4",
+        "title": "Parcours rapide",
+        "description": "Inscription, confirmation et reception de la carte: tout est pense pour aller droit au but."
+      }
+    ]
+  },
+  "process": {
+    "eyebrow": "Comment ca marche",
+    "title": "Trois etapes pour entrer dans l'ecosysteme Fidelis.",
+    "description": "La page est construite pour expliquer le service en quelques secondes, sans perdre le visiteur dans trop de details trop tot.",
+    "image": "/echange-carte-billet.png",
+    "imageTitle": "Le gain doit sembler concret.",
+    "imageDescription": "Cette scene soutient le discours sur les reductions immediates et les benefices tangibles apportes par la carte.",
+    "steps": [
+      {
+        "id": "step-1",
+        "title": "Je m'inscris",
+        "description": "Le visiteur remplit ses informations de base et choisit sa formule d'adhesion ou sa demande de rappel."
+      },
+      {
+        "id": "step-2",
+        "title": "Je recois ma carte",
+        "description": "Carte physique ou remise en point relais, avec un onboarding clair et des offres deja pretes a utiliser."
+      },
+      {
+        "id": "step-3",
+        "title": "J'economise tout de suite",
+        "description": "Les remises sont activables immediatement chez les partenaires compatibles, sans apprentissage complexe."
+      }
+    ]
+  },
+  "impact": {
+    "image": "/portefeuille-fidelis.jpg",
+    "imageTitle": "Une carte faite pour rester dans le quotidien.",
+    "imageDescription": "Le positionnement premium devient plus credible quand il est relie a la vie reelle, aux achats et a la gestion du budget.",
+    "quote": "On doit comprendre en un coup d'oeil que Fidelis n'est pas juste une carte, mais une porte d'entree vers des privileges concrets.",
+    "quoteAuthor": "Positionnement de marque suggere pour la page d'accueil",
+    "stats": [
+      {
+        "id": "impact-1",
+        "value": "+18%",
+        "label": "perception premium grace a une presentation plus forte"
+      },
+      {
+        "id": "impact-2",
+        "value": "24/7",
+        "label": "message clair sur mobile comme sur desktop"
+      }
+    ]
+  },
+  "cta": {
+    "eyebrow": "Passer a l'action",
+    "title": "Prete pour une vraie page de lancement.",
+    "description": "Le dashboard admin te permet de modifier le contenu, le menu, les couleurs, les animations et les liens sans reouvrir le code a chaque changement.",
+    "primaryLabel": "Nous contacter",
+    "primaryHref": "mailto:contact@fidelis.com",
+    "secondaryLabel": "Appeler maintenant",
+    "secondaryHref": "tel:+221700000000",
+    "items": [
+      {
+        "id": "cta-1",
+        "text": "Ajoute tes vrais numeros, emails, liens WhatsApp ou formulaires."
+      },
+      {
+        "id": "cta-2",
+        "text": "Remplace les chiffres exemples par tes donnees commerciales reelles."
+      },
+      {
+        "id": "cta-3",
+        "text": "Connecte Supabase pour persister les donnees en production."
+      }
+    ]
+  }
+}

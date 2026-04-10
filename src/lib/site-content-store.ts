@@ -1,0 +1,77 @@
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
+
+import type { SiteContent } from "@/lib/site-content-schema";
+import { getSupabaseAdmin } from "@/lib/supabase";
+
+const dataFilePath = path.join(process.cwd(), "src", "data", "site-content.json");
+const tableName = process.env.SUPABASE_SITE_CONTENT_TABLE ?? "site_content";
+const rowId = process.env.SUPABASE_SITE_CONTENT_ROW_ID ?? "main";
+
+type SupabaseLooseClient = {
+  from: (table: string) => {
+    select: (query: string) => {
+      eq: (column: string, value: string) => {
+        single: () => Promise<{ data: { content?: SiteContent } | null; error: { message?: string } | null }>;
+      };
+    };
+    upsert: (
+      value: { id: string; content: SiteContent; updated_at: string },
+      options: { onConflict: string },
+    ) => Promise<{ error: { message?: string } | null }>;
+  };
+};
+
+async function readLocalContent() {
+  const file = await readFile(dataFilePath, "utf8");
+  return JSON.parse(file) as SiteContent;
+}
+
+async function writeLocalContent(content: SiteContent) {
+  await mkdir(path.dirname(dataFilePath), { recursive: true });
+  await writeFile(dataFilePath, JSON.stringify(content, null, 2), "utf8");
+}
+
+export async function getSiteContent() {
+  const supabase = getSupabaseAdmin();
+
+  if (supabase) {
+    const client = supabase as unknown as SupabaseLooseClient;
+    const { data, error } = await client
+      .from(tableName)
+      .select("content")
+      .eq("id", rowId)
+      .single();
+
+    if (!error && data?.content) {
+      return data.content as SiteContent;
+    }
+  }
+
+  return readLocalContent();
+}
+
+export async function saveSiteContent(content: SiteContent) {
+  const supabase = getSupabaseAdmin();
+
+  if (supabase) {
+    const client = supabase as unknown as SupabaseLooseClient;
+    const { error } = await client.from(tableName).upsert(
+      {
+        id: rowId,
+        content,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "id" },
+    );
+
+    if (error) {
+      throw new Error(`Supabase save failed: ${error.message}`);
+    }
+
+    return { mode: "supabase" as const };
+  }
+
+  await writeLocalContent(content);
+  return { mode: "local" as const };
+}
