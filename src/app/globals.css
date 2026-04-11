@@ -530,6 +530,28 @@ img {
 .admin-status {
   margin: 0;
   font-size: 0.92rem;
+  line-height: 1.5;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+}
+
+.admin-status--info {
+  color: #c9d4eb;
+  background: rgba(201, 212, 235, 0.1);
+  border-color: rgba(201, 212, 235, 0.22);
+}
+
+.admin-status--success {
+  color: #9af5cb;
+  background: rgba(66, 186, 127, 0.13);
+  border-color: rgba(66, 186, 127, 0.32);
+}
+
+.admin-status--error {
+  color: #ffb0b0;
+  background: rgba(220, 88, 88, 0.14);
+  border-color: rgba(220, 88, 88, 0.34);
 }
 
 .admin-main {

@@ -228,7 +228,6 @@ export function FidelisSite({ content }: FidelisSiteProps) {
               {social.label}
             </a>
           ))}
-          <a href="/admin">Dashboard CMS</a>
         </div>
       </footer>
     </div>

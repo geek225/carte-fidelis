@@ -28,6 +28,74 @@ function removeItemById<T extends { id: string }>(items: T[], id: string) {
   return items.filter((item) => item.id !== id);
 }
 
+type StatusTone = "info" | "success" | "error";
+
+type StatusState = {
+  tone: StatusTone;
+  message: string;
+};
+
+type ApiValidationIssue = {
+  path?: string;
+  message?: string;
+};
+
+type ApiErrorPayload = {
+  error?: string;
+  details?: ApiValidationIssue[];
+};
+
+type RetryOptions = {
+  retries?: number;
+};
+
+async function parseResponseJson<T>(response: Response): Promise<T | null> {
+  return (await response.json().catch(() => null)) as T | null;
+}
+
+function extractApiError(payload: ApiErrorPayload | null, fallback: string) {
+  const base = payload?.error?.trim() || fallback;
+  const firstIssue = payload?.details?.[0];
+
+  if (!firstIssue) {
+    return base;
+  }
+
+  const suffix = firstIssue.path
+    ? ` (${firstIssue.path}: ${firstIssue.message ?? "valeur invalide"})`
+    : ` (${firstIssue.message ?? "valeur invalide"})`;
+
+  return `${base}${suffix}`;
+}
+
+async function fetchWithRetry(
+  input: RequestInfo | URL,
+  init?: RequestInit,
+  options: RetryOptions = {},
+) {
+  const retries = options.retries ?? 1;
+
+  let networkError: unknown = null;
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    try {
+      const response = await fetch(input, init);
+
+      if (response.status >= 500 && response.status <= 599 && attempt < retries) {
+        continue;
+      }
+
+      return response;
+    } catch (error) {
+      networkError = error;
+      if (attempt === retries) {
+        throw error;
+      }
+    }
+  }
+
+  throw networkError ?? new Error("Echec reseau.");
+}
+
 function Panel({
   title,
   description,
@@ -118,7 +186,10 @@ function ImageField({
 
 export function AdminDashboard({ initialContent }: AdminDashboardProps) {
   const [content, setContent] = useState(initialContent);
-  const [status, setStatus] = useState("Aucune modification sauvegardee.");
+  const [status, setStatus] = useState<StatusState>({
+    tone: "info",
+    message: "Aucune modification sauvegardee.",
+  });
   const [isPending, startTransition] = useTransition();
 
   function setMenu(items: NavItem[]) {
@@ -150,47 +221,86 @@ export function AdminDashboard({ initialContent }: AdminDashboardProps) {
   }
 
   async function uploadImage(file: File, applyPath: (path: string) => void) {
-    setStatus(`Upload de ${file.name}...`);
-    const formData = new FormData();
-    formData.append("file", file);
+    setStatus({ tone: "info", message: `Upload de ${file.name}...` });
 
-    const response = await fetch("/api/upload", {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
 
-    if (!response.ok) {
-      const payload = (await response.json().catch(() => null)) as { error?: string } | null;
-      setStatus(payload?.error ?? "Upload impossible.");
-      return;
+      const response = await fetchWithRetry(
+        "/api/upload",
+        {
+          method: "POST",
+          body: formData,
+        },
+        { retries: 1 },
+      );
+
+      if (!response.ok) {
+        const payload = await parseResponseJson<ApiErrorPayload>(response);
+        setStatus({
+          tone: "error",
+          message: extractApiError(payload, "Upload impossible."),
+        });
+        return;
+      }
+
+      const payload = await parseResponseJson<{ path?: string }>(response);
+      if (!payload?.path) {
+        setStatus({
+          tone: "error",
+          message: "Upload termine mais chemin d'image manquant.",
+        });
+        return;
+      }
+
+      applyPath(payload.path);
+      setStatus({ tone: "success", message: `Image importee: ${payload.path}` });
+    } catch {
+      setStatus({
+        tone: "error",
+        message: "Erreur reseau pendant l'upload. Reessaie dans quelques secondes.",
+      });
     }
-
-    const payload = (await response.json()) as { path: string };
-    applyPath(payload.path);
-    setStatus(`Image importee: ${payload.path}`);
   }
 
   async function saveAllChanges() {
-    setStatus("Sauvegarde en cours...");
+    setStatus({ tone: "info", message: "Sauvegarde en cours..." });
 
-    const response = await fetch("/api/site-content", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(content),
-    });
+    try {
+      const response = await fetchWithRetry(
+        "/api/site-content",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(content),
+        },
+        { retries: 1 },
+      );
 
-    if (!response.ok) {
-      const payload = (await response.json().catch(() => null)) as { error?: string } | null;
-      setStatus(payload?.error ?? "La sauvegarde a echoue.");
-      return;
+      if (!response.ok) {
+        const payload = await parseResponseJson<ApiErrorPayload>(response);
+        setStatus({
+          tone: "error",
+          message: extractApiError(payload, "La sauvegarde a echoue."),
+        });
+        return;
+      }
+
+      const payload = await parseResponseJson<{ mode?: string }>(response);
+      setStatus({
+        tone: "success",
+        message:
+          payload?.mode === "supabase"
+            ? "Toutes les modifications ont ete sauvegardees dans Supabase."
+            : "Toutes les modifications ont ete sauvegardees localement.",
+      });
+    } catch {
+      setStatus({
+        tone: "error",
+        message: "Erreur reseau pendant la sauvegarde. Reessaie dans quelques secondes.",
+      });
     }
-
-    const payload = (await response.json()) as { mode: string };
-    setStatus(
-      payload.mode === "supabase"
-        ? "Toutes les modifications ont ete sauvegardees dans Supabase."
-        : "Toutes les modifications ont ete sauvegardees localement.",
-    );
   }
 
   return (
@@ -216,7 +326,7 @@ export function AdminDashboard({ initialContent }: AdminDashboardProps) {
           <a className="button button-secondary" href="/" rel="noreferrer" target="_blank">
             Ouvrir le site public
           </a>
-          <p className="admin-status">{status}</p>
+          <p className={`admin-status admin-status--${status.tone}`}>{status.message}</p>
         </div>
       </aside>
 

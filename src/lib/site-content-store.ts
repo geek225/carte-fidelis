@@ -95,6 +95,12 @@ export async function saveSiteContent(content: SiteContent) {
     return { mode: "supabase" as const };
   }
 
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(
+      "Supabase non configure en production. Definis NEXT_PUBLIC_SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY.",
+    );
+  }
+
   await writeLocalContent(content);
   return { mode: "local" as const };
 }
