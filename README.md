@@ -38,15 +38,15 @@ SUPABASE_SERVICE_ROLE_KEY=
 SUPABASE_SITE_CONTENT_TABLE=site_content
 SUPABASE_SITE_CONTENT_ROW_ID=main
 SUPABASE_UPLOAD_BUCKET=site-assets
-ADMIN_BASIC_AUTH_USER=
-ADMIN_BASIC_AUTH_PASSWORD=
+ADMIN_BASIC_AUTH_USER=admin
+ADMIN_BASIC_AUTH_PASSWORD=password123
 ```
 
 ## Protection de l'admin
 
 - Les routes `/admin`, `PUT /api/site-content` et `POST /api/upload` sont protegees par Basic Auth.
-- Configure `ADMIN_BASIC_AUTH_USER` et `ADMIN_BASIC_AUTH_PASSWORD` en local et dans Vercel.
-- En production, si ces variables sont absentes, les routes protegees repondent en erreur.
+- Identifiants par defaut: `admin` / `password123`.
+- Tu peux surcharger avec `ADMIN_BASIC_AUTH_USER` et `ADMIN_BASIC_AUTH_PASSWORD` en local et dans Vercel.
 
 ## Validation API CMS
 
