@@ -27,12 +27,35 @@ async function readLocalContent() {
   return JSON.parse(file) as SiteContent;
 }
 
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function mergeSiteContent<T>(base: T, override: unknown): T {
+  if (Array.isArray(base)) {
+    return (Array.isArray(override) ? override : base) as T;
+  }
+
+  if (isPlainObject(base) && isPlainObject(override)) {
+    const merged: Record<string, unknown> = { ...base };
+
+    for (const [key, baseValue] of Object.entries(base)) {
+      merged[key] = mergeSiteContent(baseValue, override[key]);
+    }
+
+    return merged as T;
+  }
+
+  return (override ?? base) as T;
+}
+
 async function writeLocalContent(content: SiteContent) {
   await mkdir(path.dirname(dataFilePath), { recursive: true });
   await writeFile(dataFilePath, JSON.stringify(content, null, 2), "utf8");
 }
 
 export async function getSiteContent() {
+  const defaultContent = await readLocalContent();
   const supabase = getSupabaseAdmin();
 
   if (supabase) {
@@ -44,11 +67,11 @@ export async function getSiteContent() {
       .single();
 
     if (!error && data?.content) {
-      return data.content as SiteContent;
+      return mergeSiteContent(defaultContent, data.content);
     }
   }
 
-  return readLocalContent();
+  return defaultContent;
 }
 
 export async function saveSiteContent(content: SiteContent) {
