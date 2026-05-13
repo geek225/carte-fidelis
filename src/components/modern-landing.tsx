@@ -1,6 +1,6 @@
 "use client";
 
-import React, { CSSProperties, useState } from "react";
+import React, { CSSProperties, useState, useEffect, useRef, ReactNode } from "react";
 import styles from "./modern-landing.module.css";
 import type { SiteContent } from "@/lib/site-content-schema";
 
@@ -30,6 +30,66 @@ const getIcon = (name: string) => {
     default: return <IconCheck />;
   }
 }
+
+interface RevealProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: ReactNode;
+  delay?: number;
+  direction?: "up" | "down" | "left" | "right" | "none";
+  duration?: number;
+}
+
+function Reveal({ children, delay = 0, direction = "up", duration = 0.8, style, ...props }: RevealProps) {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  const getTransform = () => {
+    if (!isVisible) {
+      switch (direction) {
+        case "up": return "translateY(30px)";
+        case "down": return "translateY(-30px)";
+        case "left": return "translateX(30px)";
+        case "right": return "translateX(-30px)";
+        default: return "none";
+      }
+    }
+    return "translate(0)";
+  };
+
+  const animatedStyle: CSSProperties = {
+    opacity: isVisible ? 1 : 0,
+    transform: getTransform(),
+    transition: `opacity ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
+    willChange: "transform, opacity",
+    ...style,
+  };
+
+  return (
+    <div ref={ref} style={animatedStyle} {...props}>
+      {children}
+    </div>
+  );
+}
+
 
 type ModernLandingProps = {
   content: SiteContent;
@@ -97,15 +157,15 @@ export function ModernLanding({ content }: ModernLandingProps) {
       {/* GRID FEATURES */}
       {content.gridFeatures.enabled && (
         <section className="section-padding container">
-          <div className="text-center">
+          <Reveal className="text-center">
             <h2 style={{ whiteSpace: 'pre-line' }}>{content.gridFeatures.title}<span className="dot">_</span></h2>
-          </div>
+          </Reveal>
           <div className={styles.gridFeatures}>
-            {content.gridFeatures.items.filter(i => i.enabled).map((feature) => (
-              <div key={feature.id} className={styles.featureSmall}>
+            {content.gridFeatures.items.filter(i => i.enabled).map((feature, idx) => (
+              <Reveal key={feature.id} className={styles.featureSmall} delay={idx * 100} duration={0.6}>
                 <div className={styles.featureIcon}>{getIcon(feature.icon)}</div>
                 <p>{feature.title}</p>
-              </div>
+              </Reveal>
             ))}
           </div>
         </section>
@@ -114,12 +174,12 @@ export function ModernLanding({ content }: ModernLandingProps) {
       {/* CARD SPLIT SECTION */}
       {content.splitCards.enabled && (
         <section className="section-padding container">
-          <div className="text-center">
+          <Reveal className="text-center">
             <h2>{content.splitCards.title}<span className="dot">_</span></h2>
-          </div>
+          </Reveal>
           <div className={styles.splitCards}>
             {content.splitCards.cardPhysical.enabled && (
-              <div className={styles.cardItem}>
+              <Reveal className={styles.cardItem} delay={0} direction="up">
                 <div className={styles.cardHead}>
                   <h3>{content.splitCards.cardPhysical.title}</h3>
                   <p>{content.splitCards.cardPhysical.description}</p>
@@ -128,11 +188,11 @@ export function ModernLanding({ content }: ModernLandingProps) {
                   <img src={content.splitCards.cardPhysical.image} alt={content.splitCards.cardPhysical.title} />
                 </div>
                 <a href={content.splitCards.cardPhysical.btnHref} className="btn btn-primary">{content.splitCards.cardPhysical.btnLabel}</a>
-              </div>
+              </Reveal>
             )}
 
             {content.splitCards.cardVirtual.enabled && (
-              <div className={styles.cardItem}>
+              <Reveal className={styles.cardItem} delay={200} direction="up">
                 <div className={styles.cardHead}>
                   <h3>{content.splitCards.cardVirtual.title}</h3>
                   <p>{content.splitCards.cardVirtual.description}</p>
@@ -141,7 +201,7 @@ export function ModernLanding({ content }: ModernLandingProps) {
                   <img src={content.splitCards.cardVirtual.image} alt={content.splitCards.cardVirtual.title} style={{ transform: "scale(0.8) translateY(20px)" }} />
                 </div>
                 <a href={content.splitCards.cardVirtual.btnHref} className="btn btn-primary">{content.splitCards.cardVirtual.btnLabel}</a>
-              </div>
+              </Reveal>
             )}
           </div>
         </section>
@@ -151,7 +211,7 @@ export function ModernLanding({ content }: ModernLandingProps) {
       {content.superApp.enabled && (
         <section className="section-padding container">
           <div className={styles.superApp}>
-            <div className={styles.superAppContent}>
+            <Reveal className={styles.superAppContent} direction="right" duration={1}>
               <h2 style={{ textAlign: "left" }}>{content.superApp.title}<span className="dot">_</span></h2>
               <div className={styles.checklist}>
                 {content.superApp.checklist.filter(c => c.enabled).map((item) => (
@@ -162,11 +222,11 @@ export function ModernLanding({ content }: ModernLandingProps) {
                 ))}
               </div>
               <a href={content.superApp.btnHref} className="btn btn-primary" style={{ marginTop: "32px" }}>{content.superApp.btnLabel}</a>
-            </div>
+            </Reveal>
             
-            <div className={styles.superAppVisual}>
+            <Reveal className={styles.superAppVisual} direction="left" duration={1} delay={200}>
                <img src={content.superApp.image} className={styles.floatingPhone} alt="App Visual" />
-            </div>
+            </Reveal>
           </div>
         </section>
       )}
@@ -213,10 +273,10 @@ export function ModernLanding({ content }: ModernLandingProps) {
       {content.footerCta.enabled && (
         <section className="container">
           <div className={styles.footerCta}>
-            <div className={styles.ctaPhones}>
+            <Reveal className={styles.ctaPhones} direction="right" duration={1}>
                <img src={content.footerCta.image} alt="Footer graphic" style={{maxWidth: "200px", margin: "0 auto", display: "block"}} />
-            </div>
-            <div className={styles.footerCtaContent}>
+            </Reveal>
+            <Reveal className={styles.footerCtaContent} direction="left" duration={1} delay={200}>
               <h2>{content.footerCta.title}<span className="dot">_</span></h2>
               <p style={{marginBottom: "24px"}}>{content.footerCta.description}</p>
               <div className={styles.footerSocials}>
@@ -224,7 +284,7 @@ export function ModernLanding({ content }: ModernLandingProps) {
                    <a key={social.id} href={social.url} className={styles.socialIcon} target="_blank" rel="noreferrer">{social.label}</a>
                 ))}
               </div>
-            </div>
+            </Reveal>
           </div>
         </section>
       )}
