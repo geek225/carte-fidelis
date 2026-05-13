@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 import { isAdminRequestAuthorized, isSessionAuthorized } from "@/lib/admin-auth";
 import { getSupabaseAdmin } from "@/lib/supabase";
 
-const uploadBucket = process.env.SUPABASE_UPLOAD_BUCKET ?? "site-assets";
+const uploadBucket = process.env.SUPABASE_UPLOAD_BUCKET ?? "storage";
 const maxUploadSizeBytes = 5 * 1024 * 1024;
 
 function safeFileName(name: string) {
