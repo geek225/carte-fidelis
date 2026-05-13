@@ -199,6 +199,11 @@ export function ModernLanding({ content }: ModernLandingProps) {
         </section>
       )}
 
+      {/* PARTNERS SECTION */}
+      {content.partners && content.partners.enabled && (
+        <PartnersSection partners={content.partners} />
+      )}
+
       {/* FAQ SECTION */}
       {content.faq.enabled && (
         <FaqAccordion faq={content.faq} />
@@ -289,6 +294,105 @@ function FaqAccordion({ faq }: { faq: SiteContent["faq"] }) {
             </div>
           );
         })}
+      </div>
+    </section>
+  );
+}
+
+function PartnersSection({ partners }: { partners: SiteContent["partners"] }) {
+  const activeCats = (partners.categories || []).filter(c => c.enabled);
+  const initialCatId = activeCats.length > 0 ? activeCats[0].id : "";
+  
+  const [activeCatId, setActiveCatId] = useState<string>(initialCatId);
+
+  // Guard against activeCatId no longer existing in categories list
+  const activeTabId = activeCats.some(c => c.id === activeCatId) 
+    ? activeCatId 
+    : initialCatId;
+
+  const filteredItems = (partners.items || []).filter(
+    item => item.enabled && item.categoryId === activeTabId
+  );
+
+  if (activeCats.length === 0) return null;
+
+  return (
+    <section id="partenaires" className="section-padding container">
+      <div className="text-center" style={{ marginBottom: "20px" }}>
+        <h2 style={{ whiteSpace: 'pre-line' }}>{partners.title}<span className="dot">_</span></h2>
+      </div>
+
+      {/* Filter Tabs */}
+      <div className={styles.partnersTabs}>
+        {activeCats.map((cat) => {
+          const isActive = cat.id === activeTabId;
+          return (
+            <button
+              key={cat.id}
+              onClick={() => setActiveCatId(cat.id)}
+              className={styles.partnerTab}
+              style={{
+                backgroundColor: isActive ? partners.tabActiveBgColor : partners.tabBgColor,
+                color: isActive ? partners.tabActiveTextColor : partners.tabTextColor,
+                transform: isActive ? 'scale(1.05)' : 'scale(1)',
+                fontWeight: isActive ? '700' : '600',
+              }}
+            >
+              {cat.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Partners list */}
+      <div className={styles.partnersGrid}>
+        {filteredItems.length > 0 ? (
+          filteredItems.map((item) => (
+            <div key={item.id} className={styles.partnerCard}>
+              <div style={{ width: "100%" }}>
+                <div className={styles.partnerLogoWrapper}>
+                  {item.logo ? (
+                    <img src={item.logo} alt={item.name} className={styles.partnerLogo} />
+                  ) : (
+                    <div className={styles.partnerPlaceholderLogo}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                      {item.name}
+                    </div>
+                  )}
+                </div>
+                {item.logo && <h4 className={styles.partnerName}>{item.name}</h4>}
+                <p className={styles.partnerDesc} style={{ whiteSpace: 'pre-line' }}>{item.description}</p>
+              </div>
+
+              <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "16px" }}>
+                {item.imageUrl && (
+                  <img src={item.imageUrl} alt={item.name} className={styles.partnerImg} />
+                )}
+                
+                {(item.videoUrl || item.pdfUrl) && (
+                  <div className={styles.partnerActions}>
+                    {item.videoUrl && (
+                      <a href={item.videoUrl} className={styles.actionLink} target="_blank" rel="noreferrer">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                        Vidéo
+                      </a>
+                    )}
+                    {item.pdfUrl && (
+                      <a href={item.pdfUrl} className={styles.actionLink} download target="_blank" rel="noreferrer">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        Fichier PDF
+                      </a>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))
+        ) : (
+          <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "60px 0", color: "var(--dark-light)", border: "2px dashed var(--border-color)", borderRadius: "20px" }}>
+            Aucun partenaire enregistré dans cette catégorie pour le moment.
+          </div>
+        )}
       </div>
     </section>
   );

@@ -169,8 +169,17 @@
   grid-template-columns: repeat(3, 1fr);
 }
 
+.grid4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
 @media (max-width: 1024px) {
   .grid2, .grid3 { grid-template-columns: 1fr; }
+  .grid4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .grid4 { grid-template-columns: 1fr; }
 }
 
 .field {

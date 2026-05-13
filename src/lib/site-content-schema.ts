@@ -46,6 +46,24 @@ export const socialLinkSchema = z.object({
   enabled: z.boolean().default(true),
 }).strict();
 
+export const partnerCategorySchema = z.object({
+  id: idField,
+  label: stringField.max(100),
+  enabled: z.boolean().default(true),
+}).strict();
+
+export const partnerItemSchema = z.object({
+  id: idField,
+  name: stringField.max(200),
+  logo: stringField,
+  description: stringField.max(2000),
+  categoryId: stringField,
+  imageUrl: z.string().trim().optional(),
+  videoUrl: z.string().trim().optional(),
+  pdfUrl: z.string().trim().optional(),
+  enabled: z.boolean().default(true),
+}).strict();
+
 export const siteContentSchema = z.object({
   site: z.object({
     brandName: stringField.max(120),
@@ -129,6 +147,16 @@ export const siteContentSchema = z.object({
     title: stringField,
     items: z.array(faqItemSchema),
   }).strict(),
+  partners: z.object({
+    enabled: z.boolean(),
+    title: stringField,
+    tabBgColor: stringField,
+    tabTextColor: stringField,
+    tabActiveBgColor: stringField,
+    tabActiveTextColor: stringField,
+    categories: z.array(partnerCategorySchema),
+    items: z.array(partnerItemSchema),
+  }).strict(),
   footerCta: z.object({
     enabled: z.boolean(),
     title: stringField,
@@ -145,3 +173,5 @@ export type TabItem = z.infer<typeof tabItemSchema>;
 export type FaqItem = z.infer<typeof faqItemSchema>;
 export type SocialLink = z.infer<typeof socialLinkSchema>;
 export type SimpleItem = z.infer<typeof simpleItemSchema>;
+export type PartnerCategory = z.infer<typeof partnerCategorySchema>;
+export type PartnerItem = z.infer<typeof partnerItemSchema>;

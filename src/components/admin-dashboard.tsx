@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition, ReactNode } from "react";
-import type { SiteContent, NavItem, FeatureItem, TabItem, FaqItem, SocialLink, SimpleItem } from "@/lib/site-content-schema";
+import type { SiteContent, NavItem, FeatureItem, TabItem, FaqItem, SocialLink, SimpleItem, PartnerCategory, PartnerItem } from "@/lib/site-content-schema";
 import s from "./admin-dashboard.module.css";
 
 type AdminDashboardProps = { initialContent: SiteContent };
@@ -355,6 +355,85 @@ export function AdminDashboard({ initialContent }: AdminDashboardProps) {
                    </div>
                 </div>
              </div>
+           </div>
+        </Panel>
+
+        {/* PARTNERS */}
+        <Panel title="Nos Partenaires & Catégories" enabled={content.partners?.enabled} onToggle={v => updateContent(c => ({ ...c, partners: { ...c.partners, enabled: v }}))}>
+           <div className={`${s.grid} ${s.grid2}`}>
+              <Field label="Titre de la Section" value={content.partners?.title || ""} onChange={v => updateContent(c => ({ ...c, partners: { ...c.partners, title: v }}))} />
+           </div>
+
+           {/* Onglets Couleurs */}
+           <div style={{ marginTop: "20px", border: "1px solid #e2e8f0", borderRadius: "8px", padding: "16px", background: "#f8fafc" }}>
+              <div style={{ fontSize: "14px", fontWeight: "700", marginBottom: "12px", color: "#475569" }}>Couleurs Personnalisées des Onglets</div>
+              <div className={`${s.grid} ${s.grid4}`}>
+                 <Field label="Fond (Normal)" type="color" value={content.partners?.tabBgColor || "#f3faf2"} onChange={v => updateContent(c => ({ ...c, partners: { ...c.partners, tabBgColor: v }}))} />
+                 <Field label="Texte (Normal)" type="color" value={content.partners?.tabTextColor || "#123227"} onChange={v => updateContent(c => ({ ...c, partners: { ...c.partners, tabTextColor: v }}))} />
+                 <Field label="Fond (Actif)" type="color" value={content.partners?.tabActiveBgColor || "#50B848"} onChange={v => updateContent(c => ({ ...c, partners: { ...c.partners, tabActiveBgColor: v }}))} />
+                 <Field label="Texte (Actif)" type="color" value={content.partners?.tabActiveTextColor || "#ffffff"} onChange={v => updateContent(c => ({ ...c, partners: { ...c.partners, tabActiveTextColor: v }}))} />
+              </div>
+           </div>
+
+           {/* Gestion des Catégories (Onglets) */}
+           <div className={s.stack} style={{ marginTop: "32px" }}>
+              <span className={s.fieldLabel}>1. Définir les Catégories d'Onglets</span>
+              <div className={`${s.grid} ${s.grid2}`}>
+                 {(content.partners?.categories || []).map(cat => (
+                    <div key={cat.id} className={s.rowCard}>
+                       <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                          <Field label="Nom de l'onglet" value={cat.label} onChange={v => updateContent(c => ({ ...c, partners: { ...c.partners, categories: updateItemById(c.partners.categories, cat.id, { label: v }) }}))} />
+                          <div className={s.rowActions} style={{ marginTop: "8px", borderTop: "1px dashed #e2e8f0", paddingTop: "8px" }}>
+                             <Switch label="Activé" checked={cat.enabled} onChange={v => updateContent(c => ({ ...c, partners: { ...c.partners, categories: updateItemById(c.partners.categories, cat.id, { enabled: v }) }}))} />
+                             <button className={s.iconBtn} onClick={() => updateContent(c => ({ ...c, partners: { ...c.partners, categories: removeItemById(c.partners.categories, cat.id) }}))}>Retirer</button>
+                          </div>
+                       </div>
+                    </div>
+                 ))}
+              </div>
+              <button className={s.addButton} onClick={() => updateContent(c => ({ ...c, partners: { ...c.partners, categories: [...(c.partners.categories || []), { id: makeId("cat"), label: "Nouvelle catégorie", enabled: true }] }}))}>+ Ajouter une catégorie d'onglet</button>
+           </div>
+
+           {/* Gestion des Partenaires */}
+           <div className={s.stack} style={{ marginTop: "32px", borderTop: "1px solid #f1f5f9", paddingTop: "24px" }}>
+              <span className={s.fieldLabel}>2. Liste des Partenaires</span>
+              {(content.partners?.items || []).map(item => (
+                 <div key={item.id} className={s.rowCard} style={{ background: "#ffffff", border: "1px solid #cbd5e1", padding: "20px", marginBottom: "20px" }}>
+                    <div className={`${s.grid} ${s.grid2}`}>
+                       <Field label="Nom du partenaire" value={item.name} onChange={v => updateContent(c => ({ ...c, partners: { ...c.partners, items: updateItemById(c.partners.items, item.id, { name: v }) }}))} />
+                       
+                       <div className={s.field}>
+                          <span className={s.fieldLabel}>Catégorie associée</span>
+                          <select 
+                            className={s.input} 
+                            value={item.categoryId} 
+                            onChange={e => updateContent(c => ({ ...c, partners: { ...c.partners, items: updateItemById(c.partners.items, item.id, { categoryId: e.target.value }) }}))}
+                          >
+                             <option value="">-- Choisir une catégorie --</option>
+                             {(content.partners?.categories || []).map(cat => (
+                                <option key={cat.id} value={cat.id}>{cat.label}</option>
+                             ))}
+                          </select>
+                       </div>
+
+                       <div style={{ gridColumn: "1 / -1" }}>
+                          <TextAreaField label="Description courte" value={item.description} onChange={v => updateContent(c => ({ ...c, partners: { ...c.partners, items: updateItemById(c.partners.items, item.id, { description: v }) }}))} />
+                       </div>
+
+                       <ImageField label="Logo du partenaire (Requis)" value={item.logo} onChange={v => updateContent(c => ({ ...c, partners: { ...c.partners, items: updateItemById(c.partners.items, item.id, { logo: v }) }}))} onUpload={uploadImage} />
+                       <ImageField label="Photo de couverture (Optionnelle)" value={item.imageUrl || ""} onChange={v => updateContent(c => ({ ...c, partners: { ...c.partners, items: updateItemById(c.partners.items, item.id, { imageUrl: v }) }}))} onUpload={uploadImage} />
+                       
+                       <Field label="Lien Vidéo (Optionnel)" value={item.videoUrl || ""} onChange={v => updateContent(c => ({ ...c, partners: { ...c.partners, items: updateItemById(c.partners.items, item.id, { videoUrl: v }) }}))} />
+                       <Field label="Lien Fichier PDF (Optionnel)" value={item.pdfUrl || ""} onChange={v => updateContent(c => ({ ...c, partners: { ...c.partners, items: updateItemById(c.partners.items, item.id, { pdfUrl: v }) }}))} />
+                    </div>
+
+                    <div className={s.rowActions} style={{ marginTop: "16px", borderTop: "1px solid #e2e8f0", paddingTop: "12px", justifyContent: "flex-end" }}>
+                       <Switch label="Visible en ligne" checked={item.enabled} onChange={v => updateContent(c => ({ ...c, partners: { ...c.partners, items: updateItemById(c.partners.items, item.id, { enabled: v }) }}))} />
+                       <button className={s.iconBtn} style={{ color: "#ef4444" }} onClick={() => updateContent(c => ({ ...c, partners: { ...c.partners, items: removeItemById(c.partners.items, item.id) }}))}>❌ Retirer ce Partenaire</button>
+                    </div>
+                 </div>
+              ))}
+              <button className={s.addButton} onClick={() => updateContent(c => ({ ...c, partners: { ...c.partners, items: [...(c.partners.items || []), { id: makeId("part"), name: "Nouveau Partenaire", logo: "", description: "", categoryId: content.partners?.categories[0]?.id || "", enabled: true }] }}))}>+ Ajouter un Partenaire</button>
            </div>
         </Panel>
 

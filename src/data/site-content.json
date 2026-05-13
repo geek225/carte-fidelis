@@ -108,6 +108,45 @@
       { "id": "faq-4", "question": "Quels sont les frais appliques ?", "answer": "La création de compte et la carte virtuelle sont totalement gratuites. Les frais de transfert varient selon le montant mais restent parmi les plus bas du marché (généralement 1%).", "enabled": true }
     ]
   },
+  "partners": {
+    "enabled": true,
+    "title": "Nos Partenaires de Confiance",
+    "tabBgColor": "#f3faf2",
+    "tabTextColor": "#123227",
+    "tabActiveBgColor": "#50B848",
+    "tabActiveTextColor": "#ffffff",
+    "categories": [
+      { "id": "cat-finance", "label": "Finance", "enabled": true },
+      { "id": "cat-immo", "label": "Immobilier", "enabled": true },
+      { "id": "cat-permis", "label": "Permis de conduire", "enabled": true },
+      { "id": "cat-assurance", "label": "Assurance", "enabled": true },
+      { "id": "cat-alimentaire", "label": "Alimentation", "enabled": true }
+    ],
+    "items": [
+      {
+        "id": "part-demo-1",
+        "name": "Banque Populaire",
+        "logo": "",
+        "description": "Votre partenaire financier privilégié pour faciliter tous vos transferts de fonds et la gestion de votre trésorerie en local et international.",
+        "categoryId": "cat-finance",
+        "imageUrl": "",
+        "videoUrl": "",
+        "pdfUrl": "",
+        "enabled": true
+      },
+      {
+        "id": "part-demo-2",
+        "name": "Immo Prestige",
+        "logo": "",
+        "description": "Trouvez et financez le bien immobilier de vos rêves grâce à nos conseillers experts.",
+        "categoryId": "cat-immo",
+        "imageUrl": "",
+        "videoUrl": "",
+        "pdfUrl": "",
+        "enabled": true
+      }
+    ]
+  },
   "footerCta": {
     "enabled": true,
     "title": "Rejoignez-nous maintenant",
