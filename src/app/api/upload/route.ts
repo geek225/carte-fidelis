@@ -1,9 +1,10 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { isAdminRequestAuthorized } from "@/lib/admin-auth";
+import { isAdminRequestAuthorized, isSessionAuthorized } from "@/lib/admin-auth";
 import { getSupabaseAdmin } from "@/lib/supabase";
 
 const uploadBucket = process.env.SUPABASE_UPLOAD_BUCKET ?? "site-assets";
@@ -54,7 +55,14 @@ function internalError(defaultMessage: string, error: unknown) {
 }
 
 export async function POST(request: Request) {
-  if (!isAdminRequestAuthorized(request.headers.get("authorization"))) {
+  const cookieStore = await cookies();
+  const session = cookieStore.get("admin_session")?.value;
+  
+  const isAuthorized = 
+    (session && isSessionAuthorized(session)) || 
+    isAdminRequestAuthorized(request.headers.get("authorization"));
+
+  if (!isAuthorized) {
     return NextResponse.json({ error: "Acces refuse." }, { status: 401 });
   }
 
