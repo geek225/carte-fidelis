@@ -1,208 +1,122 @@
 {
   "site": {
-    "brandName": "Carte Fidelis",
-    "metaTitle": "Carte Fidelis | Carte premium et avantages partenaires",
-    "metaDescription": "Site one-page Carte Fidelis avec CMS global pour gerer les textes, images, couleurs, animations, menu et reseaux sociaux.",
-    "footerText": "Carte Fidelis - carte premium de fidelite et avantages partenaires."
+    "brandName": "Push",
+    "logoImage": "",
+    "metaTitle": "Push - Gerez votre argent 24/7",
+    "metaDescription": "Transferez, recevez, payez et gerez votre argent facilement.",
+    "footerText": "© 2026 Push Inc. Tous droits reserves."
   },
   "theme": {
-    "background": "#08111d",
-    "foreground": "#f5f7fb",
-    "muted": "rgba(245,247,251,0.72)",
-    "accent": "#f2b544",
-    "accentText": "#111111",
-    "surface": "rgba(255,255,255,0.06)",
-    "surfaceSoft": "rgba(255,255,255,0.04)",
-    "border": "rgba(255,255,255,0.12)",
-    "menuBackground": "rgba(5,10,17,0.62)"
+    "primary": "#50B848",
+    "primaryHover": "#41a03a",
+    "dark": "#123227",
+    "darkLight": "#2a4a3e",
+    "lightBg": "#f3faf2",
+    "grayBg": "#f5f8f7",
+    "white": "#ffffff",
+    "borderColor": "#e2eae2"
   },
-  "animation": {
-    "heroCard": "tilt",
-    "reveal": "fade-up",
-    "media": "parallax"
+  "header": {
+    "menu": [
+      { "id": "nav-1", "label": "Particuliers", "href": "#", "enabled": true },
+      { "id": "nav-2", "label": "Entreprises", "href": "#", "enabled": true },
+      { "id": "nav-3", "label": "Tarifs", "href": "#", "enabled": true },
+      { "id": "nav-4", "label": "Trouver un agent", "href": "#", "enabled": true },
+      { "id": "nav-5", "label": "Aide et contact", "href": "#", "enabled": true }
+    ],
+    "ctaLabel": "Devenir un agent",
+    "ctaHref": "#",
+    "ctaEnabled": true
   },
-  "sizing": {
-    "heroTitle": "clamp(3.1rem, 7vw, 6.2rem)",
-    "sectionTitle": "clamp(2.2rem, 5vw, 4rem)",
-    "bodyText": "1.05rem",
-    "heroCardWidth": "440px",
-    "benefitsImageHeight": "560px",
-    "processImageHeight": "320px",
-    "impactImageHeight": "320px"
-  },
-  "menu": [
-    {
-      "id": "home",
-      "label": "Accueil",
-      "href": "#top",
-      "enabled": true
-    },
-    {
-      "id": "benefits",
-      "label": "Avantages",
-      "href": "#avantages",
-      "enabled": true
-    },
-    {
-      "id": "process",
-      "label": "Parcours",
-      "href": "#parcours",
-      "enabled": true
-    },
-    {
-      "id": "impact",
-      "label": "Impact",
-      "href": "#impact",
-      "enabled": true
-    },
-    {
-      "id": "contact",
-      "label": "Contact",
-      "href": "#contact",
-      "enabled": true
-    }
-  ],
-  "socials": [
-    {
-      "id": "facebook",
-      "label": "Facebook",
-      "url": "https://facebook.com/"
-    },
-    {
-      "id": "instagram",
-      "label": "Instagram",
-      "url": "https://instagram.com/"
-    },
-    {
-      "id": "whatsapp",
-      "label": "WhatsApp",
-      "url": "https://wa.me/221700000000"
-    }
-  ],
   "hero": {
-    "eyebrow": "Fidelite premium pour clients exigeants",
-    "title": "Une seule carte. Plus d'avantages. Moins de friction.",
-    "description": "Carte Fidelis transforme une simple carte de fidelite en experience premium: reductions instantanees, partenaires selectionnes, suivi des gains et acces rapide aux bons plans du quotidien.",
-    "primaryCtaLabel": "Commander maintenant",
-    "primaryCtaHref": "#contact",
-    "secondaryCtaLabel": "Voir les avantages",
-    "secondaryCtaHref": "#avantages",
-    "cardImage": "/carte-fidelis.jpeg",
-    "partnerBadge": "+25 partenaires de confiance",
-    "savingsLabel": "+4 500 FCFA d'economies en moyenne sur les premiers achats",
-    "stats": [
-      {
-        "id": "stat-1",
-        "value": "25+",
-        "label": "partenaires deja actifs"
-      },
-      {
-        "id": "stat-2",
-        "value": "5000 FCFA",
-        "label": "economies moyennes observees"
-      },
-      {
-        "id": "stat-3",
-        "value": "48 h",
-        "label": "pour recevoir sa carte"
-      }
-    ]
+    "enabled": true,
+    "kickerNum": "1",
+    "kickerText": "Compte\nCarte VISA\nRIB",
+    "title": "Transferez, recevez,\n payez et gerez votre argent\n24/7",
+    "subtitle": "Gagnez du temps et gerez votre argent en toute simplicite, sans bouger de chez vous.",
+    "mainImage": "/assets/hero-woman.png",
+    "btnLabel": "Ouvrir un compte",
+    "btnHref": "#"
   },
-  "benefits": {
-    "eyebrow": "Pourquoi Fidelis",
-    "title": "Un service plus ambitieux qu'une carte classique.",
-    "description": "Le projet repose sur trois promesses simples: une valeur claire pour le client, une activation rapide et une marque suffisamment premium pour etre desiree, montree et gardee.",
-    "image": "/couple-carte.png",
-    "imageTitle": "Une carte que l'on montre avec fierte.",
-    "imageDescription": "L'image humanise le produit et aide a projeter la carte dans une situation reelle de confiance, de partage et de satisfaction.",
+  "gridFeatures": {
+    "enabled": true,
+    "title": "Grace a votre numero de telephone,\nvous beneficiez de",
     "items": [
-      {
-        "id": "benefit-1",
-        "title": "Remises immediates",
-        "description": "Le client beneficie d'avantages visibles sans attendre un cumul de points obscur ou une activation compliquee."
-      },
-      {
-        "id": "benefit-2",
-        "title": "Reseau partenaire",
-        "description": "Restaurants, boutiques, services et offres selectionnees dans un seul ecosysteme simple a comprendre."
-      },
-      {
-        "id": "benefit-3",
-        "title": "Image premium",
-        "description": "La carte valorise la marque et donne l'impression d'appartenir a un club prive accessible."
-      },
-      {
-        "id": "benefit-4",
-        "title": "Parcours rapide",
-        "description": "Inscription, confirmation et reception de la carte: tout est pense pour aller droit au but."
-      }
+      { "id": "feat-1", "icon": "check", "title": "1 Compte Bancaire & 1 RIB local", "enabled": true },
+      { "id": "feat-2", "icon": "check", "title": "Carte Visa Physique", "enabled": true },
+      { "id": "feat-3", "icon": "check", "title": "Cartes Virtuelles illimitees", "enabled": true },
+      { "id": "feat-4", "icon": "check", "title": "Application Mobile Tout-en-un", "enabled": true },
+      { "id": "feat-5", "icon": "check", "title": "Interoperabilite Mobile Money", "enabled": true },
+      { "id": "feat-6", "icon": "check", "title": "Paiements En Ligne Internationaux", "enabled": true },
+      { "id": "feat-7", "icon": "check", "title": "Paiements De Factures", "enabled": true },
+      { "id": "feat-8", "icon": "check", "title": "Assistance Client Dediee", "enabled": true }
     ]
   },
-  "process": {
-    "eyebrow": "Comment ca marche",
-    "title": "Trois etapes pour entrer dans l'ecosysteme Fidelis.",
-    "description": "La page est construite pour expliquer le service en quelques secondes, sans perdre le visiteur dans trop de details trop tot.",
-    "image": "/echange-carte-billet.png",
-    "imageTitle": "Le gain doit sembler concret.",
-    "imageDescription": "Cette scene soutient le discours sur les reductions immediates et les benefices tangibles apportes par la carte.",
-    "steps": [
-      {
-        "id": "step-1",
-        "title": "Je m'inscris",
-        "description": "Le visiteur remplit ses informations de base et choisit sa formule d'adhesion ou sa demande de rappel."
-      },
-      {
-        "id": "step-2",
-        "title": "Je recois ma carte",
-        "description": "Carte physique ou remise en point relais, avec un onboarding clair et des offres deja pretes a utiliser."
-      },
-      {
-        "id": "step-3",
-        "title": "J'economise tout de suite",
-        "description": "Les remises sont activables immediatement chez les partenaires compatibles, sans apprentissage complexe."
-      }
+  "splitCards": {
+    "enabled": true,
+    "title": "Un compte, Une carte Visa",
+    "cardPhysical": {
+      "enabled": true,
+      "title": "La Carte Push",
+      "description": "La carte Visa est une carte bancaire internationale que vous pouvez utiliser partout pour effectuer des retraits de guichet automatique ou des paiements.",
+      "image": "/assets/visa-green.png",
+      "btnLabel": "Details carte",
+      "btnHref": "#"
+    },
+    "cardVirtual": {
+      "enabled": true,
+      "title": "La virtuelle Push",
+      "description": "La carte virtuelle est ideale pour les achats en ligne et les abonnements. Generez-la en 1 clic depuis l'app et securisez vos paiements sur le web.",
+      "image": "/assets/phone-mockup.png",
+      "btnLabel": "Details carte virtuelle",
+      "btnHref": "#"
+    }
+  },
+  "superApp": {
+    "enabled": true,
+    "title": "Une Super App revolutionnaire",
+    "image": "/assets/phone-mockup.png",
+    "btnLabel": "Ouvrir un compte",
+    "btnHref": "#",
+    "checklist": [
+      { "id": "sup-1", "text": "Interoperabilite avec les Mobile Money", "enabled": true },
+      { "id": "sup-2", "text": "Paiement en ligne", "enabled": true },
+      { "id": "sup-3", "text": "Transfert d'argent", "enabled": true },
+      { "id": "sup-4", "text": "Achat de credit telephonique", "enabled": true },
+      { "id": "sup-5", "text": "Paiement de factures", "enabled": true },
+      { "id": "sup-6", "text": "Historique de transactions detaille", "enabled": true }
     ]
   },
-  "impact": {
-    "image": "/portefeuille-fidelis.jpg",
-    "imageTitle": "Une carte faite pour rester dans le quotidien.",
-    "imageDescription": "Le positionnement premium devient plus credible quand il est relie a la vie reelle, aux achats et a la gestion du budget.",
-    "quote": "On doit comprendre en un coup d'oeil que Fidelis n'est pas juste une carte, mais une porte d'entree vers des privileges concrets.",
-    "quoteAuthor": "Positionnement de marque suggere pour la page d'accueil",
-    "stats": [
-      {
-        "id": "impact-1",
-        "value": "+18%",
-        "label": "perception premium grace a une presentation plus forte"
-      },
-      {
-        "id": "impact-2",
-        "value": "24/7",
-        "label": "message clair sur mobile comme sur desktop"
-      }
-    ]
+  "agentBanner": {
+    "enabled": true,
+    "title": "Retirez partout, pres de chez vous",
+    "backgroundImage": "/assets/agent.png",
+    "overlayTitle": "Ne soyez jamais a court d'argent liquide !",
+    "overlayDesc": "Faites vos rechargements et retraits d'argent dans nos points relais agrees Push.",
+    "stat1Num": "0 F",
+    "stat1Label": "Depot a",
+    "stat2Num": "1 %",
+    "stat2Label": "Retrait a"
   },
-  "cta": {
-    "eyebrow": "Passer a l'action",
-    "title": "Prete pour une vraie page de lancement.",
-    "description": "Le dashboard admin te permet de modifier le contenu, le menu, les couleurs, les animations et les liens sans reouvrir le code a chaque changement.",
-    "primaryLabel": "Nous contacter",
-    "primaryHref": "mailto:contact@fidelis.com",
-    "secondaryLabel": "Appeler maintenant",
-    "secondaryHref": "tel:+221700000000",
+  "faq": {
+    "enabled": true,
+    "title": "Des questions ? Nous repondons",
     "items": [
-      {
-        "id": "cta-1",
-        "text": "Ajoute tes vrais numeros, emails, liens WhatsApp ou formulaires."
-      },
-      {
-        "id": "cta-2",
-        "text": "Remplace les chiffres exemples par tes donnees commerciales reelles."
-      },
-      {
-        "id": "cta-3",
-        "text": "Connecte Supabase pour persister les donnees en production."
-      }
+      { "id": "faq-1", "question": "Comment ouvrir un compte Push ?", "answer": "Il suffit de télécharger l'application, de renseigner votre numéro de téléphone et de suivre les étapes de vérification biométrique. C'est fait en moins de 3 minutes !", "enabled": true },
+      { "id": "faq-2", "question": "Ou recharger mon compte ?", "answer": "Vous pouvez recharger votre compte par virement bancaire, carte VISA, ou dans n'importe lequel de nos points relais partenaires.", "enabled": true },
+      { "id": "faq-3", "question": "Comment commander ma Carte Physique ?", "answer": "Accédez à l'onglet 'Cartes' de l'application, sélectionnez 'Commander une carte physique', choisissez votre adresse et validez. Votre carte arrivera sous 5 à 10 jours.", "enabled": true },
+      { "id": "faq-4", "question": "Quels sont les frais appliques ?", "answer": "La création de compte et la carte virtuelle sont totalement gratuites. Les frais de transfert varient selon le montant mais restent parmi les plus bas du marché (généralement 1%).", "enabled": true }
+    ]
+  },
+  "footerCta": {
+    "enabled": true,
+    "title": "Rejoignez-nous maintenant",
+    "description": "Telechargez l'application mobile et commencez a economiser des aujourd'hui.",
+    "image": "/assets/phone-mockup.png",
+    "socials": [
+      { "id": "soc-1", "label": "F", "url": "#", "enabled": true },
+      { "id": "soc-2", "label": "X", "url": "#", "enabled": true },
+      { "id": "soc-3", "label": "I", "url": "#", "enabled": true }
     ]
   }
 }

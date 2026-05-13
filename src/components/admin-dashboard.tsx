@@ -1,20 +1,10 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, ReactNode } from "react";
+import type { SiteContent, NavItem, FeatureItem, TabItem, FaqItem, SocialLink, SimpleItem } from "@/lib/site-content-schema";
+import s from "./admin-dashboard.module.css";
 
-import type {
-  CTAItem,
-  FeatureItem,
-  NavItem,
-  SiteContent,
-  SocialLink,
-  StatItem,
-  StepItem,
-} from "@/lib/site-content-schema";
-
-type AdminDashboardProps = {
-  initialContent: SiteContent;
-};
+type AdminDashboardProps = { initialContent: SiteContent };
 
 function makeId(prefix: string) {
   return `${prefix}-${Math.random().toString(36).slice(2, 8)}`;
@@ -28,527 +18,399 @@ function removeItemById<T extends { id: string }>(items: T[], id: string) {
   return items.filter((item) => item.id !== id);
 }
 
-type StatusTone = "info" | "success" | "error";
-
-type StatusState = {
-  tone: StatusTone;
-  message: string;
-};
-
-type ApiValidationIssue = {
-  path?: string;
-  message?: string;
-};
-
-type ApiErrorPayload = {
-  error?: string;
-  details?: ApiValidationIssue[];
-};
-
-type RetryOptions = {
-  retries?: number;
-};
-
-async function parseResponseJson<T>(response: Response): Promise<T | null> {
-  return (await response.json().catch(() => null)) as T | null;
-}
-
-function extractApiError(payload: ApiErrorPayload | null, fallback: string) {
-  const base = payload?.error?.trim() || fallback;
-  const firstIssue = payload?.details?.[0];
-
-  if (!firstIssue) {
-    return base;
-  }
-
-  const suffix = firstIssue.path
-    ? ` (${firstIssue.path}: ${firstIssue.message ?? "valeur invalide"})`
-    : ` (${firstIssue.message ?? "valeur invalide"})`;
-
-  return `${base}${suffix}`;
-}
-
-async function fetchWithRetry(
-  input: RequestInfo | URL,
-  init?: RequestInit,
-  options: RetryOptions = {},
-) {
-  const retries = options.retries ?? 1;
-
-  let networkError: unknown = null;
-  for (let attempt = 0; attempt <= retries; attempt += 1) {
-    try {
-      const response = await fetch(input, init);
-
-      if (response.status >= 500 && response.status <= 599 && attempt < retries) {
-        continue;
-      }
-
-      return response;
-    } catch (error) {
-      networkError = error;
-      if (attempt === retries) {
-        throw error;
-      }
-    }
-  }
-
-  throw networkError ?? new Error("Echec reseau.");
-}
-
-function Panel({
-  title,
-  description,
-  children,
-}: {
-  title: string;
-  description?: string;
-  children: React.ReactNode;
-}) {
+/* Modern Base UI Atomic components attached to CSS Module */
+function Panel({ title, description, children, enabled, onToggle }: { title: string; description?: string; children: ReactNode; enabled?: boolean; onToggle?: (val: boolean) => void; }) {
   return (
-    <section className="admin-panel">
-      <div className="admin-panel__head">
-        <h2>{title}</h2>
-        {description ? <p>{description}</p> : null}
+    <section className={s.panel}>
+      <div className={s.panelHeader}>
+        <div>
+          <h3 className={s.panelTitle}>{title}</h3>
+          {description && <p className={s.panelDesc}>{description}</p>}
+        </div>
+        {onToggle !== undefined && (
+          <Switch label={enabled ? "Actif" : "Inactif"} checked={!!enabled} onChange={onToggle} />
+        )}
       </div>
-      <div className="admin-panel__body">{children}</div>
+      <div className={s.panelBody} style={{ opacity: enabled === false ? 0.4 : 1, pointerEvents: enabled === false ? "none" : "auto" }}>
+        {children}
+      </div>
     </section>
   );
 }
 
-function Field({
-  label,
-  value,
-  onChange,
-  type = "text",
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  type?: string;
-}) {
+function Field({ label, value, onChange, type = "text" }: { label: string; value: string; onChange: (v: string) => void; type?: string; }) {
+  const isColor = type === "color";
   return (
-    <label className="admin-field">
-      <span>{label}</span>
-      <input type={type} value={value} onChange={(event) => onChange(event.target.value)} />
-    </label>
-  );
-}
-
-function TextAreaField({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-}) {
-  return (
-    <label className="admin-field admin-field--full">
-      <span>{label}</span>
-      <textarea rows={4} value={value} onChange={(event) => onChange(event.target.value)} />
-    </label>
-  );
-}
-
-function ImageField({
-  label,
-  value,
-  onChange,
-  onUpload,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  onUpload: (file: File) => Promise<void>;
-}) {
-  return (
-    <div className="admin-image-field">
-      <Field label={label} value={value} onChange={onChange} />
-      <label className="button button-secondary admin-upload-button">
-        Uploader une image
-        <input
-          accept="image/*"
-          className="sr-only"
-          onChange={async (event) => {
-            const file = event.target.files?.[0];
-            if (!file) return;
-            await onUpload(file);
-            event.target.value = "";
-          }}
-          type="file"
+    <div className={s.field}>
+      <span className={s.fieldLabel}>{label}</span>
+      <div className={isColor ? s.colorPickerWrapper : ""}>
+        <input 
+          type={type} 
+          className={isColor ? s.colorInput : s.input} 
+          value={value} 
+          onChange={(e) => onChange(e.target.value)} 
         />
-      </label>
+        {isColor && <span style={{fontSize: "13px", color: "#64748b", fontFamily: "monospace"}}>{value}</span>}
+      </div>
+    </div>
+  );
+}
+
+function TextAreaField({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void; }) {
+  return (
+    <div className={s.field}>
+      <span className={s.fieldLabel}>{label}</span>
+      <textarea className={`${s.input} ${s.textarea}`} rows={3} value={value} onChange={(e) => onChange(e.target.value)} />
+    </div>
+  );
+}
+
+function Switch({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void; }) {
+  return (
+    <label className={s.switchLabel}>
+      <div style={{ position: "relative" }}>
+        <input type="checkbox" className="sr-only" checked={checked} onChange={(e) => onChange(e.target.checked)} style={{opacity: 0, position: "absolute"}} />
+        <div className={s.toggle}>
+          <div className={s.toggleBall} />
+        </div>
+      </div>
+      <span className={s.switchText}>{label}</span>
+    </label>
+  );
+}
+
+function ImageField({ label, value, onChange, onUpload }: { label: string; value: string; onChange: (v: string) => void; onUpload: (f: File, cb: (p: string) => void) => void; }) {
+  return (
+    <div className={s.field} style={{ gridColumn: "1 / -1" }}>
+      <span className={s.fieldLabel}>{label}</span>
+      <div className={s.uploadArea}>
+        <input type="text" className={`${s.input} ${s.uploadInput}`} value={value} onChange={(e) => onChange(e.target.value)} placeholder="URL de l'image" />
+        <label className={s.uploadBtn}>
+          Importer
+          <input type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) onUpload(f, onChange);
+            e.target.value = "";
+          }} />
+        </label>
+      </div>
     </div>
   );
 }
 
 export function AdminDashboard({ initialContent }: AdminDashboardProps) {
   const [content, setContent] = useState(initialContent);
-  const [status, setStatus] = useState<StatusState>({
-    tone: "info",
-    message: "Aucune modification sauvegardee.",
+  const [status, setStatus] = useState<{ tone: "info" | "success" | "error", message: string }>({
+    tone: "info", message: "Dashboard prêt."
   });
   const [isPending, startTransition] = useTransition();
 
-  function setMenu(items: NavItem[]) {
-    setContent((current) => ({ ...current, menu: items }));
-  }
-
-  function setSocials(items: SocialLink[]) {
-    setContent((current) => ({ ...current, socials: items }));
-  }
-
-  function setHeroStats(items: StatItem[]) {
-    setContent((current) => ({ ...current, hero: { ...current.hero, stats: items } }));
-  }
-
-  function setBenefitItems(items: FeatureItem[]) {
-    setContent((current) => ({ ...current, benefits: { ...current.benefits, items } }));
-  }
-
-  function setProcessSteps(items: StepItem[]) {
-    setContent((current) => ({ ...current, process: { ...current.process, steps: items } }));
-  }
-
-  function setImpactStats(items: StatItem[]) {
-    setContent((current) => ({ ...current, impact: { ...current.impact, stats: items } }));
-  }
-
-  function setCtaItems(items: CTAItem[]) {
-    setContent((current) => ({ ...current, cta: { ...current.cta, items } }));
-  }
+  const updateContent = (patch: Partial<SiteContent> | ((curr: SiteContent) => SiteContent)) => {
+     if (typeof patch === "function") setContent(patch);
+     else setContent(curr => ({ ...curr, ...patch }));
+  };
 
   async function uploadImage(file: File, applyPath: (path: string) => void) {
-    setStatus({ tone: "info", message: `Upload de ${file.name}...` });
-
+    setStatus({ tone: "info", message: "Chargement de l'image..." });
     try {
       const formData = new FormData();
       formData.append("file", file);
-
-      const response = await fetchWithRetry(
-        "/api/upload",
-        {
-          method: "POST",
-          body: formData,
-        },
-        { retries: 1 },
-      );
-
-      if (!response.ok) {
-        const payload = await parseResponseJson<ApiErrorPayload>(response);
-        setStatus({
-          tone: "error",
-          message: extractApiError(payload, "Upload impossible."),
-        });
-        return;
-      }
-
-      const payload = await parseResponseJson<{ path?: string }>(response);
-      if (!payload?.path) {
-        setStatus({
-          tone: "error",
-          message: "Upload termine mais chemin d'image manquant.",
-        });
-        return;
-      }
-
-      applyPath(payload.path);
-      setStatus({ tone: "success", message: `Image importee: ${payload.path}` });
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      applyPath(data.path);
+      setStatus({ tone: "success", message: "Image mise à jour." });
     } catch {
-      setStatus({
-        tone: "error",
-        message: "Erreur reseau pendant l'upload. Reessaie dans quelques secondes.",
-      });
+      setStatus({ tone: "error", message: "Échec de l'upload." });
     }
   }
 
-  async function saveAllChanges() {
-    setStatus({ tone: "info", message: "Sauvegarde en cours..." });
-
+  async function save() {
+    setStatus({ tone: "info", message: "Publication en cours..." });
     try {
-      const response = await fetchWithRetry(
-        "/api/site-content",
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(content),
-        },
-        { retries: 1 },
-      );
-
-      if (!response.ok) {
-        const payload = await parseResponseJson<ApiErrorPayload>(response);
-        setStatus({
-          tone: "error",
-          message: extractApiError(payload, "La sauvegarde a echoue."),
-        });
-        return;
-      }
-
-      const payload = await parseResponseJson<{ mode?: string }>(response);
-      setStatus({
-        tone: "success",
-        message:
-          payload?.mode === "supabase"
-            ? "Toutes les modifications ont ete sauvegardees dans Supabase."
-            : "Toutes les modifications ont ete sauvegardees localement.",
+      const res = await fetch("/api/site-content", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(content)
       });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      setStatus({ tone: "success", message: data.mode === "supabase" ? "Publié sur le Cloud !" : "Publié localement." });
     } catch {
-      setStatus({
-        tone: "error",
-        message: "Erreur reseau pendant la sauvegarde. Reessaie dans quelques secondes.",
-      });
+      setStatus({ tone: "error", message: "Erreur de connexion." });
     }
   }
 
   return (
-    <div className="admin-layout">
-      <aside className="admin-sidebar">
-        <div>
-          <p className="admin-kicker">CMS global</p>
+    <div className={s.layout}>
+      {/* STICKY SIDEBAR */}
+      <aside className={s.sidebar}>
+        <div className={s.brandHeader}>
+          <div className={s.kicker}>Studio CMS</div>
           <h1>{content.site.brandName}</h1>
-          <p>
-            Gere le menu, les textes, les images, les couleurs, les reseaux sociaux et les animations
-            du site one-page.
+          <p className={s.sidebarDesc}>
+            Bienvenue dans votre studio de gestion. Pilotez votre identité en direct.
           </p>
         </div>
-        <div className="admin-sidebar__actions">
-          <button
-            className="button button-primary"
-            disabled={isPending}
-            onClick={() => startTransition(saveAllChanges)}
-            type="button"
-          >
-            {isPending ? "Sauvegarde..." : "Sauvegarder toutes les modifications"}
+        
+        <div className={s.sidebarActions}>
+          <button className={s.publishBtn} disabled={isPending} onClick={() => startTransition(save)}>
+            {isPending ? "⏳ Patientez..." : "🚀 Publier les modifications"}
           </button>
-          <a className="button button-secondary" href="/" rel="noreferrer" target="_blank">
-            Ouvrir le site public
-          </a>
-          <p className={`admin-status admin-status--${status.tone}`}>{status.message}</p>
+          <a className={s.visitBtn} href="/" target="_blank" rel="noreferrer">👁 Voir le site live</a>
+          <div className={`${s.statusBadge} ${s['statusBadge_'+status.tone]}`}>
+            {status.message}
+          </div>
         </div>
       </aside>
 
-      <div className="admin-main">
-        <Panel title="Parametres generaux">
-          <div className="admin-grid admin-grid--two">
-            <Field label="Nom de marque" value={content.site.brandName} onChange={(value) => setContent((current) => ({ ...current, site: { ...current.site, brandName: value } }))} />
-            <Field label="Titre SEO" value={content.site.metaTitle} onChange={(value) => setContent((current) => ({ ...current, site: { ...current.site, metaTitle: value } }))} />
-            <TextAreaField label="Description SEO" value={content.site.metaDescription} onChange={(value) => setContent((current) => ({ ...current, site: { ...current.site, metaDescription: value } }))} />
-            <Field label="Texte footer" value={content.site.footerText} onChange={(value) => setContent((current) => ({ ...current, site: { ...current.site, footerText: value } }))} />
+      {/* MAIN SCROLLABLE STREAM */}
+      <main className={s.main}>
+        <div className={s.header}>
+          <h2>Tableau de Bord Éditorial</h2>
+          <p style={{color: "#64748b"}}>Organisez et personnalisez chaque élément de votre landing page sans une ligne de code.</p>
+        </div>
+
+        {/* GENERAL */}
+        <Panel title="Identité & Meta" description="Votre nom de marque, logo et vos configurations pour le référencement naturel.">
+          <div className={`${s.grid} ${s.grid2}`}>
+            <Field label="Nom de la Marque (Texte)" value={content.site.brandName} onChange={v => updateContent(c => ({ ...c, site: { ...c.site, brandName: v }}))} />
+            <Field label="Titre du Site (SEO)" value={content.site.metaTitle} onChange={v => updateContent(c => ({ ...c, site: { ...c.site, metaTitle: v }}))} />
+            <ImageField label="Logo Officiel (Remplace le texte si défini)" value={content.site.logoImage} onChange={v => updateContent(c => ({ ...c, site: { ...c.site, logoImage: v }}))} onUpload={uploadImage} />
+            <div style={{ gridColumn: "1 / -1" }}>
+              <TextAreaField label="Description SEO" value={content.site.metaDescription} onChange={v => updateContent(c => ({ ...c, site: { ...c.site, metaDescription: v }}))} />
+            </div>
+            <div style={{ gridColumn: "1 / -1" }}>
+              <Field label="Texte de copyright Footer" value={content.site.footerText} onChange={v => updateContent(c => ({ ...c, site: { ...c.site, footerText: v }}))} />
+            </div>
           </div>
         </Panel>
 
-        <Panel title="Theme et couleurs">
-          <div className="admin-grid admin-grid--three">
-            <Field label="Fond principal" type="color" value={content.theme.background} onChange={(value) => setContent((current) => ({ ...current, theme: { ...current.theme, background: value } }))} />
-            <Field label="Texte principal" type="color" value={content.theme.foreground} onChange={(value) => setContent((current) => ({ ...current, theme: { ...current.theme, foreground: value } }))} />
-            <Field label="Accent" type="color" value={content.theme.accent} onChange={(value) => setContent((current) => ({ ...current, theme: { ...current.theme, accent: value } }))} />
-            <Field label="Texte accent" type="color" value={content.theme.accentText} onChange={(value) => setContent((current) => ({ ...current, theme: { ...current.theme, accentText: value } }))} />
-            <Field label="Texte secondaire" value={content.theme.muted} onChange={(value) => setContent((current) => ({ ...current, theme: { ...current.theme, muted: value } }))} />
-            <Field label="Fond menu" value={content.theme.menuBackground} onChange={(value) => setContent((current) => ({ ...current, theme: { ...current.theme, menuBackground: value } }))} />
-            <Field label="Surface" value={content.theme.surface} onChange={(value) => setContent((current) => ({ ...current, theme: { ...current.theme, surface: value } }))} />
-            <Field label="Surface douce" value={content.theme.surfaceSoft} onChange={(value) => setContent((current) => ({ ...current, theme: { ...current.theme, surfaceSoft: value } }))} />
-            <Field label="Bordures" value={content.theme.border} onChange={(value) => setContent((current) => ({ ...current, theme: { ...current.theme, border: value } }))} />
+        {/* THEME */}
+        <Panel title="Design System" description="Gérez la palette visuelle centrale de l'interface en temps réel.">
+          <div className={`${s.grid} ${s.grid3}`}>
+            <Field label="Couleur Principale" type="color" value={content.theme.primary} onChange={v => updateContent(c => ({ ...c, theme: { ...c.theme, primary: v }}))} />
+            <Field label="Survol Principal" type="color" value={content.theme.primaryHover} onChange={v => updateContent(c => ({ ...c, theme: { ...c.theme, primaryHover: v }}))} />
+            <Field label="Fond d'Écran" type="color" value={content.theme.white} onChange={v => updateContent(c => ({ ...c, theme: { ...c.theme, white: v }}))} />
+            <Field label="Titres Foncés" type="color" value={content.theme.dark} onChange={v => updateContent(c => ({ ...c, theme: { ...c.theme, dark: v }}))} />
+            <Field label="Textes Secondaires" type="color" value={content.theme.darkLight} onChange={v => updateContent(c => ({ ...c, theme: { ...c.theme, darkLight: v }}))} />
+            <Field label="Bordures & Lignes" type="color" value={content.theme.borderColor} onChange={v => updateContent(c => ({ ...c, theme: { ...c.theme, borderColor: v }}))} />
           </div>
         </Panel>
 
-        <Panel title="Animations">
-          <div className="admin-grid admin-grid--three">
-            <label className="admin-field">
-              <span>Animation carte hero</span>
-              <select value={content.animation.heroCard} onChange={(event) => setContent((current) => ({ ...current, animation: { ...current.animation, heroCard: event.target.value as SiteContent["animation"]["heroCard"] } }))}>
-                <option value="float">Float</option>
-                <option value="tilt">Tilt</option>
-                <option value="none">None</option>
-              </select>
-            </label>
-            <label className="admin-field">
-              <span>Reveal sections</span>
-              <select value={content.animation.reveal} onChange={(event) => setContent((current) => ({ ...current, animation: { ...current.animation, reveal: event.target.value as SiteContent["animation"]["reveal"] } }))}>
-                <option value="fade-up">Fade up</option>
-                <option value="fade">Fade</option>
-                <option value="none">None</option>
-              </select>
-            </label>
-            <label className="admin-field">
-              <span>Animation medias</span>
-              <select value={content.animation.media} onChange={(event) => setContent((current) => ({ ...current, animation: { ...current.animation, media: event.target.value as SiteContent["animation"]["media"] } }))}>
-                <option value="parallax">Parallax</option>
-                <option value="static">Static</option>
-              </select>
-            </label>
-          </div>
+        {/* NAV */}
+        <Panel title="Navigation de Tête" description="Gérez les liens de votre menu et le bouton d'appel à l'action principal.">
+           <div className={`${s.grid} ${s.grid3}`} style={{ alignItems: "end", marginBottom: "24px" }}>
+             <Field label="Texte Bouton CTA" value={content.header.ctaLabel} onChange={v => updateContent(c => ({ ...c, header: { ...c.header, ctaLabel: v }}))} />
+             <Field label="Cible / Lien (#)" value={content.header.ctaHref} onChange={v => updateContent(c => ({ ...c, header: { ...c.header, ctaHref: v }}))} />
+             <div style={{paddingBottom: "12px"}}>
+               <Switch label="Activer bouton" checked={content.header.ctaEnabled} onChange={v => updateContent(c => ({ ...c, header: { ...c.header, ctaEnabled: v }}))} />
+             </div>
+           </div>
+           <div className={s.stack}>
+             <div style={{fontSize: "14px", fontWeight: "700", color: "#475569", marginBottom: "8px"}}>Liens du menu</div>
+             {content.header.menu.map(item => (
+               <div key={item.id} className={s.rowCard}>
+                 <div className={`${s.grid} ${s.grid3}`} style={{alignItems: "end"}}>
+                    <Field label="Libellé" value={item.label} onChange={v => updateContent(c => ({ ...c, header: { ...c.header, menu: updateItemById(c.header.menu, item.id, { label: v })}}))} />
+                    <Field label="Cible" value={item.href} onChange={v => updateContent(c => ({ ...c, header: { ...c.header, menu: updateItemById(c.header.menu, item.id, { href: v })}}))} />
+                    <div className={s.rowActions}>
+                       <Switch label="On" checked={item.enabled} onChange={v => updateContent(c => ({ ...c, header: { ...c.header, menu: updateItemById(c.header.menu, item.id, { enabled: v })}}))} />
+                       <button className={s.iconBtn} onClick={() => updateContent(c => ({ ...c, header: { ...c.header, menu: removeItemById(c.header.menu, item.id) }}))}>Supprimer</button>
+                    </div>
+                 </div>
+               </div>
+             ))}
+             <button className={s.addButton} onClick={() => updateContent(c => ({ ...c, header: { ...c.header, menu: [...c.header.menu, { id: makeId("nav"), label: "Nouvel onglet", href: "#", enabled: true }] }}))}>+ Ajouter un lien</button>
+           </div>
         </Panel>
 
-        <Panel title="Tailles" description="Regle les tailles principales sans toucher au code CSS.">
-          <div className="admin-grid admin-grid--three">
-            <Field label="Titre hero" value={content.sizing.heroTitle} onChange={(value) => setContent((current) => ({ ...current, sizing: { ...current.sizing, heroTitle: value } }))} />
-            <Field label="Titres de section" value={content.sizing.sectionTitle} onChange={(value) => setContent((current) => ({ ...current, sizing: { ...current.sizing, sectionTitle: value } }))} />
-            <Field label="Texte courant" value={content.sizing.bodyText} onChange={(value) => setContent((current) => ({ ...current, sizing: { ...current.sizing, bodyText: value } }))} />
-            <Field label="Largeur carte hero" value={content.sizing.heroCardWidth} onChange={(value) => setContent((current) => ({ ...current, sizing: { ...current.sizing, heroCardWidth: value } }))} />
-            <Field label="Hauteur image avantages" value={content.sizing.benefitsImageHeight} onChange={(value) => setContent((current) => ({ ...current, sizing: { ...current.sizing, benefitsImageHeight: value } }))} />
-            <Field label="Hauteur image parcours" value={content.sizing.processImageHeight} onChange={(value) => setContent((current) => ({ ...current, sizing: { ...current.sizing, processImageHeight: value } }))} />
-            <Field label="Hauteur image impact" value={content.sizing.impactImageHeight} onChange={(value) => setContent((current) => ({ ...current, sizing: { ...current.sizing, impactImageHeight: value } }))} />
-          </div>
+        {/* HERO */}
+        <Panel title="Section Héro (Entrée)" enabled={content.hero.enabled} onToggle={v => updateContent(c => ({ ...c, hero: { ...c.hero, enabled: v }}))}>
+           <div className={`${s.grid} ${s.grid2}`}>
+              <Field label="Chiffre Kicker (ex: 1)" value={content.hero.kickerNum} onChange={v => updateContent(c => ({ ...c, hero: { ...c.hero, kickerNum: v }}))} />
+              <TextAreaField label="Libellé Kicker" value={content.hero.kickerText} onChange={v => updateContent(c => ({ ...c, hero: { ...c.hero, kickerText: v }}))} />
+              <div style={{ gridColumn: "1/-1" }}>
+                <TextAreaField label="Titre D'accroche H1" value={content.hero.title} onChange={v => updateContent(c => ({ ...c, hero: { ...c.hero, title: v }}))} />
+              </div>
+              <div style={{ gridColumn: "1/-1" }}>
+                <TextAreaField label="Sous-titre explicatif" value={content.hero.subtitle} onChange={v => updateContent(c => ({ ...c, hero: { ...c.hero, subtitle: v }}))} />
+              </div>
+              <Field label="Texte du Bouton" value={content.hero.btnLabel} onChange={v => updateContent(c => ({ ...c, hero: { ...c.hero, btnLabel: v }}))} />
+              <Field label="Lien Cible" value={content.hero.btnHref} onChange={v => updateContent(c => ({ ...c, hero: { ...c.hero, btnHref: v }}))} />
+              <ImageField label="Image Visuel (Femme tenant carte)" value={content.hero.mainImage} onChange={v => updateContent(c => ({ ...c, hero: { ...c.hero, mainImage: v }}))} onUpload={uploadImage} />
+           </div>
         </Panel>
 
-        <Panel title="Menu">
-          <div className="admin-stack">
-            {content.menu.map((item) => (
-              <div className="admin-row-card" key={item.id}>
-                <div className="admin-grid admin-grid--menu">
-                  <Field label="Libelle" value={item.label} onChange={(value) => setMenu(updateItemById(content.menu, item.id, { label: value }))} />
-                  <Field label="Lien" value={item.href} onChange={(value) => setMenu(updateItemById(content.menu, item.id, { href: value }))} />
-                  <label className="admin-check">
-                    <input checked={item.enabled} onChange={(event) => setMenu(updateItemById(content.menu, item.id, { enabled: event.target.checked }))} type="checkbox" />
-                    <span>Afficher</span>
-                  </label>
+        {/* GRID FEATURES */}
+        <Panel title="Grille Bénéfices Rapides" enabled={content.gridFeatures.enabled} onToggle={v => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, enabled: v }}))}>
+           <TextAreaField label="Titre Principal de la Section" value={content.gridFeatures.title} onChange={v => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, title: v }}))} />
+           
+           <div className={s.stack} style={{marginTop: "24px"}}>
+             <span className={s.fieldLabel}>Cartes d'Arguments</span>
+             <div className={`${s.grid} ${s.grid2}`}>
+               {content.gridFeatures.items.map(feat => (
+                 <div key={feat.id} className={s.rowCard}>
+                   <div style={{display: "flex", gap: "12px"}}>
+                      <select className={s.input} style={{width: "auto"}} value={feat.icon} onChange={e => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, items: updateItemById(c.gridFeatures.items, feat.id, { icon: e.target.value as any }) }}))}>
+                        <option value="check">Coche ✓</option>
+                        <option value="globe">Globe 🌍</option>
+                        <option value="phone">Téléphone 📱</option>
+                        <option value="support">Micro 🎧</option>
+                      </select>
+                      <div style={{flex: 1}}><input className={s.input} style={{width: "100%"}} value={feat.title} onChange={e => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, items: updateItemById(c.gridFeatures.items, feat.id, { title: e.target.value }) }}))} /></div>
+                   </div>
+                   <div className={s.rowActions}>
+                      <Switch label="Activé" checked={feat.enabled} onChange={v => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, items: updateItemById(c.gridFeatures.items, feat.id, { enabled: v }) }}))} />
+                      <button className={s.iconBtn} onClick={() => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, items: removeItemById(c.gridFeatures.items, feat.id) }}))}>Retirer</button>
+                   </div>
+                 </div>
+               ))}
+             </div>
+             <button className={s.addButton} onClick={() => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, items: [...c.gridFeatures.items, { id: makeId("f"), title: "Nouvel avantage", icon: "check", enabled: true } ] }}))}>+ Ajouter une tuile d'argument</button>
+           </div>
+        </Panel>
+
+        {/* SPLIT CARDS */}
+        <Panel title="Duo de Cartes Bancaires" enabled={content.splitCards.enabled} onToggle={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, enabled: v }}))}>
+           <Field label="Titre du module" value={content.splitCards.title} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, title: v }}))} />
+           <div className={`${s.grid} ${s.grid2}`} style={{marginTop: "24px"}}>
+              
+              {/* Card 1 */}
+              <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", padding: "20px", borderRadius: "12px" }}>
+                 <div style={{display: "flex", justifyContent: "space-between", marginBottom: "16px"}}>
+                    <strong style={{color: "#1e293b"}}>Emplacement 1</strong>
+                    <Switch label="Actif" checked={content.splitCards.cardPhysical.enabled} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardPhysical: { ...c.splitCards.cardPhysical, enabled: v }}}))} />
+                 </div>
+                 <div className={s.grid} style={{ opacity: content.splitCards.cardPhysical.enabled ? 1 : 0.5 }}>
+                    <Field label="Titre de la carte" value={content.splitCards.cardPhysical.title} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardPhysical: { ...c.splitCards.cardPhysical, title: v }}}))} />
+                    <TextAreaField label="Paragraphe descriptif" value={content.splitCards.cardPhysical.description} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardPhysical: { ...c.splitCards.cardPhysical, description: v }}}))} />
+                    <ImageField label="Visuel Carte" value={content.splitCards.cardPhysical.image} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardPhysical: { ...c.splitCards.cardPhysical, image: v }}}))} onUpload={uploadImage} />
+                    <div className={`${s.grid} ${s.grid2}`}>
+                      <Field label="Texte Bouton" value={content.splitCards.cardPhysical.btnLabel} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardPhysical: { ...c.splitCards.cardPhysical, btnLabel: v }}}))} />
+                      <Field label="Lien" value={content.splitCards.cardPhysical.btnHref} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardPhysical: { ...c.splitCards.cardPhysical, btnHref: v }}}))} />
+                    </div>
+                 </div>
+              </div>
+
+              {/* Card 2 */}
+              <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", padding: "20px", borderRadius: "12px" }}>
+                 <div style={{display: "flex", justifyContent: "space-between", marginBottom: "16px"}}>
+                    <strong style={{color: "#1e293b"}}>Emplacement 2</strong>
+                    <Switch label="Actif" checked={content.splitCards.cardVirtual.enabled} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardVirtual: { ...c.splitCards.cardVirtual, enabled: v }}}))} />
+                 </div>
+                 <div className={s.grid} style={{ opacity: content.splitCards.cardVirtual.enabled ? 1 : 0.5 }}>
+                    <Field label="Titre de la carte" value={content.splitCards.cardVirtual.title} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardVirtual: { ...c.splitCards.cardVirtual, title: v }}}))} />
+                    <TextAreaField label="Paragraphe descriptif" value={content.splitCards.cardVirtual.description} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardVirtual: { ...c.splitCards.cardVirtual, description: v }}}))} />
+                    <ImageField label="Visuel Carte" value={content.splitCards.cardVirtual.image} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardVirtual: { ...c.splitCards.cardVirtual, image: v }}}))} onUpload={uploadImage} />
+                    <div className={`${s.grid} ${s.grid2}`}>
+                      <Field label="Texte Bouton" value={content.splitCards.cardVirtual.btnLabel} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardVirtual: { ...c.splitCards.cardVirtual, btnLabel: v }}}))} />
+                      <Field label="Lien" value={content.splitCards.cardVirtual.btnHref} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardVirtual: { ...c.splitCards.cardVirtual, btnHref: v }}}))} />
+                    </div>
+                 </div>
+              </div>
+           </div>
+        </Panel>
+
+        {/* SUPER APP */}
+        <Panel title="Super App Ecosystem" enabled={content.superApp.enabled} onToggle={v => updateContent(c => ({ ...c, superApp: { ...c.superApp, enabled: v }}))}>
+           <div className={`${s.grid} ${s.grid2}`}>
+              <Field label="Titre Block" value={content.superApp.title} onChange={v => updateContent(c => ({ ...c, superApp: { ...c.superApp, title: v }}))} />
+              <ImageField label="Image Smartphone" value={content.superApp.image} onChange={v => updateContent(c => ({ ...c, superApp: { ...c.superApp, image: v }}))} onUpload={uploadImage} />
+           </div>
+           <div className={s.stack} style={{marginTop: "24px"}}>
+             <span className={s.fieldLabel}>Lignes Points Forts</span>
+             {content.superApp.checklist.map(item => (
+               <div key={item.id} className={s.rowCard}>
+                  <div style={{display: "flex", gap: "12px", alignItems: "center"}}>
+                    <span style={{color: "#10b981", fontWeight: "bold"}}>✓</span>
+                    <div style={{flex: 1}}><input className={s.input} style={{width: "100%"}} value={item.text} onChange={e => updateContent(c => ({ ...c, superApp: { ...c.superApp, checklist: updateItemById(c.superApp.checklist, item.id, { text: e.target.value }) }}))} /></div>
+                    <Switch label="" checked={item.enabled} onChange={v => updateContent(c => ({ ...c, superApp: { ...c.superApp, checklist: updateItemById(c.superApp.checklist, item.id, { enabled: v }) }}))} />
+                    <button className={s.iconBtn} onClick={() => updateContent(c => ({ ...c, superApp: { ...c.superApp, checklist: removeItemById(c.superApp.checklist, item.id) }}))}>Suppr.</button>
+                  </div>
+               </div>
+             ))}
+             <button className={s.addButton} onClick={() => updateContent(c => ({ ...c, superApp: { ...c.superApp, checklist: [...c.superApp.checklist, { id: makeId("sc"), text: "Nouvelle fonctionnalité", enabled: true }] }}))}>+ Ajouter un argument checklist</button>
+           </div>
+        </Panel>
+
+        {/* AGENT BANNER */}
+        <Panel title="Bannière Point de Retrait" enabled={content.agentBanner.enabled} onToggle={v => updateContent(c => ({ ...c, agentBanner: { ...c.agentBanner, enabled: v }}))}>
+           <div className={`${s.grid} ${s.grid2}`}>
+             <Field label="Titre de la Section" value={content.agentBanner.title} onChange={v => updateContent(c => ({ ...c, agentBanner: { ...c.agentBanner, title: v }}))} />
+             <ImageField label="Photographie Arrière-plan" value={content.agentBanner.backgroundImage} onChange={v => updateContent(c => ({ ...c, agentBanner: { ...c.agentBanner, backgroundImage: v }}))} onUpload={uploadImage} />
+             <Field label="Grand Titre Cartouche" value={content.agentBanner.overlayTitle} onChange={v => updateContent(c => ({ ...c, agentBanner: { ...c.agentBanner, overlayTitle: v }}))} />
+             <TextAreaField label="Description Cartouche" value={content.agentBanner.overlayDesc} onChange={v => updateContent(c => ({ ...c, agentBanner: { ...c.agentBanner, overlayDesc: v }}))} />
+             
+             <div style={{gridColumn: "1 / -1", borderTop: "1px solid #f1f5f9", marginTop: "12px", paddingTop: "20px"}}>
+                <span className={s.fieldLabel} style={{marginBottom: "12px", display: "block"}}>Chiffres Clés / Tarification</span>
+                <div className={`${s.grid} ${s.grid2}`}>
+                   <div className={`${s.grid} ${s.grid2}`}>
+                     <Field label="Statistique 1" value={content.agentBanner.stat1Num} onChange={v => updateContent(c => ({ ...c, agentBanner: { ...c.agentBanner, stat1Num: v }}))} />
+                     <Field label="Label Stat 1" value={content.agentBanner.stat1Label} onChange={v => updateContent(c => ({ ...c, agentBanner: { ...c.agentBanner, stat1Label: v }}))} />
+                   </div>
+                   <div className={`${s.grid} ${s.grid2}`}>
+                     <Field label="Statistique 2" value={content.agentBanner.stat2Num} onChange={v => updateContent(c => ({ ...c, agentBanner: { ...c.agentBanner, stat2Num: v }}))} />
+                     <Field label="Label Stat 2" value={content.agentBanner.stat2Label} onChange={v => updateContent(c => ({ ...c, agentBanner: { ...c.agentBanner, stat2Label: v }}))} />
+                   </div>
                 </div>
-                <button className="button button-secondary" onClick={() => setMenu(removeItemById(content.menu, item.id))} type="button">Supprimer</button>
-              </div>
-            ))}
-            <button className="button button-secondary" onClick={() => setMenu([...content.menu, { id: makeId("menu"), label: "Nouvel item", href: "#nouvelle-section", enabled: true }])} type="button">Ajouter un item de menu</button>
-          </div>
+             </div>
+           </div>
         </Panel>
 
-        <Panel title="Hero">
-          <div className="admin-grid admin-grid--two">
-            <Field label="Eyebrow" value={content.hero.eyebrow} onChange={(value) => setContent((current) => ({ ...current, hero: { ...current.hero, eyebrow: value } }))} />
-            <Field label="Titre" value={content.hero.title} onChange={(value) => setContent((current) => ({ ...current, hero: { ...current.hero, title: value } }))} />
-            <TextAreaField label="Description" value={content.hero.description} onChange={(value) => setContent((current) => ({ ...current, hero: { ...current.hero, description: value } }))} />
-            <ImageField label="Image carte" value={content.hero.cardImage} onChange={(value) => setContent((current) => ({ ...current, hero: { ...current.hero, cardImage: value } }))} onUpload={(file) => uploadImage(file, (path) => setContent((current) => ({ ...current, hero: { ...current.hero, cardImage: path } })))} />
-            <Field label="Badge partenaires" value={content.hero.partnerBadge} onChange={(value) => setContent((current) => ({ ...current, hero: { ...current.hero, partnerBadge: value } }))} />
-            <Field label="Label economies" value={content.hero.savingsLabel} onChange={(value) => setContent((current) => ({ ...current, hero: { ...current.hero, savingsLabel: value } }))} />
-            <Field label="CTA principal libelle" value={content.hero.primaryCtaLabel} onChange={(value) => setContent((current) => ({ ...current, hero: { ...current.hero, primaryCtaLabel: value } }))} />
-            <Field label="CTA principal lien" value={content.hero.primaryCtaHref} onChange={(value) => setContent((current) => ({ ...current, hero: { ...current.hero, primaryCtaHref: value } }))} />
-            <Field label="CTA secondaire libelle" value={content.hero.secondaryCtaLabel} onChange={(value) => setContent((current) => ({ ...current, hero: { ...current.hero, secondaryCtaLabel: value } }))} />
-            <Field label="CTA secondaire lien" value={content.hero.secondaryCtaHref} onChange={(value) => setContent((current) => ({ ...current, hero: { ...current.hero, secondaryCtaHref: value } }))} />
-          </div>
-          <div className="admin-stack">
-            <h3>Stats hero</h3>
-            {content.hero.stats.map((stat) => (
-              <div className="admin-row-card" key={stat.id}>
-                <div className="admin-grid admin-grid--two">
-                  <Field label="Valeur" value={stat.value} onChange={(value) => setHeroStats(updateItemById(content.hero.stats, stat.id, { value }))} />
-                  <Field label="Libelle" value={stat.label} onChange={(value) => setHeroStats(updateItemById(content.hero.stats, stat.id, { label: value }))} />
-                </div>
-                <button className="button button-secondary" onClick={() => setHeroStats(removeItemById(content.hero.stats, stat.id))} type="button">Supprimer</button>
-              </div>
-            ))}
-            <button className="button button-secondary" onClick={() => setHeroStats([...content.hero.stats, { id: makeId("hero-stat"), value: "0", label: "Nouvelle stat" }])} type="button">Ajouter une stat</button>
-          </div>
+        {/* FAQ */}
+        <Panel title="Foire Aux Questions" enabled={content.faq.enabled} onToggle={v => updateContent(c => ({ ...c, faq: { ...c.faq, enabled: v }}))}>
+           <Field label="Titre Section FAQ" value={content.faq.title} onChange={v => updateContent(c => ({ ...c, faq: { ...c.faq, title: v }}))} />
+           <div className={s.stack} style={{marginTop: "24px"}}>
+             <span className={s.fieldLabel}>Questions & Réponses</span>
+             {content.faq.items.map(q => (
+               <div key={q.id} className={s.rowCard}>
+                 <div className={s.grid} style={{gridTemplateColumns: "1fr auto", alignItems: "end"}}>
+                    <Field label="Texte de la question" value={q.question} onChange={v => updateContent(c => ({ ...c, faq: { ...c.faq, items: updateItemById(c.faq.items, q.id, { question: v }) }}))} />
+                    <div className={s.rowActions}>
+                       <Switch label="On" checked={q.enabled} onChange={v => updateContent(c => ({ ...c, faq: { ...c.faq, items: updateItemById(c.faq.items, q.id, { enabled: v }) }}))} />
+                       <button className={s.iconBtn} onClick={() => updateContent(c => ({ ...c, faq: { ...c.faq, items: removeItemById(c.faq.items, q.id) }}))}>X</button>
+                    </div>
+                 
+                  <TextAreaField label="Réponse (S'affiche au clic)" value={q.answer || ""} onChange={v => updateContent(c => ({ ...c, faq: { ...c.faq, items: updateItemById(c.faq.items, q.id, { answer: v }) }}))} />
+               </div>
+               </div>
+             ))}
+             <button className={s.addButton} onClick={() => updateContent(c => ({ ...c, faq: { ...c.faq, items: [...c.faq.items, { id: makeId("q"), question: "Question type ?", enabled: true }] }}))}>+ Ajouter une question</button>
+           </div>
         </Panel>
 
-        <Panel title="Section avantages">
-          <div className="admin-grid admin-grid--two">
-            <Field label="Eyebrow" value={content.benefits.eyebrow} onChange={(value) => setContent((current) => ({ ...current, benefits: { ...current.benefits, eyebrow: value } }))} />
-            <Field label="Titre" value={content.benefits.title} onChange={(value) => setContent((current) => ({ ...current, benefits: { ...current.benefits, title: value } }))} />
-            <TextAreaField label="Description" value={content.benefits.description} onChange={(value) => setContent((current) => ({ ...current, benefits: { ...current.benefits, description: value } }))} />
-            <ImageField label="Image" value={content.benefits.image} onChange={(value) => setContent((current) => ({ ...current, benefits: { ...current.benefits, image: value } }))} onUpload={(file) => uploadImage(file, (path) => setContent((current) => ({ ...current, benefits: { ...current.benefits, image: path } })))} />
-            <Field label="Titre image" value={content.benefits.imageTitle} onChange={(value) => setContent((current) => ({ ...current, benefits: { ...current.benefits, imageTitle: value } }))} />
-            <TextAreaField label="Description image" value={content.benefits.imageDescription} onChange={(value) => setContent((current) => ({ ...current, benefits: { ...current.benefits, imageDescription: value } }))} />
-          </div>
-          <div className="admin-stack">
-            <h3>Blocs avantages</h3>
-            {content.benefits.items.map((item) => (
-              <div className="admin-row-card" key={item.id}>
-                <div className="admin-grid admin-grid--two">
-                  <Field label="Titre" value={item.title} onChange={(value) => setBenefitItems(updateItemById(content.benefits.items, item.id, { title: value }))} />
-                  <TextAreaField label="Description" value={item.description} onChange={(value) => setBenefitItems(updateItemById(content.benefits.items, item.id, { description: value }))} />
-                </div>
-                <button className="button button-secondary" onClick={() => setBenefitItems(removeItemById(content.benefits.items, item.id))} type="button">Supprimer</button>
+        {/* FOOTER CTA */}
+        <Panel title="Final Call-to-Action & Réseaux" enabled={content.footerCta.enabled} onToggle={v => updateContent(c => ({ ...c, footerCta: { ...c.footerCta, enabled: v }}))}>
+           <div className={`${s.grid} ${s.grid2}`}>
+              <Field label="Titre d'appel final" value={content.footerCta.title} onChange={v => updateContent(c => ({ ...c, footerCta: { ...c.footerCta, title: v }}))} />
+              <ImageField label="Image Graphique (bas de page)" value={content.footerCta.image} onChange={v => updateContent(c => ({ ...c, footerCta: { ...c.footerCta, image: v }}))} onUpload={uploadImage} />
+              <div style={{gridColumn: "1/-1"}}>
+                <TextAreaField label="Texte d'accroche" value={content.footerCta.description} onChange={v => updateContent(c => ({ ...c, footerCta: { ...c.footerCta, description: v }}))} />
               </div>
-            ))}
-            <button className="button button-secondary" onClick={() => setBenefitItems([...content.benefits.items, { id: makeId("benefit"), title: "Nouvel avantage", description: "Description du bloc." }])} type="button">Ajouter un bloc</button>
-          </div>
+           </div>
+           
+           <div className={s.stack} style={{marginTop: "24px", borderTop: "1px solid #f1f5f9", paddingTop: "20px"}}>
+              <span className={s.fieldLabel}>Liens Réseaux Sociaux</span>
+              <div className={`${s.grid} ${s.grid3}`}>
+                {content.footerCta.socials.map(item => (
+                  <div key={item.id} className={s.rowCard}>
+                    <div className={s.grid}>
+                      <Field label="Initial (F, X, I)" value={item.label} onChange={v => updateContent(c => ({ ...c, footerCta: { ...c.footerCta, socials: updateItemById(c.footerCta.socials, item.id, { label: v }) }}))} />
+                      <Field label="Lien URL" value={item.url} onChange={v => updateContent(c => ({ ...c, footerCta: { ...c.footerCta, socials: updateItemById(c.footerCta.socials, item.id, { url: v }) }}))} />
+                    </div>
+                    <div className={s.rowActions}>
+                       <Switch label="Actif" checked={item.enabled} onChange={v => updateContent(c => ({ ...c, footerCta: { ...c.footerCta, socials: updateItemById(c.footerCta.socials, item.id, { enabled: v }) }}))} />
+                       <button className={s.iconBtn} onClick={() => updateContent(c => ({ ...c, footerCta: { ...c.footerCta, socials: removeItemById(c.footerCta.socials, item.id) }}))}>Retirer</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <button className={s.addButton} onClick={() => updateContent(c => ({ ...c, footerCta: { ...c.footerCta, socials: [...c.footerCta.socials, { id: makeId("so"), label: "X", url: "#", enabled: true }] }}))}>+ Lier un nouveau réseau</button>
+           </div>
         </Panel>
 
-        <Panel title="Section parcours">
-          <div className="admin-grid admin-grid--two">
-            <Field label="Eyebrow" value={content.process.eyebrow} onChange={(value) => setContent((current) => ({ ...current, process: { ...current.process, eyebrow: value } }))} />
-            <Field label="Titre" value={content.process.title} onChange={(value) => setContent((current) => ({ ...current, process: { ...current.process, title: value } }))} />
-            <TextAreaField label="Description" value={content.process.description} onChange={(value) => setContent((current) => ({ ...current, process: { ...current.process, description: value } }))} />
-            <ImageField label="Image" value={content.process.image} onChange={(value) => setContent((current) => ({ ...current, process: { ...current.process, image: value } }))} onUpload={(file) => uploadImage(file, (path) => setContent((current) => ({ ...current, process: { ...current.process, image: path } })))} />
-            <Field label="Titre image" value={content.process.imageTitle} onChange={(value) => setContent((current) => ({ ...current, process: { ...current.process, imageTitle: value } }))} />
-            <TextAreaField label="Description image" value={content.process.imageDescription} onChange={(value) => setContent((current) => ({ ...current, process: { ...current.process, imageDescription: value } }))} />
-          </div>
-          <div className="admin-stack">
-            <h3>Etapes</h3>
-            {content.process.steps.map((item) => (
-              <div className="admin-row-card" key={item.id}>
-                <div className="admin-grid admin-grid--two">
-                  <Field label="Titre" value={item.title} onChange={(value) => setProcessSteps(updateItemById(content.process.steps, item.id, { title: value }))} />
-                  <TextAreaField label="Description" value={item.description} onChange={(value) => setProcessSteps(updateItemById(content.process.steps, item.id, { description: value }))} />
-                </div>
-                <button className="button button-secondary" onClick={() => setProcessSteps(removeItemById(content.process.steps, item.id))} type="button">Supprimer</button>
-              </div>
-            ))}
-            <button className="button button-secondary" onClick={() => setProcessSteps([...content.process.steps, { id: makeId("step"), title: "Nouvelle etape", description: "Description de l'etape." }])} type="button">Ajouter une etape</button>
-          </div>
-        </Panel>
-
-        <Panel title="Section impact">
-          <div className="admin-grid admin-grid--two">
-            <ImageField label="Image" value={content.impact.image} onChange={(value) => setContent((current) => ({ ...current, impact: { ...current.impact, image: value } }))} onUpload={(file) => uploadImage(file, (path) => setContent((current) => ({ ...current, impact: { ...current.impact, image: path } })))} />
-            <Field label="Titre image" value={content.impact.imageTitle} onChange={(value) => setContent((current) => ({ ...current, impact: { ...current.impact, imageTitle: value } }))} />
-            <TextAreaField label="Description image" value={content.impact.imageDescription} onChange={(value) => setContent((current) => ({ ...current, impact: { ...current.impact, imageDescription: value } }))} />
-            <TextAreaField label="Citation" value={content.impact.quote} onChange={(value) => setContent((current) => ({ ...current, impact: { ...current.impact, quote: value } }))} />
-            <Field label="Auteur citation" value={content.impact.quoteAuthor} onChange={(value) => setContent((current) => ({ ...current, impact: { ...current.impact, quoteAuthor: value } }))} />
-          </div>
-          <div className="admin-stack">
-            <h3>Stats impact</h3>
-            {content.impact.stats.map((stat) => (
-              <div className="admin-row-card" key={stat.id}>
-                <div className="admin-grid admin-grid--two">
-                  <Field label="Valeur" value={stat.value} onChange={(value) => setImpactStats(updateItemById(content.impact.stats, stat.id, { value }))} />
-                  <TextAreaField label="Libelle" value={stat.label} onChange={(value) => setImpactStats(updateItemById(content.impact.stats, stat.id, { label: value }))} />
-                </div>
-                <button className="button button-secondary" onClick={() => setImpactStats(removeItemById(content.impact.stats, stat.id))} type="button">Supprimer</button>
-              </div>
-            ))}
-            <button className="button button-secondary" onClick={() => setImpactStats([...content.impact.stats, { id: makeId("impact"), value: "0", label: "Nouvelle stat impact" }])} type="button">Ajouter une stat impact</button>
-          </div>
-        </Panel>
-
-        <Panel title="CTA final et contact">
-          <div className="admin-grid admin-grid--two">
-            <Field label="Eyebrow" value={content.cta.eyebrow} onChange={(value) => setContent((current) => ({ ...current, cta: { ...current.cta, eyebrow: value } }))} />
-            <Field label="Titre" value={content.cta.title} onChange={(value) => setContent((current) => ({ ...current, cta: { ...current.cta, title: value } }))} />
-            <TextAreaField label="Description" value={content.cta.description} onChange={(value) => setContent((current) => ({ ...current, cta: { ...current.cta, description: value } }))} />
-            <Field label="Bouton principal" value={content.cta.primaryLabel} onChange={(value) => setContent((current) => ({ ...current, cta: { ...current.cta, primaryLabel: value } }))} />
-            <Field label="Lien principal" value={content.cta.primaryHref} onChange={(value) => setContent((current) => ({ ...current, cta: { ...current.cta, primaryHref: value } }))} />
-            <Field label="Bouton secondaire" value={content.cta.secondaryLabel} onChange={(value) => setContent((current) => ({ ...current, cta: { ...current.cta, secondaryLabel: value } }))} />
-            <Field label="Lien secondaire" value={content.cta.secondaryHref} onChange={(value) => setContent((current) => ({ ...current, cta: { ...current.cta, secondaryHref: value } }))} />
-          </div>
-          <div className="admin-stack">
-            <h3>Liste CTA</h3>
-            {content.cta.items.map((item) => (
-              <div className="admin-row-card" key={item.id}>
-                <TextAreaField label="Texte" value={item.text} onChange={(value) => setCtaItems(updateItemById(content.cta.items, item.id, { text: value }))} />
-                <button className="button button-secondary" onClick={() => setCtaItems(removeItemById(content.cta.items, item.id))} type="button">Supprimer</button>
-              </div>
-            ))}
-            <button className="button button-secondary" onClick={() => setCtaItems([...content.cta.items, { id: makeId("cta"), text: "Nouvelle ligne de checklist" }])} type="button">Ajouter une ligne</button>
-          </div>
-        </Panel>
-
-        <Panel title="Reseaux sociaux">
-          <div className="admin-stack">
-            {content.socials.map((item) => (
-              <div className="admin-row-card" key={item.id}>
-                <div className="admin-grid admin-grid--two">
-                  <Field label="Nom" value={item.label} onChange={(value) => setSocials(updateItemById(content.socials, item.id, { label: value }))} />
-                  <Field label="URL" value={item.url} onChange={(value) => setSocials(updateItemById(content.socials, item.id, { url: value }))} />
-                </div>
-                <button className="button button-secondary" onClick={() => setSocials(removeItemById(content.socials, item.id))} type="button">Supprimer</button>
-              </div>
-            ))}
-            <button className="button button-secondary" onClick={() => setSocials([...content.socials, { id: makeId("social"), label: "Reseau", url: "https://" }])} type="button">Ajouter un reseau social</button>
-          </div>
-        </Panel>
-      </div>
+      </main>
     </div>
   );
 }

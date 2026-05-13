@@ -1,165 +1,147 @@
 import { z } from "zod";
 
-const stringField = z.string().trim().min(1);
+const stringField = z.string().trim();
 const idField = z.string().trim().min(1).max(80);
+const nullableString = z.string().trim().optional();
 
-export const navItemSchema = z
-  .object({
-    id: idField,
-    label: stringField.max(100),
-    href: stringField.max(500),
+export const simpleItemSchema = z.object({
+  id: idField,
+  text: stringField,
+  enabled: z.boolean().default(true),
+}).strict();
+
+export const navItemSchema = z.object({
+  id: idField,
+  label: stringField.max(100),
+  href: stringField.max(500),
+  enabled: z.boolean(),
+}).strict();
+
+export const featureItemSchema = z.object({
+  id: idField,
+  icon: z.enum(["check", "globe", "phone", "support", "arrow"]),
+  title: stringField.max(200),
+  description: nullableString,
+  enabled: z.boolean().default(true),
+}).strict();
+
+export const tabItemSchema = z.object({
+  id: idField,
+  label: stringField.max(100),
+  content: stringField.max(3000),
+  enabled: z.boolean().default(true),
+}).strict();
+
+export const faqItemSchema = z.object({
+  id: idField,
+  question: stringField.max(300),
+  answer: stringField.max(2000).optional(),
+  enabled: z.boolean().default(true),
+}).strict();
+
+export const socialLinkSchema = z.object({
+  id: idField,
+  label: stringField.max(100),
+  url: stringField.max(1000),
+  enabled: z.boolean().default(true),
+}).strict();
+
+export const siteContentSchema = z.object({
+  site: z.object({
+    brandName: stringField.max(120),
+    logoImage: stringField, // Added support for image logo
+    metaTitle: stringField.max(180),
+    metaDescription: stringField.max(500),
+    footerText: stringField.max(500),
+  }).strict(),
+  theme: z.object({
+    primary: stringField,
+    primaryHover: stringField,
+    dark: stringField,
+    darkLight: stringField,
+    lightBg: stringField,
+    grayBg: stringField,
+    white: stringField,
+    borderColor: stringField,
+  }).strict(),
+  header: z.object({
+    menu: z.array(navItemSchema),
+    ctaLabel: stringField,
+    ctaHref: stringField,
+    ctaEnabled: z.boolean(),
+  }).strict(),
+  hero: z.object({
     enabled: z.boolean(),
-  })
-  .strict();
+    kickerNum: stringField,
+    kickerText: stringField,
+    title: stringField,
+    subtitle: stringField,
+    mainImage: stringField,
+    btnLabel: stringField,
+    btnHref: stringField,
+  }).strict(),
+  gridFeatures: z.object({
+    enabled: z.boolean(),
+    title: stringField,
+    items: z.array(featureItemSchema),
+  }).strict(),
+  splitCards: z.object({
+    enabled: z.boolean(),
+    title: stringField,
+    cardPhysical: z.object({
+      enabled: z.boolean(),
+      title: stringField,
+      description: stringField,
+      image: stringField,
+      btnLabel: stringField,
+      btnHref: stringField,
+    }),
+    cardVirtual: z.object({
+      enabled: z.boolean(),
+      title: stringField,
+      description: stringField,
+      image: stringField,
+      btnLabel: stringField,
+      btnHref: stringField,
+    }),
+  }).strict(),
+  superApp: z.object({
+    enabled: z.boolean(),
+    title: stringField,
+    checklist: z.array(simpleItemSchema),
+    btnLabel: stringField,
+    btnHref: stringField,
+    image: stringField,
+  }).strict(),
+  agentBanner: z.object({
+    enabled: z.boolean(),
+    title: stringField,
+    backgroundImage: stringField,
+    overlayTitle: stringField,
+    overlayDesc: stringField,
+    stat1Num: stringField,
+    stat1Label: stringField,
+    stat2Num: stringField,
+    stat2Label: stringField,
+  }).strict(),
+  faq: z.object({
+    enabled: z.boolean(),
+    title: stringField,
+    items: z.array(faqItemSchema),
+  }).strict(),
+  footerCta: z.object({
+    enabled: z.boolean(),
+    title: stringField,
+    description: stringField,
+    image: stringField,
+    socials: z.array(socialLinkSchema),
+  }).strict(),
+}).strict();
 
-export const socialLinkSchema = z
-  .object({
-    id: idField,
-    label: stringField.max(80),
-    url: stringField.max(1000),
-  })
-  .strict();
-
-export const statItemSchema = z
-  .object({
-    id: idField,
-    value: stringField.max(120),
-    label: stringField.max(240),
-  })
-  .strict();
-
-export const featureItemSchema = z
-  .object({
-    id: idField,
-    title: stringField.max(180),
-    description: stringField.max(2000),
-  })
-  .strict();
-
-export const stepItemSchema = z
-  .object({
-    id: idField,
-    title: stringField.max(180),
-    description: stringField.max(2000),
-  })
-  .strict();
-
-export const ctaItemSchema = z
-  .object({
-    id: idField,
-    text: stringField.max(1000),
-  })
-  .strict();
-
-export const siteContentSchema = z
-  .object({
-    site: z
-      .object({
-        brandName: stringField.max(120),
-        metaTitle: stringField.max(180),
-        metaDescription: stringField.max(320),
-        footerText: stringField.max(500),
-      })
-      .strict(),
-    theme: z
-      .object({
-        background: stringField.max(100),
-        foreground: stringField.max(100),
-        muted: stringField.max(100),
-        accent: stringField.max(100),
-        accentText: stringField.max(100),
-        surface: stringField.max(100),
-        surfaceSoft: stringField.max(100),
-        border: stringField.max(100),
-        menuBackground: stringField.max(100),
-      })
-      .strict(),
-    animation: z
-      .object({
-        heroCard: z.enum(["float", "tilt", "none"]),
-        reveal: z.enum(["fade-up", "fade", "none"]),
-        media: z.enum(["parallax", "static"]),
-      })
-      .strict(),
-    sizing: z
-      .object({
-        heroTitle: stringField.max(100),
-        sectionTitle: stringField.max(100),
-        bodyText: stringField.max(100),
-        heroCardWidth: stringField.max(100),
-        benefitsImageHeight: stringField.max(100),
-        processImageHeight: stringField.max(100),
-        impactImageHeight: stringField.max(100),
-      })
-      .strict(),
-    menu: z.array(navItemSchema).min(1).max(20),
-    socials: z.array(socialLinkSchema).max(20),
-    hero: z
-      .object({
-        eyebrow: stringField.max(200),
-        title: stringField.max(220),
-        description: stringField.max(3000),
-        primaryCtaLabel: stringField.max(120),
-        primaryCtaHref: stringField.max(1000),
-        secondaryCtaLabel: stringField.max(120),
-        secondaryCtaHref: stringField.max(1000),
-        cardImage: stringField.max(2000),
-        partnerBadge: stringField.max(180),
-        savingsLabel: stringField.max(240),
-        stats: z.array(statItemSchema).min(1).max(10),
-      })
-      .strict(),
-    benefits: z
-      .object({
-        eyebrow: stringField.max(200),
-        title: stringField.max(220),
-        description: stringField.max(3000),
-        image: stringField.max(2000),
-        imageTitle: stringField.max(180),
-        imageDescription: stringField.max(1000),
-        items: z.array(featureItemSchema).min(1).max(20),
-      })
-      .strict(),
-    process: z
-      .object({
-        eyebrow: stringField.max(200),
-        title: stringField.max(220),
-        description: stringField.max(3000),
-        image: stringField.max(2000),
-        imageTitle: stringField.max(180),
-        imageDescription: stringField.max(1000),
-        steps: z.array(stepItemSchema).min(1).max(20),
-      })
-      .strict(),
-    impact: z
-      .object({
-        image: stringField.max(2000),
-        imageTitle: stringField.max(180),
-        imageDescription: stringField.max(1000),
-        quote: stringField.max(2000),
-        quoteAuthor: stringField.max(240),
-        stats: z.array(statItemSchema).min(1).max(20),
-      })
-      .strict(),
-    cta: z
-      .object({
-        eyebrow: stringField.max(200),
-        title: stringField.max(220),
-        description: stringField.max(3000),
-        primaryLabel: stringField.max(120),
-        primaryHref: stringField.max(1000),
-        secondaryLabel: stringField.max(120),
-        secondaryHref: stringField.max(1000),
-        items: z.array(ctaItemSchema).min(1).max(20),
-      })
-      .strict(),
-  })
-  .strict();
-
-export type NavItem = z.infer<typeof navItemSchema>;
-export type SocialLink = z.infer<typeof socialLinkSchema>;
-export type StatItem = z.infer<typeof statItemSchema>;
-export type FeatureItem = z.infer<typeof featureItemSchema>;
-export type StepItem = z.infer<typeof stepItemSchema>;
-export type CTAItem = z.infer<typeof ctaItemSchema>;
 export type SiteContent = z.infer<typeof siteContentSchema>;
+export type NavItem = z.infer<typeof navItemSchema>;
+export type FeatureItem = z.infer<typeof featureItemSchema>;
+export type TabItem = z.infer<typeof tabItemSchema>;
+export type FaqItem = z.infer<typeof faqItemSchema>;
+export type SocialLink = z.infer<typeof socialLinkSchema>;
+export type SimpleItem = z.infer<typeof simpleItemSchema>;

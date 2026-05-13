@@ -55,19 +55,37 @@ function parseBasicAuthHeader(headerValue: string | null) {
   return { username, password };
 }
 
+export function verifyAdminCredentials(username: string, pass: string) {
+  const expected = readAdminCredentials();
+  return safeEquals(username, expected.username) && safeEquals(pass, expected.password);
+}
+
 export function isAdminAuthConfigured() {
   return true;
 }
 
+export function getAdminSessionToken() {
+  const creds = readAdminCredentials();
+  return Buffer.from(`${creds.username}:${creds.password}`).toString("base64");
+}
+
 export function isAdminRequestAuthorized(authorizationHeader: string | null) {
   const expected = readAdminCredentials();
-
   const provided = parseBasicAuthHeader(authorizationHeader);
-  if (!provided) {
+  if (!provided) return false;
+  return safeEquals(provided.username, expected.username) && safeEquals(provided.password, expected.password);
+}
+
+export function isSessionAuthorized(sessionToken: string | null) {
+  if (!sessionToken) return false;
+  try {
+    const decoded = Buffer.from(sessionToken, "base64").toString("utf8");
+    const separator = decoded.indexOf(":");
+    if (separator < 0) return false;
+    const u = decoded.slice(0, separator);
+    const p = decoded.slice(separator + 1);
+    return verifyAdminCredentials(u, p);
+  } catch {
     return false;
   }
-
-  return (
-    safeEquals(provided.username, expected.username) && safeEquals(provided.password, expected.password)
-  );
 }
