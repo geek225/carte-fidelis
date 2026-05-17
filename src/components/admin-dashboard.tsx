@@ -244,32 +244,39 @@ export function AdminDashboard({ initialContent }: AdminDashboardProps) {
            </div>
         </Panel>
 
-        {/* GRID FEATURES */}
-        <Panel title="Grille Bénéfices Rapides" enabled={content.gridFeatures.enabled} onToggle={v => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, enabled: v }}))}>
-           <TextAreaField label="Titre Principal de la Section" value={content.gridFeatures.title} onChange={v => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, title: v }}))} />
+        {/* FORMATIONS DIGITALES FIDELIS */}
+        <Panel title="Formations Digitales Fidelis" enabled={content.gridFeatures.enabled} onToggle={v => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, enabled: v }}))}>
+           <div className={`${s.grid} ${s.grid2}`}>
+             <Field label="Titre Principal" value={content.gridFeatures.title} onChange={v => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, title: v }}))} />
+             <Field label="Sous-titre" value={content.gridFeatures.subtitle || ""} onChange={v => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, subtitle: v }}))} />
+             <Field label="Texte du Bandeau" value={content.gridFeatures.bannerText || ""} onChange={v => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, bannerText: v }}))} />
+             <Field label="Texte Bouton Bandeau" value={content.gridFeatures.bannerBtnLabel || ""} onChange={v => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, bannerBtnLabel: v }}))} />
+             <Field label="Lien Bouton Bandeau" value={content.gridFeatures.bannerBtnHref || ""} onChange={v => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, bannerBtnHref: v }}))} />
+           </div>
            
-           <div className={s.stack} style={{marginTop: "24px"}}>
-             <span className={s.fieldLabel}>Cartes d'Arguments</span>
-             <div className={`${s.grid} ${s.grid2}`}>
+           <div className={s.stack} style={{marginTop: "32px"}}>
+             <span className={s.fieldLabel}>Liste des Formations</span>
+             <div className={s.stack}>
                {content.gridFeatures.items.map(feat => (
-                 <div key={feat.id} className={s.rowCard}>
-                   <div style={{display: "flex", gap: "12px"}}>
-                      <select className={s.input} style={{width: "auto"}} value={feat.icon} onChange={e => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, items: updateItemById(c.gridFeatures.items, feat.id, { icon: e.target.value as any }) }}))}>
-                        <option value="check">Coche ✓</option>
-                        <option value="globe">Globe 🌍</option>
-                        <option value="phone">Téléphone 📱</option>
-                        <option value="support">Micro 🎧</option>
-                      </select>
-                      <div style={{flex: 1}}><input className={s.input} style={{width: "100%"}} value={feat.title} onChange={e => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, items: updateItemById(c.gridFeatures.items, feat.id, { title: e.target.value }) }}))} /></div>
+                 <div key={feat.id} className={s.rowCard} style={{ background: "#ffffff", border: "1px solid #cbd5e1", padding: "20px", marginBottom: "16px" }}>
+                   <div className={`${s.grid} ${s.grid2}`}>
+                     <Field label="Titre de la formation" value={feat.title} onChange={e => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, items: updateItemById(c.gridFeatures.items, feat.id, { title: e }) }}))} />
+                     <Field label="Badge" value={feat.badge || ""} onChange={e => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, items: updateItemById(c.gridFeatures.items, feat.id, { badge: e }) }}))} />
+                     <Field label="Niveau" value={feat.level || ""} onChange={e => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, items: updateItemById(c.gridFeatures.items, feat.id, { level: e }) }}))} />
+                     <Field label="Durée" value={feat.duration || ""} onChange={e => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, items: updateItemById(c.gridFeatures.items, feat.id, { duration: e }) }}))} />
+                     <div style={{ gridColumn: "1 / -1" }}>
+                       <TextAreaField label="Description" value={feat.description || ""} onChange={e => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, items: updateItemById(c.gridFeatures.items, feat.id, { description: e }) }}))} />
+                     </div>
+                     <ImageField label="Image de Couverture" value={feat.imageUrl || ""} onChange={e => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, items: updateItemById(c.gridFeatures.items, feat.id, { imageUrl: e }) }}))} onUpload={uploadImage} />
                    </div>
-                   <div className={s.rowActions}>
-                      <Switch label="Activé" checked={feat.enabled} onChange={v => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, items: updateItemById(c.gridFeatures.items, feat.id, { enabled: v }) }}))} />
-                      <button className={s.iconBtn} onClick={() => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, items: removeItemById(c.gridFeatures.items, feat.id) }}))}>Retirer</button>
+                   <div className={s.rowActions} style={{ marginTop: "12px", borderTop: "1px dashed #cbd5e1", paddingTop: "8px" }}>
+                     <Switch label="Activé" checked={feat.enabled} onChange={v => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, items: updateItemById(c.gridFeatures.items, feat.id, { enabled: v }) }}))} />
+                     <button className={s.iconBtn} style={{ color: "#ef4444" }} onClick={() => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, items: removeItemById(c.gridFeatures.items, feat.id) }}))}>Retirer la formation</button>
                    </div>
                  </div>
                ))}
              </div>
-             <button className={s.addButton} onClick={() => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, items: [...c.gridFeatures.items, { id: makeId("f"), title: "Nouvel avantage", icon: "check", enabled: true } ] }}))}>+ Ajouter une tuile d'argument</button>
+             <button className={s.addButton} onClick={() => updateContent(c => ({ ...c, gridFeatures: { ...c.gridFeatures, items: [...c.gridFeatures.items, { id: makeId("feat"), title: "Nouvelle formation", description: "", imageUrl: "", badge: "Disponible", level: "Débutant", duration: "4 semaines", enabled: true } ] }}))}>+ Ajouter une formation</button>
            </div>
         </Panel>
 

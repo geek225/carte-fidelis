@@ -114,9 +114,26 @@ function Reveal({ children, delay = 0, direction = "up", duration = 0.8, style, 
 }
 
 const AVATARS = [
-  { name: "Mariam K.", points: "15 420 pts", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&h=64&q=80" },
-  { name: "Koffi A.", points: "8 920 pts", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=64&h=64&q=80" },
-  { name: "Awa T.", points: "12 100 pts", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=64&h=64&q=80" }
+  {
+    name: "Mariam Koné",
+    points: "Membre Fidelis depuis 2024 • Certifiée en E-commerce",
+    img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=150&q=80"
+  },
+  {
+    name: "Koffi Mensah",
+    points: "Membre Fidelis depuis 2023 • Certifié en IA",
+    img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&q=80"
+  },
+  {
+    name: "Awa Diop",
+    points: "Membre Fidelis depuis 2025 • Certifiée en Marketing",
+    img: "https://images.unsplash.com/photo-1589156280159-27698a70f29e?auto=format&fit=crop&w=150&q=80"
+  },
+  {
+    name: "Koffi Junior",
+    points: "Membre Fidelis depuis 2024 • Certifié en Design",
+    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80"
+  }
 ];
 
 type ModernLandingProps = {
@@ -354,20 +371,95 @@ export function ModernLanding({ content }: ModernLandingProps) {
         </section>
       )}
 
-      {/* GRID FEATURES */}
+      {/* GRID FEATURES (FORMATIONS DIGITALES) */}
       {content.gridFeatures.enabled && (
-        <section className="section-padding container">
+        <section className="section-padding container" id="skills">
           <Reveal className="text-center">
             <h2 style={{ whiteSpace: 'pre-line' }}>{content.gridFeatures.title}<span className="dot">_</span></h2>
+            {content.gridFeatures.subtitle && (
+              <p className={styles.featureSubtitle}>{content.gridFeatures.subtitle}</p>
+            )}
           </Reveal>
+          
           <div className={styles.gridFeatures}>
             {content.gridFeatures.items.filter(i => i.enabled).map((feature, idx) => (
-              <Reveal key={feature.id} className={styles.featureSmall} delay={idx * 100} duration={0.6}>
-                <div className={styles.featureIcon}>{getIcon(feature.icon)}</div>
-                <p>{feature.title}</p>
+              <Reveal key={feature.id} className={styles.trainingCard} delay={idx * 100} duration={0.8} direction="up">
+                {feature.imageUrl && (
+                  <div className={styles.cardImageContainer}>
+                    <img src={feature.imageUrl} alt={feature.title} className={styles.cardImage} />
+                    {feature.badge && (
+                      <span className={styles.cardBadge}>{feature.badge}</span>
+                    )}
+                  </div>
+                )}
+                <div className={styles.cardContent}>
+                  <h4 className={styles.cardTitle}>{feature.title}</h4>
+                  {feature.description && (
+                    <p className={styles.cardDesc}>{feature.description}</p>
+                  )}
+                  
+                  <div className={styles.cardMeta}>
+                    <div style={{ display: "flex", gap: "16px" }}>
+                      {feature.level && (
+                        <div className={styles.metaItem}>
+                          <span className={styles.metaCircle} />
+                          <span>{feature.level}</span>
+                        </div>
+                      )}
+                      {feature.duration && (
+                        <div className={styles.metaItem}>
+                          <span>⏱ {feature.duration}</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className={styles.cardArrowBtn}>
+                      <IconArrowRight />
+                    </div>
+                  </div>
+                </div>
               </Reveal>
             ))}
           </div>
+
+          {/* BANDEAU DE CONCLUSION PREMIUM */}
+          {content.gridFeatures.bannerText && (
+            <Reveal className={styles.bottomBanner} delay={300} duration={0.8} direction="up">
+              <div className={styles.bannerLeft}>
+                {/* Stack d'avatars animés avec info-bulles */}
+                <div className={styles.bannerAvatarGroup}>
+                  {AVATARS.map((av, idx) => (
+                    <div key={idx} className={styles.bannerAvatarContainer}>
+                      <img src={av.img} alt={av.name} className={styles.bannerAvatar} />
+                      <div className={styles.bannerAvatarTooltip}>
+                        <strong>{av.name}</strong>
+                        <span>{av.points}</span>
+                      </div>
+                    </div>
+                  ))}
+                  <div className={styles.bannerAvatarMore}>+50</div>
+                </div>
+                
+                <div className={styles.bannerTextContainer}>
+                  <h3 className={styles.bannerTitle}>{content.gridFeatures.bannerText}</h3>
+                  <div className={styles.bannerSub}>
+                    <span className={styles.bannerDot} />
+                    <span>Formations interactives et certifiantes</span>
+                  </div>
+                </div>
+              </div>
+
+              {content.gridFeatures.bannerBtnLabel && (
+                <a 
+                  href={content.gridFeatures.bannerBtnHref || "#"} 
+                  className="btn btn-primary" 
+                  style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "14px 28px" }}
+                >
+                  {content.gridFeatures.bannerBtnLabel}
+                  <span style={{ fontSize: "16px", fontWeight: "bold" }}>↗</span>
+                </a>
+              )}
+            </Reveal>
+          )}
         </section>
       )}
 

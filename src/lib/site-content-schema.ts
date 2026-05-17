@@ -19,9 +19,13 @@ export const navItemSchema = z.object({
 
 export const featureItemSchema = z.object({
   id: idField,
-  icon: z.enum(["check", "globe", "phone", "support", "arrow"]),
+  icon: stringField.optional(),
   title: stringField.max(200),
   description: nullableString,
+  imageUrl: z.string().trim().optional(),
+  badge: z.string().trim().optional(),
+  level: z.string().trim().optional(),
+  duration: z.string().trim().optional(),
   enabled: z.boolean().default(true),
 }).strict();
 
@@ -103,6 +107,10 @@ export const siteContentSchema = z.object({
   gridFeatures: z.object({
     enabled: z.boolean(),
     title: stringField,
+    subtitle: stringField.optional(),
+    bannerText: stringField.optional(),
+    bannerBtnLabel: stringField.optional(),
+    bannerBtnHref: stringField.optional(),
     items: z.array(featureItemSchema),
   }).strict(),
   splitCards: z.object({

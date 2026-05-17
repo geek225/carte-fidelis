@@ -42,16 +42,72 @@
   },
   "gridFeatures": {
     "enabled": true,
-    "title": "Grâce à votre numéro de téléphone,\nvous bénéficiez de",
+    "title": "Développez vos compétences avec Fidelis",
+    "subtitle": "Accédez à des formations digitales modernes conçues pour aider les jeunes, entrepreneurs et professionnels à évoluer.",
+    "bannerText": "+50 formations digitales disponibles avec Fidelis",
+    "bannerBtnLabel": "Découvrir toutes les formations",
+    "bannerBtnHref": "#",
     "items": [
-      { "id": "feat-1", "icon": "bank", "title": "1 Compte Fidelis & 1 ID unique", "enabled": true },
-      { "id": "feat-2", "icon": "card", "title": "Carte Fidelis Physique", "enabled": true },
-      { "id": "feat-3", "icon": "virtual", "title": "Cartes Virtuelles illimitées", "enabled": true },
-      { "id": "feat-4", "icon": "phone", "title": "Application Mobile Tout-en-un", "enabled": true },
-      { "id": "feat-5", "icon": "swap", "title": "Interopérabilité Mobile Money", "enabled": true },
-      { "id": "feat-6", "icon": "globe", "title": "Paiements En Ligne Internationaux", "enabled": true },
-      { "id": "feat-7", "icon": "bill", "title": "Économies Cumulées Réelles", "enabled": true },
-      { "id": "feat-8", "icon": "support", "title": "Assistance Client Dédiée 24/7", "enabled": true }
+      {
+        "id": "feat-1",
+        "title": "Marketing Digital",
+        "description": "Apprenez à développer une marque et vendre en ligne.",
+        "imageUrl": "/assets/marketing-digital.png",
+        "badge": "Disponible",
+        "level": "Débutant",
+        "duration": "5 semaines",
+        "enabled": true
+      },
+      {
+        "id": "feat-2",
+        "title": "E-commerce",
+        "description": "Créez et gérez votre boutique en ligne.",
+        "imageUrl": "/assets/e-commerce.png",
+        "badge": "Disponible",
+        "level": "Intermédiaire",
+        "duration": "6 semaines",
+        "enabled": true
+      },
+      {
+        "id": "feat-3",
+        "title": "Intelligence Artificielle",
+        "description": "Découvrez les outils IA pour travailler plus vite.",
+        "imageUrl": "/assets/intelligence-artificielle.png",
+        "badge": "Disponible",
+        "level": "Débutant",
+        "duration": "4 semaines",
+        "enabled": true
+      },
+      {
+        "id": "feat-4",
+        "title": "Community Management",
+        "description": "Gérez des réseaux sociaux comme un professionnel.",
+        "imageUrl": "/assets/community-management.png",
+        "badge": "Disponible",
+        "level": "Intermédiaire",
+        "duration": "5 semaines",
+        "enabled": true
+      },
+      {
+        "id": "feat-5",
+        "title": "Design Graphique",
+        "description": "Maîtrisez les visuels modernes et branding.",
+        "imageUrl": "/assets/design-graphique.png",
+        "badge": "Disponible",
+        "level": "Débutant",
+        "duration": "5 semaines",
+        "enabled": true
+      },
+      {
+        "id": "feat-6",
+        "title": "Business & Entrepreneuriat",
+        "description": "Développez votre activité avec des stratégies modernes.",
+        "imageUrl": "/assets/business-entrepreneuriat.png",
+        "badge": "Disponible",
+        "level": "Avancé",
+        "duration": "8 semaines",
+        "enabled": true
+      }
     ]
   },
   "splitCards": {
