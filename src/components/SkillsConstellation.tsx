@@ -70,7 +70,7 @@ function ConstellationGroup({
         const points = [p1, p2];
         const lineGeom = new THREE.BufferGeometry().setFromPoints(points);
         const lineMat = new THREE.LineBasicMaterial({
-          color: "#00f2fe",
+          color: "#00A86B",
           opacity: 0.12,
           transparent: true,
         });
@@ -94,7 +94,7 @@ function ConstellationGroup({
       {/* Core glowing center star */}
       <mesh position={[0, 0, 0]}>
         <sphereGeometry args={[0.3, 16, 16]} />
-        <meshBasicMaterial color="#00f2fe" opacity={0.3} transparent />
+        <meshBasicMaterial color="#00A86B" opacity={0.3} transparent />
       </mesh>
       <mesh position={[0, 0, 0]}>
         <sphereGeometry args={[0.6, 16, 16]} />
@@ -125,7 +125,7 @@ function SkillNodePoint({
   });
 
   const nodeScale = isActive ? 1.6 : hovered ? 1.3 : 1;
-  const nodeColor = isActive ? "#9b51e0" : hovered ? "#00f2fe" : "#ffffff";
+  const nodeColor = isActive ? "#9b51e0" : hovered ? "#00A86B" : "#0F172A";
 
   return (
     <mesh
@@ -155,7 +155,7 @@ function SkillNodePoint({
         <mesh scale={[nodeScale * 1.8, nodeScale * 1.8, nodeScale * 1.8]}>
           <sphereGeometry args={[isActive ? 0.18 : 0.12, 8, 8]} />
           <meshBasicMaterial
-            color={isActive ? "#9b51e0" : "#00f2fe"}
+            color={isActive ? "#9b51e0" : "#00A86B"}
             opacity={0.18}
             transparent
             wireframe
@@ -173,25 +173,25 @@ function SkillNodePoint({
         <div
           style={{
             background: isActive
-              ? "linear-gradient(135deg, rgba(155, 81, 224, 0.25), rgba(3, 3, 7, 0.85))"
+              ? "linear-gradient(135deg, rgba(155, 81, 224, 0.1), rgba(255, 255, 255, 0.95))"
               : hovered
-              ? "linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(3, 3, 7, 0.85))"
-              : "rgba(3, 3, 7, 0.65)",
+              ? "linear-gradient(135deg, rgba(0, 168, 107, 0.1), rgba(255, 255, 255, 0.95))"
+              : "rgba(255, 255, 255, 0.85)",
             border: `1px solid ${
               isActive
-                ? "rgba(155, 81, 224, 0.4)"
+                ? "rgba(155, 81, 224, 0.3)"
                 : hovered
-                ? "rgba(0, 242, 254, 0.3)"
-                : "rgba(255, 255, 255, 0.08)"
+                ? "rgba(0, 168, 107, 0.3)"
+                : "rgba(15, 23, 42, 0.08)"
             }`,
-            color: isActive ? "#9b51e0" : hovered ? "#00f2fe" : "#ffffff",
+            color: isActive ? "#9b51e0" : hovered ? "#00A86B" : "#0F172A",
             padding: "4px 8px",
             borderRadius: "6px",
             fontSize: "11px",
             fontWeight: hovered || isActive ? 700 : 500,
             whiteSpace: "nowrap",
             backdropFilter: "blur(4px)",
-            boxShadow: hovered || isActive ? "0 4px 12px rgba(0, 0, 0, 0.25)" : "none",
+            boxShadow: hovered || isActive ? "0 4px 12px rgba(15, 23, 42, 0.08)" : "none",
             transform: hovered || isActive ? "scale(1.08)" : "scale(1)",
             transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
           }}
@@ -223,16 +223,16 @@ export default function SkillsConstellation() {
   return (
     <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
       {/* 3D Canvas side (8 columns on wide screen) */}
-      <div className="lg:col-span-7 h-[420px] rounded-2xl overflow-hidden border border-white/5 bg-[#030307]/40 backdrop-blur-md relative">
+      <div className="lg:col-span-7 h-[420px] rounded-3xl overflow-hidden border border-slate-900/5 bg-[#ffffff]/60 backdrop-blur-md relative shadow-sm">
         {/* Glow indicator */}
-        <div className="absolute top-4 left-4 z-10 text-xs font-bold text-gray-500 flex items-center gap-2 select-none">
-          <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
+        <div className="absolute top-4 left-4 z-10 text-xs font-bold text-slate-500 flex items-center gap-2 select-none">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#00A86B] animate-ping" />
           INTERACTIVE 3D GALAXY (DRAG TO ROTATE / HOVER TO FOCUS)
         </div>
 
         <Canvas camera={{ position: [0, 0, 8.5], fov: 50 }}>
           <ambientLight intensity={0.45} />
-          <pointLight position={[10, 10, 10]} intensity={1.5} color="#00f2fe" />
+          <pointLight position={[10, 10, 10]} intensity={1.5} color="#00A86B" />
           <pointLight position={[-10, -10, -10]} intensity={1.2} color="#9b51e0" />
           
           <ConstellationGroup
@@ -254,7 +254,7 @@ export default function SkillsConstellation() {
       {/* Sleek description card side (5 columns on wide screen) */}
       <div className="lg:col-span-5 h-[420px] flex flex-col justify-center">
         <div className="glass-panel p-8 relative overflow-hidden h-full flex flex-col justify-between"
-             style={{ background: "linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01))" }}>
+             style={{ background: "linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.5))" }}>
           {/* Subtle neon glowing gradient backing */}
           <div className="absolute -right-20 -bottom-20 w-48 h-48 rounded-full blur-[100px] opacity-15 pointer-events-none transition-all duration-700"
                style={{ background: activeSkill ? "var(--primary-hover)" : "var(--primary)" }} />
@@ -262,32 +262,32 @@ export default function SkillsConstellation() {
           {activeSkill ? (
             <div className="space-y-6 fade-in animate-fadeIn">
               <div className="flex justify-between items-center">
-                <span className="text-xs font-bold text-cyan-400 bg-cyan-400/10 px-3 py-1 rounded-full border border-cyan-400/20 select-none">
+                <span className="text-xs font-bold text-[#00A86B] bg-[#00A86B]/10 px-3 py-1 rounded-full border border-[#00A86B]/20 select-none">
                   {activeSkill.category}
                 </span>
               </div>
               <div>
-                <h3 className="text-3xl font-extrabold text-white leading-tight glow-text-primary">
+                <h3 className="text-3xl font-extrabold text-slate-900 leading-tight glow-text-primary">
                   {activeSkill.name}
                 </h3>
-                <div className="w-12 h-1 bg-gradient-to-r from-[#00f2fe] to-[#9b51e0] mt-3 rounded-full" />
+                <div className="w-12 h-1 bg-gradient-to-r from-[#00A86B] to-[#9b51e0] mt-3 rounded-full" />
               </div>
-              <p className="text-gray-300 text-base leading-relaxed">
+              <p className="text-slate-600 text-base leading-relaxed">
                 {activeSkill.desc}
               </p>
             </div>
           ) : (
             <div className="space-y-6 flex flex-col justify-center h-full text-center lg:text-left select-none">
-              <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto lg:mx-0 border border-white/10">
-                <svg className="w-8 h-8 text-cyan-400 animate-pulse" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+              <div className="w-16 h-16 rounded-full bg-slate-900/5 flex items-center justify-center mx-auto lg:mx-0 border border-slate-950/10">
+                <svg className="w-8 h-8 text-[#00A86B] animate-pulse" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-.778.099-1.533.284-2.253m0 0L3 12m18 0l-3 2" />
                 </svg>
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-white leading-tight">
+                <h3 className="text-2xl font-bold text-slate-900 leading-tight">
                   Constellation de Compétences
                 </h3>
-                <p className="text-gray-400 text-sm mt-3 leading-relaxed">
+                <p className="text-slate-500 text-sm mt-3 leading-relaxed">
                   Survolez les nœuds stellaires de la galaxie interactive 3D pour explorer notre expertise technologique, nos frameworks favoris et nos méthodes d'optimisation.
                 </p>
               </div>
@@ -295,7 +295,7 @@ export default function SkillsConstellation() {
           )}
 
           {/* Action indicator link */}
-          <div className="pt-6 border-t border-white/5 flex items-center justify-between text-xs text-gray-500">
+          <div className="pt-6 border-t border-slate-950/5 flex items-center justify-between text-xs text-slate-500">
             <span>Powered by React Three Fiber</span>
             <span className="flex items-center gap-1">
               Interactive Mode <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />

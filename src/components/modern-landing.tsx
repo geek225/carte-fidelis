@@ -98,6 +98,26 @@ type ModernLandingProps = {
 };
 
 export function ModernLanding({ content }: ModernLandingProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [cardTransform, setCardTransform] = useState("perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)");
+
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = -(y - centerY) / 8; // Max tilt 10deg
+    const rotateY = (x - centerX) / 8;
+    setCardTransform(`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`);
+  };
+
+  const handleCardMouseLeave = () => {
+    setCardTransform("perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)");
+  };
+
   return (
     <div 
       className={styles.wrapper}
@@ -139,19 +159,111 @@ export function ModernLanding({ content }: ModernLandingProps) {
           <AntigravityCanvas />
           <div className={`container ${styles.hero} fade-in`}>
             <div className={styles.heroContent}>
-              <div className={styles.heroKicker}>
-                <span className={styles.kickerNum}>{content.hero.kickerNum}</span>
-                <span className={styles.kickerText} style={{ whiteSpace: 'pre-line' }}>{content.hero.kickerText}</span>
+              <h1>
+                Banking Beyond <br />
+                Boundaries Redefining <br />
+                <span className={styles.serifItalic}>Financial Excellence</span>
+              </h1>
+              <p className={styles.heroSub}>
+                Seamlessly integrating technology and personalized service to empower your financial goals and elevate your banking experience to new heights.
+              </p>
+              
+              <div className={styles.ctaGroup}>
+                <a href={content.hero.btnHref} className="btn btn-primary" style={{ padding: "16px 32px", fontSize: "15px" }}>
+                  Start Your Financial
+                </a>
+                <a href="#" className="btn btn-outline" style={{ padding: "16px 32px", fontSize: "15px", display: "inline-flex", alignItems: "center", gap: "8px" }}>
+                  Explore Now <span style={{ fontSize: "16px", fontWeight: "bold" }}>↗</span>
+                </a>
               </div>
-              <h1 style={{ whiteSpace: 'pre-line' }}>{content.hero.title}</h1>
-              <p className={styles.heroSub}>{content.hero.subtitle}</p>
-              <a href={content.hero.btnHref} className="btn btn-primary" style={{ padding: "16px 32px", fontSize: "16px" }}>
-                {content.hero.btnLabel}
-              </a>
+
+              {/* Social Proof Avatar stack */}
+              <div className={styles.socialProof}>
+                <div className={styles.avatarGroup}>
+                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&h=64&q=80" alt="Customer 1" />
+                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=64&h=64&q=80" alt="Customer 2" />
+                  <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=64&h=64&q=80" alt="Customer 3" />
+                  <div className={styles.avatarMore}>8+</div>
+                </div>
+                <div className={styles.ratingInfo}>
+                  <div className={styles.ratingStars}>
+                    {"★★★★★".split("").map((star, idx) => (
+                      <span key={idx} className={styles.star}>★</span>
+                    ))}
+                  </div>
+                  <div className={styles.ratingText}>5 Star Mobile App Rated (4.8/5.0)</div>
+                </div>
+              </div>
             </div>
             
-            <div className={styles.heroImage}>
-              <img src={content.hero.mainImage} alt={content.site.brandName} />
+            {/* Bento Grid */}
+            <div className={styles.bentoGrid}>
+              {/* Card 1: 50+ Years */}
+              <div className={styles.bentoCard1}>
+                <div className={styles.bentoCard1Val}>50+</div>
+                <div className={styles.bentoCard1Label}>Years of Trusted <br /> Service</div>
+              </div>
+
+              {/* Card 2: Credit Card (3D Tilt) */}
+              <div 
+                ref={cardRef}
+                className={styles.creditCard}
+                style={{ transform: cardTransform }}
+                onMouseMove={handleCardMouseMove}
+                onMouseLeave={handleCardMouseLeave}
+              >
+                <div className={styles.ccHeader}>
+                  <div>
+                    <div className={styles.ccHeaderLabel}>Current Balance</div>
+                    <div className={styles.ccBalance}>$7,324,12</div>
+                  </div>
+                  <div className={styles.ccLogo}>
+                    <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+                      <rect x="10" y="10" width="80" height="80" rx="20" fill="rgba(0, 168, 107, 0.15)" />
+                      <circle cx="50" cy="50" r="20" stroke="#00A86B" strokeWidth="6" />
+                      <circle cx="50" cy="50" r="10" stroke="#9b51e0" strokeWidth="4" />
+                    </svg>
+                  </div>
+                </div>
+                <div className={styles.ccFooter}>
+                  <span className={styles.ccNumber}>4321 8654 **** 6547</span>
+                  <span className={styles.ccExpiry}>08/23</span>
+                </div>
+              </div>
+
+              {/* Card 3: Yellow Hoodie Portrait image */}
+              <div className={styles.bentoCard3}>
+                <img src="/assets/yellow-hoodie-man.png" alt="Smiling Cashop Customer" />
+              </div>
+
+              {/* Card 4: Spend statistics */}
+              <div className={styles.bentoCard4}>
+                <div className={styles.bentoCard4Header}>
+                  <span className={styles.trendBadge}>▲ 24%</span>
+                  <div className={styles.spendIcon}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F172A" strokeWidth="2.5">
+                      <rect x="2" y="5" width="20" height="14" rx="2" />
+                      <line x1="2" y1="10" x2="22" y2="10" />
+                    </svg>
+                  </div>
+                </div>
+                <div className={styles.bentoCard4Content}>
+                  <div className={styles.bentoCard4Label}>Total Spend</div>
+                  <div className={styles.bentoCard4Val}>$4,325</div>
+                </div>
+              </div>
+
+              {/* Card 5: Emerald Green Global clients badge */}
+              <div className={styles.bentoCard5}>
+                <div className={styles.bentoCard5Val}>2M+</div>
+                <div className={styles.bentoCard5Label}>Satisfied Global <br /> Customers</div>
+                <div className={styles.bentoCard5Pattern}>
+                  <svg width="100" height="100" viewBox="0 0 100 100" fill="none" opacity="0.15">
+                    <circle cx="80" cy="80" r="40" stroke="white" strokeWidth="6" strokeDasharray="12 12" />
+                    <circle cx="80" cy="80" r="20" stroke="white" strokeWidth="4" />
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
         </section>

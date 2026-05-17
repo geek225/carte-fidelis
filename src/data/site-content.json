@@ -1,20 +1,20 @@
 {
   "site": {
-    "brandName": "Antigravity",
+    "brandName": "Cashop",
     "logoImage": "",
-    "metaTitle": "Antigravity - 3D Gravity-Defying AI & Design Showcase",
-    "metaDescription": "Experience the future of the web with Antigravity: interactive 3D particle fields and neural networks.",
-    "footerText": "© 2026 Antigravity Labs. Tous droits reserves."
+    "metaTitle": "Cashop by Antigravity - Modern Dribbble-style Digital Banking",
+    "metaDescription": "Experience modern digital banking beyond boundaries. Overhauled with a sleek Dribbble Bento Grid layout, beautiful 3D interactive tilt effects, and real-time transaction dashboard.",
+    "footerText": "© 2026 Cashop Labs by Antigravity. Tous droits reserves."
   },
   "theme": {
-    "primary": "#00f2fe",
-    "primaryHover": "#9b51e0",
-    "dark": "#030307",
-    "darkLight": "#0d0e1a",
-    "lightBg": "#121324",
-    "grayBg": "#16172d",
+    "primary": "#00A86B",
+    "primaryHover": "#008f5a",
+    "dark": "#0F172A",
+    "darkLight": "#334155",
+    "lightBg": "#EFF1F0",
+    "grayBg": "#E2E8F0",
     "white": "#ffffff",
-    "borderColor": "rgba(255, 255, 255, 0.08)"
+    "borderColor": "rgba(15, 23, 42, 0.08)"
   },
   "header": {
     "menu": [

@@ -8,8 +8,8 @@ type AntigravityCanvasProps = {
 };
 
 export function AntigravityCanvas({
-  activeColor = "0, 242, 254", // Neon Cyan rgb
-  secondaryColor = "155, 81, 224", // Neon Purple rgb
+  activeColor = "0, 168, 107", // Emerald Green rgb
+  secondaryColor = "15, 23, 42", // Slate rgb
 }: AntigravityCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -198,7 +198,7 @@ export function AntigravityCanvas({
 
         const depthOpacity = (600 - this.z) / 500; // closer = brighter
         const baseColor = this.colorType === 0 ? activeColor : secondaryColor;
-        const opacity = 0.42 * depthOpacity * (1 + this.energy * 0.5);
+        const opacity = 0.12 * depthOpacity * (1 + this.energy * 0.5);
 
         ctx.fillStyle = `rgba(${baseColor}, ${opacity})`;
         ctx.fill();
@@ -243,7 +243,7 @@ export function AntigravityCanvas({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Draw background space grids (very subtle)
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.015)";
+      ctx.strokeStyle = "rgba(15, 23, 42, 0.02)";
       ctx.lineWidth = 1;
       const gridSize = 80;
       for (let x = 0; x < canvas.width; x += gridSize) {
@@ -284,7 +284,7 @@ export function AntigravityCanvas({
 
             const avgDepth = (p1.z + p2.z) / 2;
             const depthOpacity = (600 - avgDepth) / 500;
-            const opacity = (1 - distance / maxConnectionDistance) * 0.28 * depthOpacity;
+            const opacity = (1 - distance / maxConnectionDistance) * 0.08 * depthOpacity;
 
             // Gradient line between the two particle colors
             const grad = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
