@@ -236,8 +236,10 @@ export function AdminDashboard({ initialContent }: AdminDashboardProps) {
               <div style={{ gridColumn: "1/-1" }}>
                 <TextAreaField label="Sous-titre explicatif" value={content.hero.subtitle} onChange={v => updateContent(c => ({ ...c, hero: { ...c.hero, subtitle: v }}))} />
               </div>
-              <Field label="Texte du Bouton" value={content.hero.btnLabel} onChange={v => updateContent(c => ({ ...c, hero: { ...c.hero, btnLabel: v }}))} />
-              <Field label="Lien Cible" value={content.hero.btnHref} onChange={v => updateContent(c => ({ ...c, hero: { ...c.hero, btnHref: v }}))} />
+              <Field label="Texte du Bouton Principal" value={content.hero.btnLabel} onChange={v => updateContent(c => ({ ...c, hero: { ...c.hero, btnLabel: v }}))} />
+              <Field label="Lien Principal" value={content.hero.btnHref} onChange={v => updateContent(c => ({ ...c, hero: { ...c.hero, btnHref: v }}))} />
+              <Field label="Texte du Bouton Secondaire" value={content.hero.secondaryBtnLabel || ""} onChange={v => updateContent(c => ({ ...c, hero: { ...c.hero, secondaryBtnLabel: v }}))} />
+              <Field label="Lien Secondaire" value={content.hero.secondaryBtnHref || ""} onChange={v => updateContent(c => ({ ...c, hero: { ...c.hero, secondaryBtnHref: v }}))} />
               <ImageField label="Image Visuel (Femme tenant carte)" value={content.hero.mainImage} onChange={v => updateContent(c => ({ ...c, hero: { ...c.hero, mainImage: v }}))} onUpload={uploadImage} />
            </div>
         </Panel>
@@ -487,6 +489,58 @@ export function AdminDashboard({ initialContent }: AdminDashboardProps) {
               </div>
               <button className={s.addButton} onClick={() => updateContent(c => ({ ...c, footerCta: { ...c.footerCta, socials: [...c.footerCta.socials, { id: makeId("so"), label: "X", url: "#", enabled: true }] }}))}>+ Lier un nouveau réseau</button>
            </div>
+        </Panel>
+
+        {/* FINANCING MODAL SETTINGS */}
+        <Panel title="Système d'Accompagnement Financier" description="Personnalisez le disclaimer, les montants et les messages de confirmation du formulaire de financement.">
+          <div className={`${s.grid} ${s.grid2}`}>
+            <div style={{ gridColumn: "1 / -1" }}>
+              <TextAreaField label="Clause d'Avertissement (Disclaimer d'ancienneté)" value={content.financing.disclaimer} onChange={v => updateContent(c => ({ ...c, financing: { ...c.financing, disclaimer: v }}))} />
+            </div>
+            <Field label="Montant Avec Local" value={content.financing.amountWithLocal} onChange={v => updateContent(c => ({ ...c, financing: { ...c.financing, amountWithLocal: v }}))} />
+            <Field label="Montant Sans Local" value={content.financing.amountWithoutLocal} onChange={v => updateContent(c => ({ ...c, financing: { ...c.financing, amountWithoutLocal: v }}))} />
+            <div style={{ gridColumn: "1 / -1" }}>
+              <Field label="Message sur le Bouton Conditionnel (Avec Local)" value={content.financing.labelWithLocal} onChange={v => updateContent(c => ({ ...c, financing: { ...c.financing, labelWithLocal: v }}))} />
+            </div>
+            <div style={{ gridColumn: "1 / -1" }}>
+              <Field label="Message sur le Bouton Conditionnel (Sans Local)" value={content.financing.labelWithoutLocal} onChange={v => updateContent(c => ({ ...c, financing: { ...c.financing, labelWithoutLocal: v }}))} />
+            </div>
+            <Field label="Texte du Bouton de Validation" value={content.financing.submitLabel} onChange={v => updateContent(c => ({ ...c, financing: { ...c.financing, submitLabel: v }}))} />
+            <div style={{ gridColumn: "1 / -1" }}>
+              <TextAreaField label="Message de Succès (Après validation)" value={content.financing.successMessage} onChange={v => updateContent(c => ({ ...c, financing: { ...c.financing, successMessage: v }}))} />
+            </div>
+          </div>
+        </Panel>
+
+        {/* SOCIAL PROOF & RATING SETTINGS */}
+        <Panel title="Preuve Sociale & Avis Clients" enabled={content.rating.enabled} onToggle={v => updateContent(c => ({ ...c, rating: { ...c.rating, enabled: v }}))} description="Gérez le badge rond jaune affiché sous le Hero avec les profils d'adhérents privilèges.">
+          <div className={`${s.grid} ${s.grid2}`}>
+            <Field label="Texte Global d'Accompagnement" value={content.rating.text} onChange={v => updateContent(c => ({ ...c, rating: { ...c.rating, text: v }}))} />
+            <Field label="Label du Badge de Reste (ex: +15k)" value={content.rating.moreLabel} onChange={v => updateContent(c => ({ ...c, rating: { ...c.rating, moreLabel: v }}))} />
+            <div className={s.field}>
+              <span className={s.fieldLabel}>Nombre d'Étoiles (1 à 5)</span>
+              <input type="number" min="1" max="5" className={s.input} value={content.rating.score} onChange={e => updateContent(c => ({ ...c, rating: { ...c.rating, score: Math.max(1, Math.min(5, parseInt(e.target.value) || 5)) }}))} />
+            </div>
+          </div>
+          
+          <div className={s.stack} style={{marginTop: "24px", borderTop: "1px dashed #cbd5e1", paddingTop: "20px"}}>
+            <span className={s.fieldLabel}>Profils des Adhérents Privilèges</span>
+            <div className={`${s.grid} ${s.grid2}`}>
+              {content.rating.avatars.map(avatar => (
+                <div key={avatar.id} className={s.rowCard}>
+                  <div className={s.grid}>
+                    <Field label="Nom Complet" value={avatar.name} onChange={v => updateContent(c => ({ ...c, rating: { ...c.rating, avatars: updateItemById(c.rating.avatars, avatar.id, { name: v }) }}))} />
+                    <Field label="Points Cumulés" value={avatar.points} onChange={v => updateContent(c => ({ ...c, rating: { ...c.rating, avatars: updateItemById(c.rating.avatars, avatar.id, { points: v }) }}))} />
+                    <ImageField label="Image de Profil (Avatar)" value={avatar.img} onChange={v => updateContent(c => ({ ...c, rating: { ...c.rating, avatars: updateItemById(c.rating.avatars, avatar.id, { img: v }) }}))} onUpload={uploadImage} />
+                  </div>
+                  <div className={s.rowActions} style={{marginTop: "8px"}}>
+                    <button className={s.iconBtn} style={{color: "#ef4444"}} onClick={() => updateContent(c => ({ ...c, rating: { ...c.rating, avatars: removeItemById(c.rating.avatars, avatar.id) }}))}>Retirer Profil</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button className={s.addButton} onClick={() => updateContent(c => ({ ...c, rating: { ...c.rating, avatars: [...c.rating.avatars, { id: makeId("av"), name: "Nouveau Membre", points: "0 pts", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&h=64&q=80" }] }}))}>+ Ajouter un Profil Adhérent</button>
+          </div>
         </Panel>
 
       </main>

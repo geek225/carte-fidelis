@@ -97,6 +97,8 @@ export const siteContentSchema = z.object({
     mainImage: stringField,
     btnLabel: stringField,
     btnHref: stringField,
+    secondaryBtnLabel: stringField,
+    secondaryBtnHref: stringField,
   }).strict(),
   gridFeatures: z.object({
     enabled: z.boolean(),
@@ -163,6 +165,27 @@ export const siteContentSchema = z.object({
     description: stringField,
     image: stringField,
     socials: z.array(socialLinkSchema),
+  }).strict(),
+  rating: z.object({
+    enabled: z.boolean().default(true),
+    score: z.number().min(1).max(5).default(5),
+    text: stringField.max(300),
+    moreLabel: stringField.max(100),
+    avatars: z.array(z.object({
+      id: idField,
+      name: stringField.max(100),
+      points: stringField.max(100),
+      img: stringField,
+    }).strict()),
+  }).strict(),
+  financing: z.object({
+    disclaimer: stringField.max(1000),
+    amountWithLocal: stringField.max(100),
+    amountWithoutLocal: stringField.max(100),
+    successMessage: stringField.max(1000),
+    submitLabel: stringField.max(100),
+    labelWithLocal: stringField.max(200),
+    labelWithoutLocal: stringField.max(200),
   }).strict(),
 }).strict();
 

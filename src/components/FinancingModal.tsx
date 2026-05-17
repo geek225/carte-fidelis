@@ -7,6 +7,15 @@ import styles from "./modern-landing.module.css";
 interface FinancingModalProps {
   isOpen: boolean;
   onClose: () => void;
+  financingConfig?: {
+    disclaimer: string;
+    amountWithLocal: string;
+    amountWithoutLocal: string;
+    successMessage: string;
+    submitLabel: string;
+    labelWithLocal: string;
+    labelWithoutLocal: string;
+  };
 }
 
 const COUNTRY_CODES = [
@@ -20,7 +29,7 @@ const COUNTRY_CODES = [
   { code: "+33", country: "France 🇫🇷" }
 ];
 
-export function FinancingModal({ isOpen, onClose }: FinancingModalProps) {
+export function FinancingModal({ isOpen, onClose, financingConfig }: FinancingModalProps) {
   const [formData, setFormData] = useState({
     nom: "",
     prenom: "",
@@ -124,7 +133,7 @@ export function FinancingModal({ isOpen, onClose }: FinancingModalProps) {
                 <div className={styles.modalDisclaimer}>
                   <div className={styles.disclaimerIcon}>⚠️</div>
                   <div className={styles.disclaimerText}>
-                    <strong>Important :</strong> Pour pouvoir bénéficier d'un accompagnement financier il faudrait être souscripteur de la carte depuis plus de 3 mois.
+                    <strong>Important :</strong> {financingConfig?.disclaimer || "Pour pouvoir bénéficier d'un accompagnement financier il faudrait être souscripteur de la carte depuis plus de 3 mois."}
                   </div>
                 </div>
 
@@ -280,9 +289,9 @@ export function FinancingModal({ isOpen, onClose }: FinancingModalProps) {
                           <span className={styles.pillIcon}>✨</span>
                           <span>
                             {formData.hasLocal ? (
-                              <>Vous bénéficierez d'un accompagnement financier de <strong>300.000 FCFA</strong></>
+                              financingConfig?.labelWithLocal || "Vous bénéficierez d'un accompagnement financier de 300.000 FCFA"
                             ) : (
-                              <>Vous bénéficierez d'un accompagnement financier de <strong>200.000 FCFA</strong></>
+                              financingConfig?.labelWithoutLocal || "Vous bénéficierez d'un accompagnement financier de 200.000 FCFA"
                             )}
                           </span>
                         </div>
@@ -291,7 +300,7 @@ export function FinancingModal({ isOpen, onClose }: FinancingModalProps) {
                   </AnimatePresence>
 
                   <button type="submit" className={`btn btn-primary ${styles.modalSubmitBtn}`}>
-                    Valider ma demande
+                    {financingConfig?.submitLabel || "Valider ma demande"}
                   </button>
                 </form>
               </>
@@ -310,7 +319,7 @@ export function FinancingModal({ isOpen, onClose }: FinancingModalProps) {
                 </div>
                 <h2>Demande Reçue !</h2>
                 <p className={styles.successText}>
-                  Le formulaire a été envoyé et sera étudié par le service financier qui vous contactera dans les plus brefs délais.
+                  {financingConfig?.successMessage || "Le formulaire a été envoyé et sera étudié par le service financier qui vous contactera dans les plus brefs délais."}
                 </p>
                 <button className={`btn btn-primary ${styles.successCloseBtn}`} onClick={handleReset}>
                   Retour à l'accueil

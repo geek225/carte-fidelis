@@ -35,8 +35,10 @@
     "title": "Au-delà des Limites\nRedéfinir la\nFidélité Client",
     "subtitle": "Associez technologie moderne et privilèges exclusifs pour maximiser vos points, fidéliser vos clients et élever votre expérience d'achat vers de nouveaux sommets.",
     "mainImage": "/assets/hero-woman.png",
-    "btnLabel": "Obtenir ma carte",
-    "btnHref": "#"
+    "btnLabel": "Obtenir un financement",
+    "btnHref": "#",
+    "secondaryBtnLabel": "Découvrir les avantages de FIDELIS",
+    "secondaryBtnHref": "#cards"
   },
   "gridFeatures": {
     "enabled": true,
@@ -156,5 +158,25 @@
       { "id": "soc-2", "label": "X", "url": "#", "enabled": true },
       { "id": "soc-3", "label": "I", "url": "#", "enabled": true }
     ]
+  },
+  "rating": {
+    "enabled": true,
+    "score": 5,
+    "text": "Rejoint par +15 000 clients privilèges",
+    "moreLabel": "+15k",
+    "avatars": [
+      { "id": "av-1", "name": "Mariam K.", "points": "15 420 pts", "img": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&h=64&q=80" },
+      { "id": "av-2", "name": "Koffi A.", "points": "9 850 pts", "img": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=64&h=64&q=80" },
+      { "id": "av-3", "name": "Awa D.", "points": "24 150 pts", "img": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=64&h=64&q=80" }
+    ]
+  },
+  "financing": {
+    "disclaimer": "Pour pouvoir bénéficier d'un accompagnement financier il faudrait être souscripteur de la carte depuis plus de 3 mois.",
+    "amountWithLocal": "300.000 FCFA",
+    "amountWithoutLocal": "200.000 FCFA",
+    "successMessage": "Le formulaire a été envoyé et sera étudié par le service financier qui vous contactera.",
+    "submitLabel": "Valider ma demande",
+    "labelWithLocal": "Vous bénéficierez d'un accompagnement financier de 300.000 FCFA",
+    "labelWithoutLocal": "Vous bénéficierez d'un accompagnement financier de 200.000 FCFA"
   }
 }

@@ -208,42 +208,61 @@ export function ModernLanding({ content }: ModernLandingProps) {
                 >
                   {content.hero.btnLabel}
                 </button>
-                <a href="#cards" className="btn btn-outline" style={{ padding: "16px 32px", fontSize: "15px", display: "inline-flex", alignItems: "center", gap: "8px" }}>
-                  Découvrir <span style={{ fontSize: "16px", fontWeight: "bold" }}>↗</span>
+                <a href={content.hero.secondaryBtnHref || "#cards"} className="btn btn-outline" style={{ padding: "16px 32px", fontSize: "15px", display: "inline-flex", alignItems: "center", gap: "8px" }}>
+                  {content.hero.secondaryBtnLabel || "Découvrir les avantages de FIDELIS"} <span style={{ fontSize: "16px", fontWeight: "bold" }}>↗</span>
                 </a>
               </div>
 
               {/* Social Proof Avatar stack with dynamic interactive tooltips */}
-              <div className={styles.socialProof}>
-                <div className={styles.avatarGroup}>
-                  {AVATARS.map((av, idx) => (
-                    <div key={idx} className={styles.avatarContainer}>
-                      <img src={av.img} alt={av.name} className={styles.avatarImg} />
-                      <div className={styles.avatarTooltip}>
-                        <strong>{av.name}</strong>
-                        <span>{av.points}</span>
+              {content.rating?.enabled !== false && (
+                <div className={styles.socialProof}>
+                  <div className={styles.avatarGroup}>
+                    {(content.rating?.avatars || AVATARS).map((av, idx) => (
+                      <div key={av.id || idx} className={styles.avatarContainer}>
+                        <img src={av.img} alt={av.name} className={styles.avatarImg} />
+                        <div className={styles.avatarTooltip}>
+                          <strong>{av.name}</strong>
+                          <span>{av.points}</span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                  <div className={styles.avatarMore}>+15k</div>
-                </div>
-                <div className={styles.ratingInfo}>
-                  <div className={styles.ratingStars}>
-                    {"★★★★★".split("").map((star, idx) => (
-                      <span key={idx} className={styles.star}>★</span>
                     ))}
+                    <div className={styles.avatarMore}>{content.rating?.moreLabel || "+15k"}</div>
                   </div>
-                  <div className={styles.ratingText}>Rejoint par +15 000 clients privilèges</div>
+                  <div className={styles.ratingInfo}>
+                    <div className={styles.ratingStars}>
+                      {Array.from({ length: content.rating?.score || 5 }).map((_, idx) => (
+                        <span key={idx} className={styles.star}>★</span>
+                      ))}
+                    </div>
+                    <div className={styles.ratingText}>{content.rating?.text || "Rejoint par +15 000 clients privilèges"}</div>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
             
             {/* Bento Grid */}
             <div className={styles.bentoGrid}>
               {/* Card 1: Partenaires Affiliés */}
               <div className={styles.bentoCard1}>
-                <div className={styles.bentoCard1Val}>50+</div>
-                <div className={styles.bentoCard1Label}>Partenaires Affiliés <br /> & Commerces</div>
+                <div>
+                  <div className={styles.bentoCard1Val}>50+</div>
+                  <div className={styles.bentoCard1Label}>Partenaires Affiliés <br /> & Commerces</div>
+                </div>
+                <div className={styles.logoMarquee}>
+                  <div className={styles.logoTrack}>
+                    <span className={styles.marqueeLogo}>🟠 Orange</span>
+                    <span className={styles.marqueeLogo}>🟡 MTN</span>
+                    <span className={styles.marqueeLogo}>🔴 Moov</span>
+                    <span className={styles.marqueeLogo}>🟢 Fidelis</span>
+                    <span className={styles.marqueeLogo}>🔵 Wave</span>
+                    {/* Duplicate track for loop */}
+                    <span className={styles.marqueeLogo}>🟠 Orange</span>
+                    <span className={styles.marqueeLogo}>🟡 MTN</span>
+                    <span className={styles.marqueeLogo}>🔴 Moov</span>
+                    <span className={styles.marqueeLogo}>🟢 Fidelis</span>
+                    <span className={styles.marqueeLogo}>🔵 Wave</span>
+                  </div>
+                </div>
               </div>
 
               {/* Card 2: Credit Card (3D Tilt) */}
@@ -292,6 +311,30 @@ export function ModernLanding({ content }: ModernLandingProps) {
                 <div className={styles.bentoCard4Content}>
                   <div className={styles.bentoCard4Label}>Points Gagnés</div>
                   <div className={styles.bentoCard4Val}>3 420 pts</div>
+                </div>
+                
+                {/* Animated spending line graph */}
+                <div className={styles.miniGraph}>
+                  <svg viewBox="0 0 100 30" className={styles.graphSvg}>
+                    <defs>
+                      <linearGradient id="graphGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#00A86B" stopOpacity="0.4" />
+                        <stop offset="100%" stopColor="#00A86B" stopOpacity="0.0" />
+                      </linearGradient>
+                    </defs>
+                    <path 
+                      d="M0,25 Q15,10 30,18 T60,5 T90,12 T100,2" 
+                      fill="none" 
+                      stroke="#00A86B" 
+                      strokeWidth="2.5" 
+                      strokeLinecap="round"
+                      className={styles.graphPath}
+                    />
+                    <path 
+                      d="M0,25 Q15,10 30,18 T60,5 T90,12 T100,2 L100,30 L0,30 Z" 
+                      fill="url(#graphGradient)"
+                    />
+                  </svg>
                 </div>
               </div>
 
@@ -508,7 +551,7 @@ export function ModernLanding({ content }: ModernLandingProps) {
       </footer>
 
       {/* FINANCING SYSTEM MODAL POPUP */}
-      <FinancingModal isOpen={isFinancingOpen} onClose={() => setIsFinancingOpen(false)} />
+      <FinancingModal isOpen={isFinancingOpen} onClose={() => setIsFinancingOpen(false)} financingConfig={content.financing} />
     </div>
   );
 }
