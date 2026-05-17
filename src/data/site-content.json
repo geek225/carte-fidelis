@@ -1,10 +1,10 @@
 {
   "site": {
-    "brandName": "Cashop",
+    "brandName": "Carte Fidelis",
     "logoImage": "",
-    "metaTitle": "Cashop by Antigravity - Modern Dribbble-style Digital Banking",
-    "metaDescription": "Experience modern digital banking beyond boundaries. Overhauled with a sleek Dribbble Bento Grid layout, beautiful 3D interactive tilt effects, and real-time transaction dashboard.",
-    "footerText": "© 2026 Cashop Labs by Antigravity. Tous droits reserves."
+    "metaTitle": "Carte Fidelis - L'Excellence de la Fidélité Client par Soumangourou Technologies",
+    "metaDescription": "Découvrez Carte Fidelis, le programme de fidélité premium nouvelle génération de Soumangourou Technologies. Bénéficiez d'avantages exclusifs, suivez vos points en temps réel et demandez votre accompagnement financier.",
+    "footerText": "© 2026 Soumangourou Technologies. Tous droits réservés."
   },
   "theme": {
     "primary": "#00A86B",
@@ -18,94 +18,94 @@
   },
   "header": {
     "menu": [
-      { "id": "nav-1", "label": "Particuliers", "href": "#", "enabled": true },
-      { "id": "nav-2", "label": "Entreprises", "href": "#", "enabled": true },
-      { "id": "nav-3", "label": "Tarifs", "href": "#", "enabled": true },
-      { "id": "nav-4", "label": "Trouver un agent", "href": "#", "enabled": true },
-      { "id": "nav-5", "label": "Aide et contact", "href": "#", "enabled": true }
+      { "id": "nav-1", "label": "Nos Cartes", "href": "#cards", "enabled": true },
+      { "id": "nav-2", "label": "Super App", "href": "#app", "enabled": true },
+      { "id": "nav-3", "label": "Univers Fidelis", "href": "#skills", "enabled": true },
+      { "id": "nav-4", "label": "Partenaires", "href": "#partners", "enabled": true },
+      { "id": "nav-5", "label": "FAQ & Assistance", "href": "#faq", "enabled": true }
     ],
-    "ctaLabel": "Devenir un agent",
+    "ctaLabel": "Obtenir un financement",
     "ctaHref": "#",
     "ctaEnabled": true
   },
   "hero": {
     "enabled": true,
     "kickerNum": "1",
-    "kickerText": "Compte\nCarte VISA\nRIB",
-    "title": "Transferez, recevez,\n payez et gerez votre argent\n24/7",
-    "subtitle": "Gagnez du temps et gerez votre argent en toute simplicite, sans bouger de chez vous.",
+    "kickerText": "Fidelis\nPoints\nRemises",
+    "title": "Au-delà des Limites\nRedéfinir la\nFidélité Client",
+    "subtitle": "Associez technologie moderne et privilèges exclusifs pour maximiser vos points, fidéliser vos clients et élever votre expérience d'achat vers de nouveaux sommets.",
     "mainImage": "/assets/hero-woman.png",
-    "btnLabel": "Ouvrir un compte",
+    "btnLabel": "Obtenir ma carte",
     "btnHref": "#"
   },
   "gridFeatures": {
     "enabled": true,
-    "title": "Grace a votre numero de telephone,\nvous beneficiez de",
+    "title": "Grâce à votre numéro de téléphone,\nvous bénéficiez de",
     "items": [
-      { "id": "feat-1", "icon": "check", "title": "1 Compte Bancaire & 1 RIB local", "enabled": true },
-      { "id": "feat-2", "icon": "check", "title": "Carte Visa Physique", "enabled": true },
-      { "id": "feat-3", "icon": "check", "title": "Cartes Virtuelles illimitees", "enabled": true },
-      { "id": "feat-4", "icon": "check", "title": "Application Mobile Tout-en-un", "enabled": true },
-      { "id": "feat-5", "icon": "check", "title": "Interoperabilite Mobile Money", "enabled": true },
-      { "id": "feat-6", "icon": "check", "title": "Paiements En Ligne Internationaux", "enabled": true },
-      { "id": "feat-7", "icon": "check", "title": "Paiements De Factures", "enabled": true },
-      { "id": "feat-8", "icon": "check", "title": "Assistance Client Dediee", "enabled": true }
+      { "id": "feat-1", "icon": "bank", "title": "1 Compte Fidelis & 1 ID unique", "enabled": true },
+      { "id": "feat-2", "icon": "card", "title": "Carte Fidelis Physique", "enabled": true },
+      { "id": "feat-3", "icon": "virtual", "title": "Cartes Virtuelles illimitées", "enabled": true },
+      { "id": "feat-4", "icon": "phone", "title": "Application Mobile Tout-en-un", "enabled": true },
+      { "id": "feat-5", "icon": "swap", "title": "Interopérabilité Mobile Money", "enabled": true },
+      { "id": "feat-6", "icon": "globe", "title": "Paiements En Ligne Internationaux", "enabled": true },
+      { "id": "feat-7", "icon": "bill", "title": "Économies Cumulées Réelles", "enabled": true },
+      { "id": "feat-8", "icon": "support", "title": "Assistance Client Dédiée 24/7", "enabled": true }
     ]
   },
   "splitCards": {
     "enabled": true,
-    "title": "Un compte, Une carte Visa",
+    "title": "Une carte, plusieurs avantages",
     "cardPhysical": {
       "enabled": true,
-      "title": "La Carte Push",
-      "description": "La carte Visa est une carte bancaire internationale que vous pouvez utiliser partout pour effectuer des retraits de guichet automatique ou des paiements.",
+      "title": "Carte Fidelis Physique",
+      "description": "La carte Fidelis Physique est une carte de fidélité internationale avec puce intégrée que vous pouvez utiliser dans tous nos commerces affiliés pour accumuler des points et débloquer des remises exclusives.",
       "image": "/assets/visa-green.png",
-      "btnLabel": "Details carte",
+      "btnLabel": "Détails de la carte",
       "btnHref": "#"
     },
     "cardVirtual": {
       "enabled": true,
-      "title": "La virtuelle Push",
-      "description": "La carte virtuelle est ideale pour les achats en ligne et les abonnements. Generez-la en 1 clic depuis l'app et securisez vos paiements sur le web.",
+      "title": "La carte virtuelle FIDELIS",
+      "description": "La carte virtuelle est idéale pour le marketing digital et vos achats en ligne. Générez-la instantanément depuis votre application mobile et commencez à bénéficier d'offres partenaires exclusives.",
       "image": "/assets/phone-mockup.png",
-      "btnLabel": "Details carte virtuelle",
+      "btnLabel": "Activer ma virtuelle",
       "btnHref": "#"
     }
   },
   "superApp": {
     "enabled": true,
-    "title": "Une Super App revolutionnaire",
+    "title": "Une Super App Fidelis révolutionnaire",
     "image": "/assets/phone-mockup.png",
-    "btnLabel": "Ouvrir un compte",
+    "btnLabel": "Obtenir ma carte",
     "btnHref": "#",
     "checklist": [
-      { "id": "sup-1", "text": "Interoperabilite avec les Mobile Money", "enabled": true },
-      { "id": "sup-2", "text": "Paiement en ligne", "enabled": true },
-      { "id": "sup-3", "text": "Transfert d'argent", "enabled": true },
-      { "id": "sup-4", "text": "Achat de credit telephonique", "enabled": true },
-      { "id": "sup-5", "text": "Paiement de factures", "enabled": true },
-      { "id": "sup-6", "text": "Historique de transactions detaille", "enabled": true }
+      { "id": "sup-1", "text": "Accès rapide à vos avantages", "enabled": true },
+      { "id": "sup-2", "text": "Évaluez vos points en temps réel", "enabled": true },
+      { "id": "sup-3", "text": "Gestion de votre carte Fidelis", "enabled": true },
+      { "id": "sup-4", "text": "Historique de vos avantages", "enabled": true },
+      { "id": "sup-5", "text": "Notifications d'offres exclusives", "enabled": true },
+      { "id": "sup-6", "text": "Accès à la carte de vos commerces", "enabled": true }
     ]
   },
   "agentBanner": {
     "enabled": true,
-    "title": "Retirez partout, pres de chez vous",
+    "title": "Fidelis au Cœur de Vos Affaires",
     "backgroundImage": "/assets/agent.png",
-    "overlayTitle": "Ne soyez jamais a court d'argent liquide !",
-    "overlayDesc": "Faites vos rechargements et retraits d'argent dans nos points relais agrees Push.",
+    "overlayTitle": "Développez votre commerce avec Fidelis !",
+    "overlayDesc": "Intégrez la Carte Fidelis au sein de votre entreprise pour attirer et fidéliser plus de clients tout en stimulant vos ventes.",
     "stat1Num": "0 F",
-    "stat1Label": "Depot a",
-    "stat2Num": "1 %",
-    "stat2Label": "Retrait a"
+    "stat1Label": "Frais d'adhésion",
+    "stat2Num": "+30%",
+    "stat2Label": "Taux moyen de rétention"
   },
   "faq": {
     "enabled": true,
-    "title": "Des questions ? Nous repondons",
+    "title": "Des questions sur Fidelis ? Nous y répondons",
     "items": [
-      { "id": "faq-1", "question": "Comment ouvrir un compte Push ?", "answer": "Il suffit de télécharger l'application, de renseigner votre numéro de téléphone et de suivre les étapes de vérification biométrique. C'est fait en moins de 3 minutes !", "enabled": true },
-      { "id": "faq-2", "question": "Ou recharger mon compte ?", "answer": "Vous pouvez recharger votre compte par virement bancaire, carte VISA, ou dans n'importe lequel de nos points relais partenaires.", "enabled": true },
-      { "id": "faq-3", "question": "Comment commander ma Carte Physique ?", "answer": "Accédez à l'onglet 'Cartes' de l'application, sélectionnez 'Commander une carte physique', choisissez votre adresse et validez. Votre carte arrivera sous 5 à 10 jours.", "enabled": true },
-      { "id": "faq-4", "question": "Quels sont les frais appliques ?", "answer": "La création de compte et la carte virtuelle sont totalement gratuites. Les frais de transfert varient selon le montant mais restent parmi les plus bas du marché (généralement 1%).", "enabled": true }
+      { "id": "faq-1", "question": "Comment fonctionne la Carte Fidelis ?", "answer": "La Carte Fidelis vous permet d'accumuler des points de fidélité à chaque achat chez nos commerces affiliés. Ces points sont convertibles en remises, cadeaux ou accompagnements financiers exclusifs.", "enabled": true },
+      { "id": "faq-2", "question": "Comment obtenir un financement ?", "answer": "Pour bénéficier de l'accompagnement financier allant de 200 000 FCFA à 300 000 FCFA, vous devez être souscripteur de la Carte Fidelis depuis plus de 3 mois et remplir le formulaire en ligne dans notre menu 'Obtenir un financement'.", "enabled": true },
+      { "id": "faq-3", "question": "La carte virtuelle est-elle gratuite ?", "answer": "Oui, la génération de votre carte virtuelle FIDELIS est 100% gratuite et instantanée depuis l'application mobile.", "enabled": true },
+      { "id": "faq-4", "question": "Où utiliser ma Carte Fidelis ?", "answer": "Vous pouvez l'utiliser chez l'ensemble de nos commerces et enseignes partenaires (alimentation, assurances, immobilier, transport) signalés par le logo Fidelis.", "enabled": true }
     ]
   },
   "partners": {
@@ -116,18 +116,17 @@
     "tabActiveBgColor": "#00f2fe",
     "tabActiveTextColor": "#030307",
     "categories": [
-      { "id": "cat-finance", "label": "Finance", "enabled": true },
-      { "id": "cat-immo", "label": "Immobilier", "enabled": true },
-      { "id": "cat-permis", "label": "Permis de conduire", "enabled": true },
-      { "id": "cat-assurance", "label": "Assurance", "enabled": true },
-      { "id": "cat-alimentaire", "label": "Alimentation", "enabled": true }
+      { "id": "cat-finance", "label": "Finance & Assurances", "enabled": true },
+      { "id": "cat-immo", "label": "Immobilier & Logement", "enabled": true },
+      { "id": "cat-permis", "label": "Services Publics & Transport", "enabled": true },
+      { "id": "cat-alimentaire", "label": "Alimentation & Distribution", "enabled": true }
     ],
     "items": [
       {
         "id": "part-demo-1",
-        "name": "Banque Populaire",
+        "name": "Soumangourou Banque",
         "logo": "",
-        "description": "Votre partenaire financier privilégié pour faciliter tous vos transferts de fonds et la gestion de votre trésorerie en local et international.",
+        "description": "Votre partenaire financier privilégié pour faciliter la conversion de vos points Fidelis en opportunités de financement local.",
         "categoryId": "cat-finance",
         "imageUrl": "",
         "videoUrl": "",
@@ -136,9 +135,9 @@
       },
       {
         "id": "part-demo-2",
-        "name": "Immo Prestige",
+        "name": "Logis Prestige",
         "logo": "",
-        "description": "Trouvez et financez le bien immobilier de vos rêves grâce à nos conseillers experts.",
+        "description": "Trouvez et financez le bien immobilier de vos rêves grâce à vos avantages fidélité Carte Fidelis.",
         "categoryId": "cat-immo",
         "imageUrl": "",
         "videoUrl": "",
@@ -149,8 +148,8 @@
   },
   "footerCta": {
     "enabled": true,
-    "title": "Rejoignez-nous maintenant",
-    "description": "Telechargez l'application mobile et commencez a economiser des aujourd'hui.",
+    "title": "Rejoignez l'Univers Fidelis",
+    "description": "Téléchargez l'application mobile et commencez à maximiser vos privilèges dès aujourd'hui.",
     "image": "/assets/phone-mockup.png",
     "socials": [
       { "id": "soc-1", "label": "F", "url": "#", "enabled": true },

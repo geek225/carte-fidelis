@@ -4,31 +4,52 @@ import React, { CSSProperties, useState, useEffect, useRef, ReactNode } from "re
 import styles from "./modern-landing.module.css";
 import type { SiteContent } from "@/lib/site-content-schema";
 import { AntigravityCanvas } from "./AntigravityCanvas";
-import SkillsConstellation from "./SkillsConstellation";
+import { Fidelis3DCard } from "./Fidelis3DCard";
+import { Virtual3DPhone } from "./Virtual3DPhone";
+import { Fidelis3DLogo } from "./Fidelis3DLogo";
+import { FinancingModal } from "./FinancingModal";
 
+const IconBank = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 22h18M6 18v-7m5 7v-7m5 7v-7m-9-4 8-5 8 5" /></svg>
+);
+const IconCard = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" /><rect x="6" y="14" width="3" height="2" /></svg>
+);
+const IconVirtual = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" /><path d="M12 18h.01M9 6h6M9 10h6" /></svg>
+);
+const IconPhoneDevice = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" /><line x1="12" y1="18" x2="12.01" y2="18" /></svg>
+);
+const IconSwap = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m17 2 4 4-4 4M3 18l4 4 4-4" /><path d="M21 6H9a4 4 0 0 0-4 4v3M3 18h12a4 4 0 0 0 4-4v-3" /></svg>
+);
+const IconWorldGlobe = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
+);
+const IconBill = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
+);
+const IconHeadset = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10V8a9 9 0 0 0-18 0v2" /><rect x="21" y="10" width="2" height="4" rx="1" /><rect x="1" y="10" width="2" height="4" rx="1" /><path d="M21 14v1a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-1" /></svg>
+);
 const IconCheck = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-);
-const IconPhone = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
-);
-const IconGlobe = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-);
-const IconSupport = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
 );
 const IconArrowRight = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
 );
 
 const getIcon = (name: string) => {
   switch(name) {
-    case "check": return <IconCheck />;
-    case "phone": return <IconPhone />;
-    case "globe": return <IconGlobe />;
-    case "support": return <IconSupport />;
-    case "arrow": return <IconArrowRight />;
+    case "bank": return <IconBank />;
+    case "card": return <IconCard />;
+    case "virtual": return <IconVirtual />;
+    case "phone": return <IconPhoneDevice />;
+    case "swap": return <IconSwap />;
+    case "globe": return <IconWorldGlobe />;
+    case "bill": return <IconBill />;
+    case "support": return <IconHeadset />;
     default: return <IconCheck />;
   }
 }
@@ -92,6 +113,11 @@ function Reveal({ children, delay = 0, direction = "up", duration = 0.8, style, 
   );
 }
 
+const AVATARS = [
+  { name: "Mariam K.", points: "15 420 pts", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&h=64&q=80" },
+  { name: "Koffi A.", points: "8 920 pts", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=64&h=64&q=80" },
+  { name: "Awa T.", points: "12 100 pts", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=64&h=64&q=80" }
+];
 
 type ModernLandingProps = {
   content: SiteContent;
@@ -100,6 +126,7 @@ type ModernLandingProps = {
 export function ModernLanding({ content }: ModernLandingProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [cardTransform, setCardTransform] = useState("perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)");
+  const [isFinancingOpen, setIsFinancingOpen] = useState(false);
 
   const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = cardRef.current;
@@ -109,7 +136,7 @@ export function ModernLanding({ content }: ModernLandingProps) {
     const y = e.clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    const rotateX = -(y - centerY) / 8; // Max tilt 10deg
+    const rotateX = -(y - centerY) / 8;
     const rotateY = (x - centerX) / 8;
     setCardTransform(`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`);
   };
@@ -148,7 +175,12 @@ export function ModernLanding({ content }: ModernLandingProps) {
             ))}
           </nav>
           {content.header.ctaEnabled && (
-            <a href={content.header.ctaHref} className="btn btn-primary">{content.header.ctaLabel}</a>
+            <button 
+              onClick={() => setIsFinancingOpen(true)} 
+              className={`btn btn-primary ${styles.navbarCta}`}
+            >
+              {content.header.ctaLabel}
+            </button>
           )}
         </div>
       </header>
@@ -159,31 +191,41 @@ export function ModernLanding({ content }: ModernLandingProps) {
           <AntigravityCanvas />
           <div className={`container ${styles.hero} fade-in`}>
             <div className={styles.heroContent}>
-              <h1>
-                Banking Beyond <br />
-                Boundaries Redefining <br />
-                <span className={styles.serifItalic}>Financial Excellence</span>
+              <h1 style={{ whiteSpace: "pre-line" }}>
+                Au-delà des Limites <br />
+                Redéfinir la <br />
+                <span className={styles.serifItalic}>Fidélité Client</span>
               </h1>
               <p className={styles.heroSub}>
-                Seamlessly integrating technology and personalized service to empower your financial goals and elevate your banking experience to new heights.
+                {content.hero.subtitle}
               </p>
               
               <div className={styles.ctaGroup}>
-                <a href={content.hero.btnHref} className="btn btn-primary" style={{ padding: "16px 32px", fontSize: "15px" }}>
-                  Start Your Financial
-                </a>
-                <a href="#" className="btn btn-outline" style={{ padding: "16px 32px", fontSize: "15px", display: "inline-flex", alignItems: "center", gap: "8px" }}>
-                  Explore Now <span style={{ fontSize: "16px", fontWeight: "bold" }}>↗</span>
+                <button 
+                  onClick={() => setIsFinancingOpen(true)} 
+                  className="btn btn-primary" 
+                  style={{ padding: "16px 32px", fontSize: "15px" }}
+                >
+                  {content.hero.btnLabel}
+                </button>
+                <a href="#cards" className="btn btn-outline" style={{ padding: "16px 32px", fontSize: "15px", display: "inline-flex", alignItems: "center", gap: "8px" }}>
+                  Découvrir <span style={{ fontSize: "16px", fontWeight: "bold" }}>↗</span>
                 </a>
               </div>
 
-              {/* Social Proof Avatar stack */}
+              {/* Social Proof Avatar stack with dynamic interactive tooltips */}
               <div className={styles.socialProof}>
                 <div className={styles.avatarGroup}>
-                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&h=64&q=80" alt="Customer 1" />
-                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=64&h=64&q=80" alt="Customer 2" />
-                  <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=64&h=64&q=80" alt="Customer 3" />
-                  <div className={styles.avatarMore}>8+</div>
+                  {AVATARS.map((av, idx) => (
+                    <div key={idx} className={styles.avatarContainer}>
+                      <img src={av.img} alt={av.name} className={styles.avatarImg} />
+                      <div className={styles.avatarTooltip}>
+                        <strong>{av.name}</strong>
+                        <span>{av.points}</span>
+                      </div>
+                    </div>
+                  ))}
+                  <div className={styles.avatarMore}>+15k</div>
                 </div>
                 <div className={styles.ratingInfo}>
                   <div className={styles.ratingStars}>
@@ -191,17 +233,17 @@ export function ModernLanding({ content }: ModernLandingProps) {
                       <span key={idx} className={styles.star}>★</span>
                     ))}
                   </div>
-                  <div className={styles.ratingText}>5 Star Mobile App Rated (4.8/5.0)</div>
+                  <div className={styles.ratingText}>Rejoint par +15 000 clients privilèges</div>
                 </div>
               </div>
             </div>
             
             {/* Bento Grid */}
             <div className={styles.bentoGrid}>
-              {/* Card 1: 50+ Years */}
+              {/* Card 1: Partenaires Affiliés */}
               <div className={styles.bentoCard1}>
                 <div className={styles.bentoCard1Val}>50+</div>
-                <div className={styles.bentoCard1Label}>Years of Trusted <br /> Service</div>
+                <div className={styles.bentoCard1Label}>Partenaires Affiliés <br /> & Commerces</div>
               </div>
 
               {/* Card 2: Credit Card (3D Tilt) */}
@@ -214,8 +256,8 @@ export function ModernLanding({ content }: ModernLandingProps) {
               >
                 <div className={styles.ccHeader}>
                   <div>
-                    <div className={styles.ccHeaderLabel}>Current Balance</div>
-                    <div className={styles.ccBalance}>$7,324,12</div>
+                    <div className={styles.ccHeaderLabel}>Points Cumulés</div>
+                    <div className={styles.ccBalance}>12 450 PTS</div>
                   </div>
                   <div className={styles.ccLogo}>
                     <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
@@ -227,13 +269,13 @@ export function ModernLanding({ content }: ModernLandingProps) {
                 </div>
                 <div className={styles.ccFooter}>
                   <span className={styles.ccNumber}>4321 8654 **** 6547</span>
-                  <span className={styles.ccExpiry}>08/23</span>
+                  <span className={styles.ccExpiry}>08/28</span>
                 </div>
               </div>
 
-              {/* Card 3: Yellow Hoodie Portrait image */}
+              {/* Card 3: Smile customer */}
               <div className={styles.bentoCard3}>
-                <img src="/assets/yellow-hoodie-man.png" alt="Smiling Cashop Customer" />
+                <img src="/assets/yellow-hoodie-man.png" alt="Client Fidelis souriant" />
               </div>
 
               {/* Card 4: Spend statistics */}
@@ -248,15 +290,15 @@ export function ModernLanding({ content }: ModernLandingProps) {
                   </div>
                 </div>
                 <div className={styles.bentoCard4Content}>
-                  <div className={styles.bentoCard4Label}>Total Spend</div>
-                  <div className={styles.bentoCard4Val}>$4,325</div>
+                  <div className={styles.bentoCard4Label}>Points Gagnés</div>
+                  <div className={styles.bentoCard4Val}>3 420 pts</div>
                 </div>
               </div>
 
               {/* Card 5: Emerald Green Global clients badge */}
               <div className={styles.bentoCard5}>
                 <div className={styles.bentoCard5Val}>2M+</div>
-                <div className={styles.bentoCard5Label}>Satisfied Global <br /> Customers</div>
+                <div className={styles.bentoCard5Label}>Membres Actifs <br /> Globalement</div>
                 <div className={styles.bentoCard5Pattern}>
                   <svg width="100" height="100" viewBox="0 0 100 100" fill="none" opacity="0.15">
                     <circle cx="80" cy="80" r="40" stroke="white" strokeWidth="6" strokeDasharray="12 12" />
@@ -286,9 +328,9 @@ export function ModernLanding({ content }: ModernLandingProps) {
         </section>
       )}
 
-      {/* CARD SPLIT SECTION */}
+      {/* CARD SPLIT SECTION (WITH 3D WEBGL MODELS) */}
       {content.splitCards.enabled && (
-        <section className="section-padding container">
+        <section className="section-padding container" id="cards">
           <Reveal className="text-center">
             <h2>{content.splitCards.title}<span className="dot">_</span></h2>
           </Reveal>
@@ -299,8 +341,8 @@ export function ModernLanding({ content }: ModernLandingProps) {
                   <h3>{content.splitCards.cardPhysical.title}</h3>
                   <p>{content.splitCards.cardPhysical.description}</p>
                 </div>
-                <div className={styles.cardVisual}>
-                  <img src={content.splitCards.cardPhysical.image} alt={content.splitCards.cardPhysical.title} />
+                <div className={styles.cardVisual} style={{ cursor: "grab" }}>
+                  <Fidelis3DCard />
                 </div>
                 <a href={content.splitCards.cardPhysical.btnHref} className="btn btn-primary">{content.splitCards.cardPhysical.btnLabel}</a>
               </Reveal>
@@ -312,8 +354,8 @@ export function ModernLanding({ content }: ModernLandingProps) {
                   <h3>{content.splitCards.cardVirtual.title}</h3>
                   <p>{content.splitCards.cardVirtual.description}</p>
                 </div>
-                <div className={styles.cardVisual}>
-                  <img src={content.splitCards.cardVirtual.image} alt={content.splitCards.cardVirtual.title} style={{ transform: "scale(0.8) translateY(20px)" }} />
+                <div className={styles.cardVisual} style={{ cursor: "grab" }}>
+                  <Virtual3DPhone />
                 </div>
                 <a href={content.splitCards.cardVirtual.btnHref} className="btn btn-primary">{content.splitCards.cardVirtual.btnLabel}</a>
               </Reveal>
@@ -324,7 +366,7 @@ export function ModernLanding({ content }: ModernLandingProps) {
 
       {/* SUPER APP CHECKLIST */}
       {content.superApp.enabled && (
-        <section className="section-padding container">
+        <section className="section-padding container" id="app">
           <div className={styles.superApp}>
             <Reveal className={styles.superAppContent} direction="right" duration={1}>
               <h2 style={{ textAlign: "left" }}>{content.superApp.title}<span className="dot">_</span></h2>
@@ -336,7 +378,9 @@ export function ModernLanding({ content }: ModernLandingProps) {
                   </div>
                 ))}
               </div>
-              <a href={content.superApp.btnHref} className="btn btn-primary" style={{ marginTop: "32px" }}>{content.superApp.btnLabel}</a>
+              <button onClick={() => setIsFinancingOpen(true)} className="btn btn-primary" style={{ marginTop: "32px" }}>
+                {content.superApp.btnLabel}
+              </button>
             </Reveal>
             
             <Reveal className={styles.superAppVisual} direction="left" duration={1} delay={200}>
@@ -374,15 +418,36 @@ export function ModernLanding({ content }: ModernLandingProps) {
         </section>
       )}
 
-      {/* 3D SKILLS GALAXY CONSTELLATION */}
-      <section className="section-padding container" id="skills">
+      {/* 3D BRAND SHOWCASE (REPLACED SKILLS CONSTELLATION) */}
+      <section className="section-padding container" id="skills" style={{ borderTop: "1px solid var(--border-color)", borderBottom: "1px solid var(--border-color)" }}>
         <Reveal className="text-center" style={{ marginBottom: "48px" }} direction="up">
-          <h2>Skills Constellation<span className="dot">_</span></h2>
-          <p style={{ color: "rgba(255, 255, 255, 0.6)", marginTop: "12px", fontSize: "16.5px", maxWidth: "620px", margin: "12px auto 0", lineHeight: "1.6" }}>
-            Explore notre stack technologique à travers une constellation 3D interactive tridimensionnelle de particules connectées en apesanteur.
+          <h2>Votre Univers Fidelis<span className="dot">_</span></h2>
+          <p style={{ color: "rgba(15, 23, 42, 0.6)", marginTop: "12px", fontSize: "16.5px", maxWidth: "620px", margin: "12px auto 0", lineHeight: "1.6" }}>
+            Explorez notre écosystème de fidélité 3D. Découvrez l'alliance parfaite entre le design physique premium de notre carte et la puissance de nos outils digitaux.
           </p>
         </Reveal>
-        <SkillsConstellation />
+        <div className={styles.brandUniverseGrid}>
+          <Reveal className={styles.brandUniverseImageCard} direction="right" duration={0.8}>
+            <div className={styles.brandUniverseFrame}>
+              <img src="/carte-fidelis.jpeg" alt="Carte Fidelis Officielle" className={styles.brandLogoImage} />
+            </div>
+            <div style={{ marginTop: "24px" }}>
+              <h4>Identité de Marque Fidelis</h4>
+              <p style={{ fontSize: "14px", color: "rgba(15,23,42,0.7)", marginTop: "8px" }}>
+                Un design épuré, aux finitions or et émeraude, sculpté pour offrir à vos clients une expérience d'achat haut de gamme inédite.
+              </p>
+            </div>
+          </Reveal>
+          <Reveal className={styles.brandUniverse3DCard} direction="left" duration={0.8} delay={200}>
+            <Fidelis3DLogo />
+            <div style={{ marginTop: "24px" }}>
+              <h4>Écosystème Numérique Interactif</h4>
+              <p style={{ fontSize: "14px", color: "rgba(15,23,42,0.7)", marginTop: "8px" }}>
+                Faites tourner et pivoter notre logo 3D orbital. Fidelis est un univers vivant et interconnecté, alliant transactions fluides et récompenses immédiates.
+              </p>
+            </div>
+          </Reveal>
+        </div>
       </section>
 
       {/* PARTNERS SECTION */}
@@ -395,9 +460,24 @@ export function ModernLanding({ content }: ModernLandingProps) {
         <FaqAccordion faq={content.faq} />
       )}
 
+      {/* CONTACT FORM */}
+      <section className="section-padding container" style={{ borderBottom: "1px solid var(--border-color)" }}>
+        <div className={styles.contactFormContainer}>
+          <Reveal className="text-center" style={{ marginBottom: "32px" }}>
+            <h2>Contactez-nous<span className="dot">_</span></h2>
+            <p style={{ color: "rgba(15,23,42,0.6)", marginTop: "8px" }}>
+              Une question, un partenariat ou besoin d'une démonstration ? Notre équipe vous répond sous 24h.
+            </p>
+          </Reveal>
+          <Reveal className={styles.contactFormCard} direction="up" duration={0.8}>
+            <ContactForm />
+          </Reveal>
+        </div>
+      </section>
+
       {/* FOOTER CTA */}
       {content.footerCta.enabled && (
-        <section className="container">
+        <section className="container" style={{ marginTop: "60px" }}>
           <div className={styles.footerCta}>
             <Reveal className={styles.ctaPhones} direction="right" duration={1}>
                <img src={content.footerCta.image} alt="Footer graphic" style={{maxWidth: "200px", margin: "0 auto", display: "block"}} />
@@ -426,7 +506,138 @@ export function ModernLanding({ content }: ModernLandingProps) {
           </div>
         </div>
       </footer>
+
+      {/* FINANCING SYSTEM MODAL POPUP */}
+      <FinancingModal isOpen={isFinancingOpen} onClose={() => setIsFinancingOpen(false)} />
     </div>
+  );
+}
+
+function ContactForm() {
+  const [contactData, setContactData] = useState({ name: "", email: "", subject: "", message: "" });
+  const [isSent, setIsSent] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSent(true);
+  };
+
+  if (isSent) {
+    return (
+      <div style={{ textAlign: "center", padding: "40px 20px" }}>
+        <div style={{
+          width: "48px",
+          height: "48px",
+          borderRadius: "50%",
+          background: "rgba(0, 168, 107, 0.1)",
+          color: "#00A86B",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          margin: "0 auto 16px auto"
+        }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <h4 style={{ fontWeight: 700, fontSize: "18px" }}>Message Envoyé !</h4>
+        <p style={{ color: "rgba(15,23,42,0.7)", fontSize: "14px", marginTop: "8px", lineHeight: 1.5 }}>
+          Merci pour votre message. Notre service commercial ou financier reviendra vers vous très rapidement.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+      <div className={styles.formRow}>
+        <div className={styles.formGroup} style={{ flex: 1 }}>
+          <label style={{ fontSize: "13px", fontWeight: "600", marginBottom: "6px", display: "block" }}>Nom Complet *</label>
+          <input 
+            type="text" 
+            required 
+            placeholder="Votre nom" 
+            value={contactData.name} 
+            onChange={(e) => setContactData({ ...contactData, name: e.target.value })} 
+            style={{
+              width: "100%",
+              padding: "14px 18px",
+              background: "rgba(255,255,255,0.7)",
+              border: "1px solid rgba(15,23,42,0.08)",
+              borderRadius: "10px",
+              outline: "none",
+              fontSize: "14px",
+              color: "#0F172A"
+            }}
+          />
+        </div>
+        <div className={styles.formGroup} style={{ flex: 1 }}>
+          <label style={{ fontSize: "13px", fontWeight: "600", marginBottom: "6px", display: "block" }}>Adresse E-mail *</label>
+          <input 
+            type="email" 
+            required 
+            placeholder="nom@exemple.com" 
+            value={contactData.email} 
+            onChange={(e) => setContactData({ ...contactData, email: e.target.value })} 
+            style={{
+              width: "100%",
+              padding: "14px 18px",
+              background: "rgba(255,255,255,0.7)",
+              border: "1px solid rgba(15,23,42,0.08)",
+              borderRadius: "10px",
+              outline: "none",
+              fontSize: "14px",
+              color: "#0F172A"
+            }}
+          />
+        </div>
+      </div>
+      <div className={styles.formGroup}>
+        <label style={{ fontSize: "13px", fontWeight: "600", marginBottom: "6px", display: "block" }}>Sujet *</label>
+        <input 
+          type="text" 
+          required 
+          placeholder="Sujet de votre message" 
+          value={contactData.subject} 
+          onChange={(e) => setContactData({ ...contactData, subject: e.target.value })} 
+          style={{
+            width: "100%",
+            padding: "14px 18px",
+            background: "rgba(255,255,255,0.7)",
+            border: "1px solid rgba(15,23,42,0.08)",
+            borderRadius: "10px",
+            outline: "none",
+            fontSize: "14px",
+            color: "#0F172A"
+          }}
+        />
+      </div>
+      <div className={styles.formGroup}>
+        <label style={{ fontSize: "13px", fontWeight: "600", marginBottom: "6px", display: "block" }}>Message *</label>
+        <textarea 
+          required 
+          rows={4}
+          placeholder="Comment pouvons-nous vous aider ?" 
+          value={contactData.message} 
+          onChange={(e) => setContactData({ ...contactData, message: e.target.value })} 
+          style={{
+            width: "100%",
+            padding: "14px 18px",
+            background: "rgba(255,255,255,0.7)",
+            border: "1px solid rgba(15,23,42,0.08)",
+            borderRadius: "10px",
+            outline: "none",
+            fontSize: "14px",
+            color: "#0F172A",
+            resize: "vertical",
+            fontFamily: "inherit"
+          }}
+        />
+      </div>
+      <button type="submit" className="btn btn-primary" style={{ padding: "14px 28px", alignSelf: "flex-end" }}>
+        Envoyer le message ✉
+      </button>
+    </form>
   );
 }
 
@@ -438,7 +649,7 @@ function FaqAccordion({ faq }: { faq: SiteContent["faq"] }) {
   };
 
   return (
-    <section className="section-padding container">
+    <section id="faq" className="section-padding container">
       <div className="text-center">
         <h2>{faq.title}<span className="dot">_</span></h2>
       </div>
@@ -470,7 +681,7 @@ function FaqAccordion({ faq }: { faq: SiteContent["faq"] }) {
                 transition: "all 0.3s ease",
                 opacity: isOpen ? 1 : 0,
                 fontSize: "15px",
-                color: "rgba(255, 255, 255, 0.7)",
+                color: "rgba(15, 23, 42, 0.7)",
                 lineHeight: "1.6",
                 paddingBottom: isOpen ? "24px" : "0px",
                 whiteSpace: "pre-line"
@@ -491,7 +702,6 @@ function PartnersSection({ partners }: { partners: SiteContent["partners"] }) {
   
   const [activeCatId, setActiveCatId] = useState<string>(initialCatId);
 
-  // Guard against activeCatId no longer existing in categories list
   const activeTabId = activeCats.some(c => c.id === activeCatId) 
     ? activeCatId 
     : initialCatId;
@@ -503,12 +713,11 @@ function PartnersSection({ partners }: { partners: SiteContent["partners"] }) {
   if (activeCats.length === 0) return null;
 
   return (
-    <section id="partenaires" className="section-padding container">
+    <section id="partners" className="section-padding container">
       <div className="text-center" style={{ marginBottom: "20px" }}>
         <h2 style={{ whiteSpace: 'pre-line' }}>{partners.title}<span className="dot">_</span></h2>
       </div>
 
-      {/* Filter Tabs */}
       <div className={styles.partnersTabs}>
         {activeCats.map((cat) => {
           const isActive = cat.id === activeTabId;
@@ -530,7 +739,6 @@ function PartnersSection({ partners }: { partners: SiteContent["partners"] }) {
         })}
       </div>
 
-      {/* Partners list */}
       <div className={styles.partnersGrid}>
         {filteredItems.length > 0 ? (
           filteredItems.map((item) => (
