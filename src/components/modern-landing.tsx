@@ -3,6 +3,8 @@
 import React, { CSSProperties, useState, useEffect, useRef, ReactNode } from "react";
 import styles from "./modern-landing.module.css";
 import type { SiteContent } from "@/lib/site-content-schema";
+import { AntigravityCanvas } from "./AntigravityCanvas";
+import SkillsConstellation from "./SkillsConstellation";
 
 const IconCheck = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -134,6 +136,7 @@ export function ModernLanding({ content }: ModernLandingProps) {
       {/* HERO */}
       {content.hero.enabled && (
         <section className={styles.heroBg}>
+          <AntigravityCanvas />
           <div className={`container ${styles.hero} fade-in`}>
             <div className={styles.heroContent}>
               <div className={styles.heroKicker}>
@@ -259,6 +262,17 @@ export function ModernLanding({ content }: ModernLandingProps) {
         </section>
       )}
 
+      {/* 3D SKILLS GALAXY CONSTELLATION */}
+      <section className="section-padding container" id="skills">
+        <Reveal className="text-center" style={{ marginBottom: "48px" }} direction="up">
+          <h2>Skills Constellation<span className="dot">_</span></h2>
+          <p style={{ color: "rgba(255, 255, 255, 0.6)", marginTop: "12px", fontSize: "16.5px", maxWidth: "620px", margin: "12px auto 0", lineHeight: "1.6" }}>
+            Explore notre stack technologique à travers une constellation 3D interactive tridimensionnelle de particules connectées en apesanteur.
+          </p>
+        </Reveal>
+        <SkillsConstellation />
+      </section>
+
       {/* PARTNERS SECTION */}
       {content.partners && content.partners.enabled && (
         <PartnersSection partners={content.partners} />
@@ -344,7 +358,7 @@ function FaqAccordion({ faq }: { faq: SiteContent["faq"] }) {
                 transition: "all 0.3s ease",
                 opacity: isOpen ? 1 : 0,
                 fontSize: "15px",
-                color: "var(--dark-light)",
+                color: "rgba(255, 255, 255, 0.7)",
                 lineHeight: "1.6",
                 paddingBottom: isOpen ? "24px" : "0px",
                 whiteSpace: "pre-line"

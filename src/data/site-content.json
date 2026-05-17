@@ -1,20 +1,20 @@
 {
   "site": {
-    "brandName": "Push",
+    "brandName": "Antigravity",
     "logoImage": "",
-    "metaTitle": "Push - Gerez votre argent 24/7",
-    "metaDescription": "Transferez, recevez, payez et gerez votre argent facilement.",
-    "footerText": "© 2026 Push Inc. Tous droits reserves."
+    "metaTitle": "Antigravity - 3D Gravity-Defying AI & Design Showcase",
+    "metaDescription": "Experience the future of the web with Antigravity: interactive 3D particle fields and neural networks.",
+    "footerText": "© 2026 Antigravity Labs. Tous droits reserves."
   },
   "theme": {
-    "primary": "#50B848",
-    "primaryHover": "#41a03a",
-    "dark": "#123227",
-    "darkLight": "#2a4a3e",
-    "lightBg": "#f3faf2",
-    "grayBg": "#f5f8f7",
+    "primary": "#00f2fe",
+    "primaryHover": "#9b51e0",
+    "dark": "#030307",
+    "darkLight": "#0d0e1a",
+    "lightBg": "#121324",
+    "grayBg": "#16172d",
     "white": "#ffffff",
-    "borderColor": "#e2eae2"
+    "borderColor": "rgba(255, 255, 255, 0.08)"
   },
   "header": {
     "menu": [
@@ -111,10 +111,10 @@
   "partners": {
     "enabled": true,
     "title": "Nos Partenaires de Confiance",
-    "tabBgColor": "#f3faf2",
-    "tabTextColor": "#123227",
-    "tabActiveBgColor": "#50B848",
-    "tabActiveTextColor": "#ffffff",
+    "tabBgColor": "rgba(255, 255, 255, 0.04)",
+    "tabTextColor": "#ffffff",
+    "tabActiveBgColor": "#00f2fe",
+    "tabActiveTextColor": "#030307",
     "categories": [
       { "id": "cat-finance", "label": "Finance", "enabled": true },
       { "id": "cat-immo", "label": "Immobilier", "enabled": true },

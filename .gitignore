@@ -43,3 +43,5 @@ next-env.d.ts
 # local credentials
 github-credentials.txt
 
+# temporary files
+/inspiration-repo/
