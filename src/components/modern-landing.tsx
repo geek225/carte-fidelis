@@ -463,39 +463,107 @@ export function ModernLanding({ content }: ModernLandingProps) {
         </section>
       )}
 
-      {/* CARD SPLIT SECTION (WITH 3D WEBGL MODELS) */}
-      {content.splitCards.enabled && (
-        <section className="section-padding container" id="cards">
+      {/* SECTION AVANTAGES FIDELIS */}
+      {content.advantagesSection?.enabled && (
+        <section className="section-padding container" id="advantages">
           <Reveal className="text-center">
-            <h2>{content.splitCards.title}<span className="dot">_</span></h2>
+            <h2>{content.advantagesSection.title}<span className="dot">_</span></h2>
+            {content.advantagesSection.subtitle && (
+              <p className={styles.featureSubtitle}>{content.advantagesSection.subtitle}</p>
+            )}
           </Reveal>
-          <div className={styles.splitCards}>
-            {content.splitCards.cardPhysical.enabled && (
-              <Reveal className={styles.cardItem} delay={0} direction="up">
-                <div className={styles.cardHead}>
-                  <h3>{content.splitCards.cardPhysical.title}</h3>
-                  <p>{content.splitCards.cardPhysical.description}</p>
-                </div>
-                <div className={styles.cardVisual} style={{ cursor: "grab" }}>
-                  <Fidelis3DCard />
-                </div>
-                <a href={content.splitCards.cardPhysical.btnHref} className="btn btn-primary">{content.splitCards.cardPhysical.btnLabel}</a>
-              </Reveal>
-            )}
+          
+          <div className={styles.advantagesGrid}>
+            {content.advantagesSection.items.filter(item => item.enabled).map((advantage, idx) => {
+              const getAdvantageIcon = (iconName: string) => {
+                switch(iconName) {
+                  case "assurance": return "🏥";
+                  case "immobilier": return "🏠";
+                  case "scolarite": return "🎓";
+                  case "emploi": return "💼";
+                  case "finance": return "💰";
+                  case "alimentation": return "🛒";
+                  case "reseau": return "🤝";
+                  default: return "✨";
+                }
+              };
 
-            {content.splitCards.cardVirtual.enabled && (
-              <Reveal className={styles.cardItem} delay={200} direction="up">
-                <div className={styles.cardHead}>
-                  <h3>{content.splitCards.cardVirtual.title}</h3>
-                  <p>{content.splitCards.cardVirtual.description}</p>
-                </div>
-                <div className={styles.cardVisual} style={{ cursor: "grab" }}>
-                  <Virtual3DPhone />
-                </div>
-                <a href={content.splitCards.cardVirtual.btnHref} className="btn btn-primary">{content.splitCards.cardVirtual.btnLabel}</a>
-              </Reveal>
-            )}
+              return (
+                <Reveal 
+                  key={advantage.id} 
+                  className={styles.advantageCard} 
+                  delay={idx * 100} 
+                  duration={0.8} 
+                  direction="up"
+                >
+                  <div className={styles.advantageIconWrapper}>
+                    {getAdvantageIcon(advantage.icon)}
+                  </div>
+                  <h4 className={styles.advantageTitle}>{advantage.title}</h4>
+                  {advantage.description && (
+                    <p className={styles.advantageDesc}>{advantage.description}</p>
+                  )}
+                  {advantage.cities && advantage.cities.length > 0 && (
+                    <div className={styles.cityBadgesContainer}>
+                      {advantage.cities.map((city, cIdx) => (
+                        <span key={cIdx} className={styles.cityBadge}>
+                          📍 {city}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </Reveal>
+              );
+            })}
           </div>
+        </section>
+      )}
+
+      {/* SECTION SYNTHÈSE "POURQUOI CHOISIR FIDELIS ?" */}
+      {content.whyFidelis?.enabled && (
+        <section className="section-padding container" id="why">
+          <Reveal className={styles.whySection} direction="up" duration={0.9} delay={100}>
+            <div className={styles.whyGrid}>
+              <div className={styles.whyLeft}>
+                <h2 className={styles.whyTitle}>{content.whyFidelis.title}</h2>
+                <p className={styles.whyDesc}>{content.whyFidelis.description}</p>
+                
+                <div className={styles.whyAvatarBlock}>
+                  <div className={styles.bannerAvatarGroup}>
+                    {AVATARS.map((av, idx) => (
+                      <div key={idx} className={styles.bannerAvatarContainer}>
+                        <img src={av.img} alt={av.name} className={styles.bannerAvatar} />
+                        <div className={styles.bannerAvatarTooltip}>
+                          <strong>{av.name}</strong>
+                          <span>{av.points}</span>
+                        </div>
+                      </div>
+                    ))}
+                    <div className={styles.bannerAvatarMore}>+5k</div>
+                  </div>
+                  <div className={styles.whyAvatarText}>
+                    <strong>Rejoignez notre communauté</strong>
+                    Des milliers de membres évoluent avec nous
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.whyStatsGrid}>
+                <div className={styles.whyStatCard}>
+                  <span className={styles.whyStatNum}>{content.whyFidelis.statFormations}</span>
+                  <span className={styles.whyStatLabel}>Formations</span>
+                </div>
+                <div className={styles.whyStatCard}>
+                  <span className={styles.whyStatNum}>{content.whyFidelis.statPartenaires}</span>
+                  <span className={styles.whyStatLabel}>Partenaires</span>
+                </div>
+                <div className={styles.whyStatCard}>
+                  <span className={styles.whyStatNum}>{content.whyFidelis.statMembres}</span>
+                  <span className={styles.whyStatLabel}>Membres</span>
+                </div>
+              </div>
+            </div>
+          </Reveal>
         </section>
       )}
 

@@ -42,17 +42,17 @@
   },
   "gridFeatures": {
     "enabled": true,
-    "title": "Développez vos compétences avec Fidelis",
-    "subtitle": "Accédez à des formations digitales modernes conçues pour aider les jeunes, entrepreneurs et professionnels à évoluer.",
+    "title": "Développez vos revenus grâce aux formations Fidelis",
+    "subtitle": "Fidelis donne accès à des formations pratiques et modernes pour développer ses compétences et créer de nouvelles opportunités.",
     "bannerText": "+50 formations digitales disponibles avec Fidelis",
     "bannerBtnLabel": "Découvrir toutes les formations",
     "bannerBtnHref": "#",
     "items": [
       {
         "id": "feat-1",
-        "title": "Marketing Digital",
-        "description": "Apprenez à développer une marque et vendre en ligne.",
-        "imageUrl": "/assets/marketing-digital.png",
+        "title": "Facebook Ads",
+        "description": "Apprenez à créer des campagnes publicitaires performantes sur Facebook.",
+        "imageUrl": "/assets/facebook-ads.png",
         "badge": "Disponible",
         "level": "Débutant",
         "duration": "5 semaines",
@@ -60,29 +60,29 @@
       },
       {
         "id": "feat-2",
-        "title": "E-commerce",
-        "description": "Créez et gérez votre boutique en ligne.",
-        "imageUrl": "/assets/e-commerce.png",
-        "badge": "Disponible",
-        "level": "Intermédiaire",
-        "duration": "6 semaines",
-        "enabled": true
-      },
-      {
-        "id": "feat-3",
-        "title": "Intelligence Artificielle",
-        "description": "Découvrez les outils IA pour travailler plus vite.",
-        "imageUrl": "/assets/intelligence-artificielle.png",
+        "title": "Marketing TikTok",
+        "description": "Découvrez comment vendre et développer une audience sur TikTok.",
+        "imageUrl": "/assets/marketing-tiktok.png",
         "badge": "Disponible",
         "level": "Débutant",
         "duration": "4 semaines",
         "enabled": true
       },
       {
+        "id": "feat-3",
+        "title": "Marketing de Réseau",
+        "description": "Maîtrisez les techniques de network marketing et développement de réseau.",
+        "imageUrl": "/assets/marketing-reseau.png",
+        "badge": "Disponible",
+        "level": "Intermédiaire",
+        "duration": "6 semaines",
+        "enabled": true
+      },
+      {
         "id": "feat-4",
-        "title": "Community Management",
-        "description": "Gérez des réseaux sociaux comme un professionnel.",
-        "imageUrl": "/assets/community-management.png",
+        "title": "Techniques Commerciales",
+        "description": "Développez vos compétences en vente terrain et négociation.",
+        "imageUrl": "/assets/commercial.png",
         "badge": "Disponible",
         "level": "Intermédiaire",
         "duration": "5 semaines",
@@ -90,45 +90,80 @@
       },
       {
         "id": "feat-5",
-        "title": "Design Graphique",
-        "description": "Maîtrisez les visuels modernes et branding.",
-        "imageUrl": "/assets/design-graphique.png",
+        "title": "Entrepreneuriat",
+        "description": "Apprenez à créer et développer votre activité.",
+        "imageUrl": "/assets/entrepreneuriat-modern.png",
         "badge": "Disponible",
         "level": "Débutant",
         "duration": "5 semaines",
         "enabled": true
+      }
+    ]
+  },
+  "advantagesSection": {
+    "enabled": true,
+    "title": "Les avantages de la carte Fidelis",
+    "subtitle": "Des opportunités concrètes pour améliorer votre vie professionnelle et familiale.",
+    "items": [
+      {
+        "id": "adv-1",
+        "icon": "assurance",
+        "title": "Réductions sur les assurances",
+        "description": "Bénéficiez de 10 % à 15 % de réduction auprès de nos partenaires assurance.",
+        "enabled": true
       },
       {
-        "id": "feat-6",
-        "title": "Business & Entrepreneuriat",
-        "description": "Développez votre activité avec des stratégies modernes.",
-        "imageUrl": "/assets/business-entrepreneuriat.png",
-        "badge": "Disponible",
-        "level": "Avancé",
-        "duration": "8 semaines",
+        "id": "adv-2",
+        "icon": "immobilier",
+        "title": "Opportunités immobilières",
+        "description": "Accédez à des offres de terrains et projets immobiliers à Bonoua, Yamoussoukro et Alépé grâce à notre partenaire ITBP.",
+        "cities": ["Bonoua", "Yamoussoukro", "Alépé"],
+        "enabled": true
+      },
+      {
+        "id": "adv-3",
+        "icon": "scolarite",
+        "title": "Aide à la prise en charge scolaire",
+        "description": "Profitez d’un accompagnement pour la scolarité des enfants et certaines solutions liées aux frais scolaires.",
+        "enabled": true
+      },
+      {
+        "id": "adv-4",
+        "icon": "emploi",
+        "title": "Opportunités d’emploi",
+        "description": "Accédez à des offres d’emploi et bénéficiez d’un accompagnement professionnel.",
+        "enabled": true
+      },
+      {
+        "id": "adv-5",
+        "icon": "finance",
+        "title": "Accompagnement financier",
+        "description": "Bénéficiez de conseils financiers et d’un suivi personnalisé adaptés à vos projets.",
+        "enabled": true
+      },
+      {
+        "id": "adv-6",
+        "icon": "alimentation",
+        "title": "Produits à prix réduits",
+        "description": "Accédez à certains produits alimentaires à prix de gros chez nos partenaires.",
+        "enabled": true
+      },
+      {
+        "id": "adv-7",
+        "icon": "reseau",
+        "title": "Réseau & accompagnement",
+        "description": "Développez vos relations et profitez d’opportunités commerciales grâce au réseau Fidelis.",
         "enabled": true
       }
     ]
   },
-  "splitCards": {
+  "whyFidelis": {
     "enabled": true,
-    "title": "Une carte, plusieurs avantages",
-    "cardPhysical": {
-      "enabled": true,
-      "title": "Carte Fidelis Physique",
-      "description": "La carte Fidelis Physique est une carte de fidélité internationale avec puce intégrée que vous pouvez utiliser dans tous nos commerces affiliés pour accumuler des points et débloquer des remises exclusives.",
-      "image": "/assets/visa-green.png",
-      "btnLabel": "Détails de la carte",
-      "btnHref": "#"
-    },
-    "cardVirtual": {
-      "enabled": true,
-      "title": "La carte virtuelle FIDELIS",
-      "description": "La carte virtuelle est idéale pour le marketing digital et vos achats en ligne. Générez-la instantanément depuis votre application mobile et commencez à bénéficier d'offres partenaires exclusives.",
-      "image": "/assets/phone-mockup.png",
-      "btnLabel": "Activer ma virtuelle",
-      "btnHref": "#"
-    }
+    "title": "Pourquoi choisir Fidelis ?",
+    "description": "La carte Fidelis permet d’accéder à des formations, réductions, opportunités d’emploi, avantages immobiliers, accompagnement financier et achats à prix réduit, tout en intégrant un réseau utile pour améliorer sa vie professionnelle et familiale.",
+    "statFormations": "+50",
+    "statPartenaires": "+100",
+    "statMembres": "+5000"
   },
   "superApp": {
     "enabled": true,

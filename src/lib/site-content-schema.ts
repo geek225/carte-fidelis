@@ -132,6 +132,27 @@ export const siteContentSchema = z.object({
       btnLabel: stringField,
       btnHref: stringField,
     }),
+  }).strict().optional(),
+  advantagesSection: z.object({
+    enabled: z.boolean(),
+    title: stringField,
+    subtitle: stringField.optional(),
+    items: z.array(z.object({
+      id: idField,
+      icon: stringField,
+      title: stringField,
+      description: stringField,
+      cities: z.array(z.string()).optional(),
+      enabled: z.boolean().default(true),
+    }).strict()),
+  }).strict(),
+  whyFidelis: z.object({
+    enabled: z.boolean(),
+    title: stringField,
+    description: stringField,
+    statFormations: stringField,
+    statPartenaires: stringField,
+    statMembres: stringField,
   }).strict(),
   superApp: z.object({
     enabled: z.boolean(),

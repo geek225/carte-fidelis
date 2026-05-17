@@ -280,46 +280,83 @@ export function AdminDashboard({ initialContent }: AdminDashboardProps) {
            </div>
         </Panel>
 
-        {/* SPLIT CARDS */}
-        <Panel title="Duo de Cartes Bancaires" enabled={content.splitCards.enabled} onToggle={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, enabled: v }}))}>
-           <Field label="Titre du module" value={content.splitCards.title} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, title: v }}))} />
-           <div className={`${s.grid} ${s.grid2}`} style={{marginTop: "24px"}}>
-              
-              {/* Card 1 */}
-              <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", padding: "20px", borderRadius: "12px" }}>
-                 <div style={{display: "flex", justifyContent: "space-between", marginBottom: "16px"}}>
-                    <strong style={{color: "#1e293b"}}>Emplacement 1</strong>
-                    <Switch label="Actif" checked={content.splitCards.cardPhysical.enabled} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardPhysical: { ...c.splitCards.cardPhysical, enabled: v }}}))} />
-                 </div>
-                 <div className={s.grid} style={{ opacity: content.splitCards.cardPhysical.enabled ? 1 : 0.5 }}>
-                    <Field label="Titre de la carte" value={content.splitCards.cardPhysical.title} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardPhysical: { ...c.splitCards.cardPhysical, title: v }}}))} />
-                    <TextAreaField label="Paragraphe descriptif" value={content.splitCards.cardPhysical.description} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardPhysical: { ...c.splitCards.cardPhysical, description: v }}}))} />
-                    <ImageField label="Visuel Carte" value={content.splitCards.cardPhysical.image} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardPhysical: { ...c.splitCards.cardPhysical, image: v }}}))} onUpload={uploadImage} />
+        {/* AVANTAGES FIDELIS */}
+         <Panel 
+           title="Avantages Officiels Fidelis" 
+           enabled={content.advantagesSection?.enabled} 
+           onToggle={v => updateContent(c => ({ ...c, advantagesSection: { ...c.advantagesSection, enabled: v }}))}
+         >
+            <div className={`${s.grid} ${s.grid2}`}>
+              <Field label="Titre Principal" value={content.advantagesSection?.title || ""} onChange={v => updateContent(c => ({ ...c, advantagesSection: { ...c.advantagesSection, title: v }}))} />
+              <Field label="Sous-titre" value={content.advantagesSection?.subtitle || ""} onChange={v => updateContent(c => ({ ...c, advantagesSection: { ...c.advantagesSection, subtitle: v }}))} />
+            </div>
+            
+            <div className={s.stack} style={{marginTop: "32px"}}>
+              <span className={s.fieldLabel}>Liste des Avantages</span>
+              <div className={s.stack}>
+                {(content.advantagesSection?.items || []).map(adv => (
+                  <div key={adv.id} className={s.rowCard} style={{ background: "#ffffff", border: "1px solid #cbd5e1", padding: "20px", marginBottom: "16px" }}>
                     <div className={`${s.grid} ${s.grid2}`}>
-                      <Field label="Texte Bouton" value={content.splitCards.cardPhysical.btnLabel} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardPhysical: { ...c.splitCards.cardPhysical, btnLabel: v }}}))} />
-                      <Field label="Lien" value={content.splitCards.cardPhysical.btnHref} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardPhysical: { ...c.splitCards.cardPhysical, btnHref: v }}}))} />
+                      <Field label="Titre de l'avantage" value={adv.title} onChange={e => updateContent(c => ({ ...c, advantagesSection: { ...c.advantagesSection, items: updateItemById(c.advantagesSection.items, adv.id, { title: e }) }}))} />
+                      <div className={s.field}>
+                        <span className={s.fieldLabel}>Icône</span>
+                        <select 
+                          className={s.input} 
+                          value={adv.icon} 
+                          onChange={e => updateContent(c => ({ ...c, advantagesSection: { ...c.advantagesSection, items: updateItemById(c.advantagesSection.items, adv.id, { icon: e.target.value }) }}))}
+                        >
+                          <option value="assurance">🏥 Assurance</option>
+                          <option value="immobilier">🏠 Immobilier</option>
+                          <option value="scolarite">🎓 Scolarité</option>
+                          <option value="emploi">💼 Emploi</option>
+                          <option value="finance">💰 Finance</option>
+                          <option value="alimentation">🛒 Alimentation</option>
+                          <option value="reseau">🤝 Réseau</option>
+                        </select>
+                      </div>
+                      <div style={{ gridColumn: "1 / -1" }}>
+                        <TextAreaField label="Description" value={adv.description || ""} onChange={e => updateContent(c => ({ ...c, advantagesSection: { ...c.advantagesSection, items: updateItemById(c.advantagesSection.items, adv.id, { description: e }) }}))} />
+                      </div>
+                      {adv.icon === "immobilier" && (
+                        <div style={{ gridColumn: "1 / -1" }}>
+                          <Field 
+                            label="Villes associées (séparées par des virgules)" 
+                            value={(adv.cities || []).join(", ")} 
+                            onChange={e => {
+                              const cities = e.split(",").map(x => x.trim()).filter(Boolean);
+                              updateContent(c => ({ ...c, advantagesSection: { ...c.advantagesSection, items: updateItemById(c.advantagesSection.items, adv.id, { cities }) }}));
+                            }} 
+                          />
+                        </div>
+                      )}
                     </div>
-                 </div>
+                    <div className={s.rowActions} style={{ marginTop: "12px", borderTop: "1px dashed #cbd5e1", paddingTop: "8px" }}>
+                      <Switch label="Activé" checked={adv.enabled} onChange={v => updateContent(c => ({ ...c, advantagesSection: { ...c.advantagesSection, items: updateItemById(c.advantagesSection.items, adv.id, { enabled: v }) }}))} />
+                      <button className={s.iconBtn} style={{ color: "#ef4444" }} onClick={() => updateContent(c => ({ ...c, advantagesSection: { ...c.advantagesSection, items: removeItemById(c.advantagesSection.items, adv.id) }}))}>Retirer l'avantage</button>
+                    </div>
+                  </div>
+                ))}
               </div>
+              <button className={s.addButton} onClick={() => updateContent(c => ({ ...c, advantagesSection: { ...c.advantagesSection, items: [...(c.advantagesSection?.items || []), { id: makeId("adv"), icon: "reseau", title: "Nouvel avantage", description: "", enabled: true } ] }}))}>+ Ajouter un avantage</button>
+            </div>
+         </Panel>
 
-              {/* Card 2 */}
-              <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", padding: "20px", borderRadius: "12px" }}>
-                 <div style={{display: "flex", justifyContent: "space-between", marginBottom: "16px"}}>
-                    <strong style={{color: "#1e293b"}}>Emplacement 2</strong>
-                    <Switch label="Actif" checked={content.splitCards.cardVirtual.enabled} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardVirtual: { ...c.splitCards.cardVirtual, enabled: v }}}))} />
-                 </div>
-                 <div className={s.grid} style={{ opacity: content.splitCards.cardVirtual.enabled ? 1 : 0.5 }}>
-                    <Field label="Titre de la carte" value={content.splitCards.cardVirtual.title} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardVirtual: { ...c.splitCards.cardVirtual, title: v }}}))} />
-                    <TextAreaField label="Paragraphe descriptif" value={content.splitCards.cardVirtual.description} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardVirtual: { ...c.splitCards.cardVirtual, description: v }}}))} />
-                    <ImageField label="Visuel Carte" value={content.splitCards.cardVirtual.image} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardVirtual: { ...c.splitCards.cardVirtual, image: v }}}))} onUpload={uploadImage} />
-                    <div className={`${s.grid} ${s.grid2}`}>
-                      <Field label="Texte Bouton" value={content.splitCards.cardVirtual.btnLabel} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardVirtual: { ...c.splitCards.cardVirtual, btnLabel: v }}}))} />
-                      <Field label="Lien" value={content.splitCards.cardVirtual.btnHref} onChange={v => updateContent(c => ({ ...c, splitCards: { ...c.splitCards, cardVirtual: { ...c.splitCards.cardVirtual, btnHref: v }}}))} />
-                    </div>
-                 </div>
-              </div>
+         {/* SYNTHÈSE POURQUOI FIDELIS */}
+         <Panel 
+           title="Pourquoi Choisir Fidelis (Synthèse)" 
+           enabled={content.whyFidelis?.enabled} 
+           onToggle={v => updateContent(c => ({ ...c, whyFidelis: { ...c.whyFidelis, enabled: v }}))}
+         >
+           <div className={s.stack}>
+             <Field label="Titre Principal" value={content.whyFidelis?.title || ""} onChange={v => updateContent(c => ({ ...c, whyFidelis: { ...c.whyFidelis, title: v }}))} />
+             <TextAreaField label="Description de synthèse" value={content.whyFidelis?.description || ""} onChange={v => updateContent(c => ({ ...c, whyFidelis: { ...c.whyFidelis, description: v }}))} />
+             <div className={s.grid} style={{ gridTemplateColumns: "repeat(3, 1fr)", gap: "16px", marginTop: "16px" }}>
+               <Field label="Compteur Formations" value={content.whyFidelis?.statFormations || ""} onChange={v => updateContent(c => ({ ...c, whyFidelis: { ...c.whyFidelis, statFormations: v }}))} />
+               <Field label="Compteur Partenaires" value={content.whyFidelis?.statPartenaires || ""} onChange={v => updateContent(c => ({ ...c, whyFidelis: { ...c.whyFidelis, statPartenaires: v }}))} />
+               <Field label="Compteur Membres" value={content.whyFidelis?.statMembres || ""} onChange={v => updateContent(c => ({ ...c, whyFidelis: { ...c.whyFidelis, statMembres: v }}))} />
+             </div>
            </div>
-        </Panel>
+         </Panel>
 
         {/* SUPER APP */}
         <Panel title="Super App Ecosystem" enabled={content.superApp.enabled} onToggle={v => updateContent(c => ({ ...c, superApp: { ...c.superApp, enabled: v }}))}>
