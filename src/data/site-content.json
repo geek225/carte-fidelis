@@ -204,10 +204,10 @@
   "partners": {
     "enabled": true,
     "title": "Nos Partenaires de Confiance",
-    "tabBgColor": "rgba(255, 255, 255, 0.04)",
-    "tabTextColor": "#ffffff",
-    "tabActiveBgColor": "#00f2fe",
-    "tabActiveTextColor": "#030307",
+    "tabBgColor": "#f3faf2",
+    "tabTextColor": "#123227",
+    "tabActiveBgColor": "#00A86B",
+    "tabActiveTextColor": "#ffffff",
     "categories": [
       { "id": "cat-finance", "label": "Finance & Assurances", "enabled": true },
       { "id": "cat-immo", "label": "Immobilier & Logement", "enabled": true },

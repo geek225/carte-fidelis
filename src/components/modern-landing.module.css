@@ -1266,22 +1266,21 @@
 }
 
 .partnerCard {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--border-color);
-  backdrop-filter: blur(12px);
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.06);
   border-radius: 20px;
   padding: 30px;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.02);
 }
 
 .partnerCard:hover {
-  box-shadow: 0 15px 35px rgba(0, 242, 254, 0.05);
+  box-shadow: 0 15px 35px rgba(0, 168, 107, 0.08);
   transform: translateY(-5px);
-  border-color: rgba(0, 242, 254, 0.35);
-  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(0, 168, 107, 0.2);
 }
 
 .partnerLogoWrapper {
@@ -1311,12 +1310,12 @@
   font-size: 20px;
   font-weight: 700;
   margin-bottom: 12px;
-  color: var(--white);
+  color: var(--dark);
 }
 
 .partnerDesc {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 14.5px;
+  color: #475569;
   line-height: 1.6;
   margin-bottom: 24px;
   flex-grow: 1;
