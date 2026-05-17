@@ -44,6 +44,8 @@ export function FinancingModal({ isOpen, onClose, financingConfig }: FinancingMo
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [phoneError, setPhoneError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -58,7 +60,7 @@ export function FinancingModal({ isOpen, onClose, financingConfig }: FinancingMo
     setFormData(prev => ({ ...prev, hasLocal }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Simple international phone validation
@@ -73,8 +75,39 @@ export function FinancingModal({ isOpen, onClose, financingConfig }: FinancingMo
       return;
     }
 
-    // Success transition
-    setIsSubmitted(true);
+    setLoading(true);
+    setError("");
+
+    try {
+      const fullPhone = `${formData.countryCode} ${formData.phone}`;
+      const payload = {
+        nom: formData.nom,
+        prenom: formData.prenom,
+        dateNaissance: formData.dateNaissance,
+        ville: formData.ville,
+        quartier: formData.quartier,
+        situationMatrimoniale: formData.situationMatrimoniale,
+        phone: fullPhone,
+        hasLocal: formData.hasLocal,
+      };
+
+      const res = await fetch("/api/submissions/financing", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        setIsSubmitted(true);
+      } else {
+        const data = await res.json();
+        setError(data.error || "Une erreur est survenue lors de l'envoi.");
+      }
+    } catch {
+      setError("Erreur de connexion avec le serveur.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleReset = () => {
@@ -90,6 +123,7 @@ export function FinancingModal({ isOpen, onClose, financingConfig }: FinancingMo
       hasLocal: null
     });
     setIsSubmitted(false);
+    setError("");
     onClose();
   };
 
@@ -139,6 +173,21 @@ export function FinancingModal({ isOpen, onClose, financingConfig }: FinancingMo
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className={styles.modalForm}>
+                  {error && (
+                    <div style={{
+                      padding: "12px 16px",
+                      background: "rgba(239, 68, 68, 0.1)",
+                      border: "1px solid rgba(239, 68, 68, 0.2)",
+                      borderRadius: "8px",
+                      color: "#dc2626",
+                      fontSize: "13px",
+                      textAlign: "center",
+                      gridColumn: "span 2",
+                      marginBottom: "10px"
+                    }}>
+                      ⚠️ {error}
+                    </div>
+                  )}
                   <div className={styles.formRow}>
                     <div className={styles.formGroup}>
                       <label htmlFor="nom">Nom *</label>
@@ -299,8 +348,13 @@ export function FinancingModal({ isOpen, onClose, financingConfig }: FinancingMo
                     )}
                   </AnimatePresence>
 
-                  <button type="submit" className={`btn btn-primary ${styles.modalSubmitBtn}`}>
-                    {financingConfig?.submitLabel || "Valider ma demande"}
+                  <button 
+                    type="submit" 
+                    disabled={loading}
+                    className={`btn btn-primary ${styles.modalSubmitBtn}`}
+                    style={{ opacity: loading ? 0.7 : 1, cursor: loading ? "wait" : "pointer" }}
+                  >
+                    {loading ? "Traitement en cours..." : (financingConfig?.submitLabel || "Valider ma demande")}
                   </button>
                 </form>
               </>

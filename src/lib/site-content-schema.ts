@@ -75,6 +75,7 @@ export const siteContentSchema = z.object({
     metaTitle: stringField.max(180),
     metaDescription: stringField.max(500),
     footerText: stringField.max(500),
+    adminEmail: stringField.optional(), // Added support for admin recipient email
   }).strict(),
   theme: z.object({
     primary: stringField,
@@ -104,6 +105,22 @@ export const siteContentSchema = z.object({
     secondaryBtnLabel: stringField,
     secondaryBtnHref: stringField,
   }).strict(),
+  heroBento: z.object({
+    enabled: z.boolean().default(true),
+    card1Val: stringField,
+    card1Label: stringField,
+    card1Brands: stringField,
+    card2Label: stringField,
+    card2Val: stringField,
+    card2Number: stringField,
+    card2Expiry: stringField,
+    card3Image: stringField,
+    card4Trend: stringField,
+    card4Label: stringField,
+    card4Val: stringField,
+    card5Val: stringField,
+    card5Label: stringField,
+  }).strict().optional(),
   gridFeatures: z.object({
     enabled: z.boolean(),
     title: stringField,

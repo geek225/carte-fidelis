@@ -145,6 +145,35 @@ export function ModernLanding({ content }: ModernLandingProps) {
   const [cardTransform, setCardTransform] = useState("perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)");
   const [isFinancingOpen, setIsFinancingOpen] = useState(false);
 
+  const bento = content.heroBento || {
+    enabled: true,
+    card1Val: "50+",
+    card1Label: "Partenaires Affiliés \n & Commerces",
+    card1Brands: "Orange, MTN, Moov, Fidelis, Wave",
+    card2Label: "Points Cumulés",
+    card2Val: "12 450 PTS",
+    card2Number: "4321 8654 **** 6547",
+    card2Expiry: "08/28",
+    card3Image: "/assets/yellow-hoodie-man.png",
+    card4Trend: "▲ 24%",
+    card4Label: "Points Gagnés",
+    card4Val: "3 420 pts",
+    card5Val: "2M+",
+    card5Label: "Membres Actifs \n Globalement"
+  };
+
+  const getBrandWithIcon = (brand: string) => {
+    const lower = brand.toLowerCase();
+    if (lower.includes("orange")) return `🟠 ${brand}`;
+    if (lower.includes("mtn")) return `🟡 ${brand}`;
+    if (lower.includes("moov")) return `🔴 ${brand}`;
+    if (lower.includes("fidelis")) return `🟢 ${brand}`;
+    if (lower.includes("wave")) return `🔵 ${brand}`;
+    return `✨ ${brand}`;
+  };
+
+  const brandsList = (bento.card1Brands || "Orange, MTN, Moov, Fidelis, Wave").split(",").map(b => b.trim());
+
   const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = cardRef.current;
     if (!card) return;
@@ -258,122 +287,120 @@ export function ModernLanding({ content }: ModernLandingProps) {
             </div>
             
             {/* Bento Grid */}
-            <div className={styles.bentoGrid}>
-              {/* Card 1: Partenaires Affiliés */}
-              <div className={styles.bentoCard1}>
-                <div>
-                  <div className={styles.bentoCard1Val}>50+</div>
-                  <div className={styles.bentoCard1Label}>Partenaires Affiliés <br /> & Commerces</div>
-                </div>
-                <div className={styles.logoMarquee}>
-                  <div className={styles.logoTrack}>
-                    <span className={styles.marqueeLogo}>🟠 Orange</span>
-                    <span className={styles.marqueeLogo}>🟡 MTN</span>
-                    <span className={styles.marqueeLogo}>🔴 Moov</span>
-                    <span className={styles.marqueeLogo}>🟢 Fidelis</span>
-                    <span className={styles.marqueeLogo}>🔵 Wave</span>
-                    {/* Duplicate track for loop */}
-                    <span className={styles.marqueeLogo}>🟠 Orange</span>
-                    <span className={styles.marqueeLogo}>🟡 MTN</span>
-                    <span className={styles.marqueeLogo}>🔴 Moov</span>
-                    <span className={styles.marqueeLogo}>🟢 Fidelis</span>
-                    <span className={styles.marqueeLogo}>🔵 Wave</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Card 2: Credit Card (3D Tilt) */}
-              <div 
-                ref={cardRef}
-                className={styles.creditCard}
-                style={{ transform: cardTransform }}
-                onMouseMove={handleCardMouseMove}
-                onMouseLeave={handleCardMouseLeave}
-              >
-                <div className={styles.ccHeader}>
+            {bento.enabled && (
+              <div className={styles.bentoGrid}>
+                {/* Card 1: Partenaires Affiliés */}
+                <div className={styles.bentoCard1}>
                   <div>
-                    <div className={styles.ccHeaderLabel}>Points Cumulés</div>
-                    <div className={styles.ccBalance}>12 450 PTS</div>
+                    <div className={styles.bentoCard1Val}>{bento.card1Val}</div>
+                    <div className={styles.bentoCard1Label} style={{ whiteSpace: "pre-line" }}>{bento.card1Label}</div>
                   </div>
-                  <div className={styles.ccLogo}>
-                    <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
-                      <rect x="10" y="10" width="80" height="80" rx="20" fill="rgba(0, 168, 107, 0.15)" />
-                      <circle cx="50" cy="50" r="20" stroke="#00A86B" strokeWidth="6" />
-                      <circle cx="50" cy="50" r="10" stroke="#9b51e0" strokeWidth="4" />
+                  <div className={styles.logoMarquee}>
+                    <div className={styles.logoTrack}>
+                      {brandsList.map((brand, idx) => (
+                        <span key={idx} className={styles.marqueeLogo}>{getBrandWithIcon(brand)}</span>
+                      ))}
+                      {/* Duplicate track for loop */}
+                      {brandsList.map((brand, idx) => (
+                        <span key={`dup-${idx}`} className={styles.marqueeLogo}>{getBrandWithIcon(brand)}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card 2: Credit Card (3D Tilt) */}
+                <div 
+                  ref={cardRef}
+                  className={styles.creditCard}
+                  style={{ transform: cardTransform }}
+                  onMouseMove={handleCardMouseMove}
+                  onMouseLeave={handleCardMouseLeave}
+                >
+                  <div className={styles.ccHeader}>
+                    <div>
+                      <div className={styles.ccHeaderLabel}>{bento.card2Label}</div>
+                      <div className={styles.ccBalance}>{bento.card2Val}</div>
+                    </div>
+                    <div className={styles.ccLogo}>
+                      <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+                        <rect x="10" y="10" width="80" height="80" rx="20" fill="rgba(0, 168, 107, 0.15)" />
+                        <circle cx="50" cy="50" r="20" stroke="#00A86B" strokeWidth="6" />
+                        <circle cx="50" cy="50" r="10" stroke="#9b51e0" strokeWidth="4" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className={styles.ccFooter}>
+                    <span className={styles.ccNumber}>{bento.card2Number}</span>
+                    <span className={styles.ccExpiry}>{bento.card2Expiry}</span>
+                  </div>
+                </div>
+
+                {/* Card 3: Smile customer */}
+                <div className={styles.bentoCard3}>
+                  <img src={bento.card3Image} alt="Client Fidelis" />
+                </div>
+
+                {/* Card 4: Spend statistics */}
+                <div className={styles.bentoCard4}>
+                  <div className={styles.bentoCard4Header}>
+                    <span className={styles.trendBadge}>{bento.card4Trend}</span>
+                    <div className={styles.spendIcon}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F172A" strokeWidth="2.5">
+                        <rect x="2" y="5" width="20" height="14" rx="2" />
+                        <line x1="2" y1="10" x2="22" y2="10" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className={styles.bentoCard4Content}>
+                    <div className={styles.bentoCard4Label}>{bento.card4Label}</div>
+                    <div className={styles.bentoCard4Val}>{bento.card4Val}</div>
+                  </div>
+                  
+                  {/* Animated spending line graph */}
+                  <div className={styles.miniGraph}>
+                    <svg viewBox="0 0 100 30" className={styles.graphSvg}>
+                      <defs>
+                        <linearGradient id="graphGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#00A86B" stopOpacity="0.4" />
+                          <stop offset="100%" stopColor="#00A86B" stopOpacity="0.0" />
+                        </linearGradient>
+                      </defs>
+                      <path 
+                        d="M0,25 Q15,10 30,18 T60,5 T90,12 T100,2" 
+                        fill="none" 
+                        stroke="#00A86B" 
+                        strokeWidth="2.5" 
+                        strokeLinecap="round"
+                        className={styles.graphPath}
+                      />
+                      <path 
+                        d="M0,25 Q15,10 30,18 T60,5 T90,12 T100,2 L100,30 L0,30 Z" 
+                        fill="url(#graphGradient)"
+                      />
                     </svg>
                   </div>
                 </div>
-                <div className={styles.ccFooter}>
-                  <span className={styles.ccNumber}>4321 8654 **** 6547</span>
-                  <span className={styles.ccExpiry}>08/28</span>
-                </div>
-              </div>
 
-              {/* Card 3: Smile customer */}
-              <div className={styles.bentoCard3}>
-                <img src="/assets/yellow-hoodie-man.png" alt="Client Fidelis souriant" />
-              </div>
-
-              {/* Card 4: Spend statistics */}
-              <div className={styles.bentoCard4}>
-                <div className={styles.bentoCard4Header}>
-                  <span className={styles.trendBadge}>▲ 24%</span>
-                  <div className={styles.spendIcon}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F172A" strokeWidth="2.5">
-                      <rect x="2" y="5" width="20" height="14" rx="2" />
-                      <line x1="2" y1="10" x2="22" y2="10" />
+                {/* Card 5: Emerald Green Global clients badge */}
+                <div className={styles.bentoCard5}>
+                  <div className={styles.bentoCard5Val}>{bento.card5Val}</div>
+                  <div className={styles.bentoCard5Label} style={{ whiteSpace: "pre-line" }}>{bento.card5Label}</div>
+                  <div className={styles.bentoCard5Pattern}>
+                    <svg width="100" height="100" viewBox="0 0 100 100" fill="none" opacity="0.15">
+                      <circle cx="80" cy="80" r="40" stroke="white" strokeWidth="6" strokeDasharray="12 12" />
+                      <circle cx="80" cy="80" r="20" stroke="white" strokeWidth="4" />
                     </svg>
                   </div>
                 </div>
-                <div className={styles.bentoCard4Content}>
-                  <div className={styles.bentoCard4Label}>Points Gagnés</div>
-                  <div className={styles.bentoCard4Val}>3 420 pts</div>
-                </div>
-                
-                {/* Animated spending line graph */}
-                <div className={styles.miniGraph}>
-                  <svg viewBox="0 0 100 30" className={styles.graphSvg}>
-                    <defs>
-                      <linearGradient id="graphGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#00A86B" stopOpacity="0.4" />
-                        <stop offset="100%" stopColor="#00A86B" stopOpacity="0.0" />
-                      </linearGradient>
-                    </defs>
-                    <path 
-                      d="M0,25 Q15,10 30,18 T60,5 T90,12 T100,2" 
-                      fill="none" 
-                      stroke="#00A86B" 
-                      strokeWidth="2.5" 
-                      strokeLinecap="round"
-                      className={styles.graphPath}
-                    />
-                    <path 
-                      d="M0,25 Q15,10 30,18 T60,5 T90,12 T100,2 L100,30 L0,30 Z" 
-                      fill="url(#graphGradient)"
-                    />
-                  </svg>
-                </div>
               </div>
-
-              {/* Card 5: Emerald Green Global clients badge */}
-              <div className={styles.bentoCard5}>
-                <div className={styles.bentoCard5Val}>2M+</div>
-                <div className={styles.bentoCard5Label}>Membres Actifs <br /> Globalement</div>
-                <div className={styles.bentoCard5Pattern}>
-                  <svg width="100" height="100" viewBox="0 0 100 100" fill="none" opacity="0.15">
-                    <circle cx="80" cy="80" r="40" stroke="white" strokeWidth="6" strokeDasharray="12 12" />
-                    <circle cx="80" cy="80" r="20" stroke="white" strokeWidth="4" />
-                  </svg>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
         </section>
       )}
 
       {/* GRID FEATURES (FORMATIONS DIGITALES) */}
       {content.gridFeatures.enabled && (
-        <section className="section-padding container" id="skills">
+        <section className="section-padding container" id="formations">
           <Reveal className="text-center">
             <h2 style={{ whiteSpace: 'pre-line' }}>{content.gridFeatures.title}<span className="dot">_</span></h2>
             {content.gridFeatures.subtitle && (
@@ -569,7 +596,7 @@ export function ModernLanding({ content }: ModernLandingProps) {
 
       {/* SUPER APP CHECKLIST */}
       {content.superApp.enabled && (
-        <section className="section-padding container" id="app">
+        <section className="section-padding container" id="super-app">
           <div className={styles.superApp}>
             <Reveal className={styles.superAppContent} direction="right" duration={1}>
               <h2 style={{ textAlign: "left" }}>{content.superApp.title}<span className="dot">_</span></h2>
@@ -622,36 +649,42 @@ export function ModernLanding({ content }: ModernLandingProps) {
       )}
 
       {/* 3D BRAND SHOWCASE (REPLACED SKILLS CONSTELLATION) */}
-      <section className="section-padding container" id="skills" style={{ borderTop: "1px solid var(--border-color)", borderBottom: "1px solid var(--border-color)" }}>
-        <Reveal className="text-center" style={{ marginBottom: "48px" }} direction="up">
-          <h2>Votre Univers Fidelis<span className="dot">_</span></h2>
-          <p style={{ color: "rgba(15, 23, 42, 0.6)", marginTop: "12px", fontSize: "16.5px", maxWidth: "620px", margin: "12px auto 0", lineHeight: "1.6" }}>
-            Explorez notre écosystème de fidélité 3D. Découvrez l'alliance parfaite entre le design physique premium de notre carte et la puissance de nos outils digitaux.
-          </p>
-        </Reveal>
-        <div className={styles.brandUniverseGrid}>
-          <Reveal className={styles.brandUniverseImageCard} direction="right" duration={0.8}>
-            <div className={styles.brandUniverseFrame}>
-              <img src="/carte-fidelis.jpeg" alt="Carte Fidelis Officielle" className={styles.brandLogoImage} />
-            </div>
-            <div style={{ marginTop: "24px" }}>
-              <h4>Identité de Marque Fidelis</h4>
-              <p style={{ fontSize: "14px", color: "rgba(15,23,42,0.7)", marginTop: "8px" }}>
-                Un design épuré, aux finitions or et émeraude, sculpté pour offrir à vos clients une expérience d'achat haut de gamme inédite.
-              </p>
-            </div>
+      {(!content.splitCards || content.splitCards.enabled) && (
+        <section className="section-padding container" id="cards" style={{ borderTop: "1px solid var(--border-color)", borderBottom: "1px solid var(--border-color)" }}>
+          <Reveal className="text-center" style={{ marginBottom: "48px" }} direction="up">
+            <h2>{content.splitCards?.title || "Votre Univers Fidelis"}<span className="dot">_</span></h2>
+            <p style={{ color: "rgba(15, 23, 42, 0.6)", marginTop: "12px", fontSize: "16.5px", maxWidth: "620px", margin: "12px auto 0", lineHeight: "1.6" }}>
+              Explorez notre écosystème de fidélité 3D. Découvrez l'alliance parfaite entre le design physique premium de notre carte et la puissance de nos outils digitaux.
+            </p>
           </Reveal>
-          <Reveal className={styles.brandUniverse3DCard} direction="left" duration={0.8} delay={200}>
-            <Fidelis3DLogo />
-            <div style={{ marginTop: "24px" }}>
-              <h4>Écosystème Numérique Interactif</h4>
-              <p style={{ fontSize: "14px", color: "rgba(15,23,42,0.7)", marginTop: "8px" }}>
-                Faites tourner et pivoter notre logo 3D orbital. Fidelis est un univers vivant et interconnecté, alliant transactions fluides et récompenses immédiates.
-              </p>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+          <div className={styles.brandUniverseGrid}>
+            {(!content.splitCards || content.splitCards.cardPhysical?.enabled) && (
+              <Reveal className={styles.brandUniverseImageCard} direction="right" duration={0.8}>
+                <div className={styles.brandUniverseFrame}>
+                  <img src={content.splitCards?.cardPhysical?.image || "/carte-fidelis.jpeg"} alt="Carte Fidelis Officielle" className={styles.brandLogoImage} />
+                </div>
+                <div style={{ marginTop: "24px" }}>
+                  <h4>{content.splitCards?.cardPhysical?.title || "Identité de Marque Fidelis"}</h4>
+                  <p style={{ fontSize: "14px", color: "rgba(15,23,42,0.7)", marginTop: "8px" }}>
+                    {content.splitCards?.cardPhysical?.description || "Un design épuré, aux finitions or et émeraude, sculpté pour offrir à vos clients une expérience d'achat haut de gamme inédite."}
+                  </p>
+                </div>
+              </Reveal>
+            )}
+            {(!content.splitCards || content.splitCards.cardVirtual?.enabled) && (
+              <Reveal className={styles.brandUniverse3DCard} direction="left" duration={0.8} delay={200}>
+                <Fidelis3DLogo />
+                <div style={{ marginTop: "24px" }}>
+                  <h4>{content.splitCards?.cardVirtual?.title || "Écosystème Numérique Interactif"}</h4>
+                  <p style={{ fontSize: "14px", color: "rgba(15,23,42,0.7)", marginTop: "8px" }}>
+                    {content.splitCards?.cardVirtual?.description || "Faites tourner et pivoter notre logo 3D orbital. Fidelis est un univers vivant et interconnecté, alliant transactions fluides et récompenses immédiates."}
+                  </p>
+                </div>
+              </Reveal>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* PARTNERS SECTION */}
       {content.partners && content.partners.enabled && (
@@ -719,10 +752,32 @@ export function ModernLanding({ content }: ModernLandingProps) {
 function ContactForm() {
   const [contactData, setContactData] = useState({ name: "", email: "", subject: "", message: "" });
   const [isSent, setIsSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSent(true);
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/submissions/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(contactData),
+      });
+
+      if (res.ok) {
+        setIsSent(true);
+      } else {
+        const data = await res.json();
+        setError(data.error || "Une erreur est survenue lors de l'envoi.");
+      }
+    } catch {
+      setError("Erreur de réseau ou de connexion.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (isSent) {
@@ -753,6 +808,19 @@ function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+      {error && (
+        <div style={{
+          padding: "12px 16px",
+          background: "rgba(239, 68, 68, 0.1)",
+          border: "1px solid rgba(239, 68, 68, 0.2)",
+          borderRadius: "8px",
+          color: "#dc2626",
+          fontSize: "14px",
+          textAlign: "center"
+        }}>
+          ⚠️ {error}
+        </div>
+      )}
       <div className={styles.formRow}>
         <div className={styles.formGroup} style={{ flex: 1 }}>
           <label style={{ fontSize: "13px", fontWeight: "600", marginBottom: "6px", display: "block" }}>Nom Complet *</label>
@@ -837,8 +905,13 @@ function ContactForm() {
           }}
         />
       </div>
-      <button type="submit" className="btn btn-primary" style={{ padding: "14px 28px", alignSelf: "flex-end" }}>
-        Envoyer le message ✉
+      <button 
+        type="submit" 
+        disabled={loading}
+        className="btn btn-primary" 
+        style={{ padding: "14px 28px", alignSelf: "flex-end", opacity: loading ? 0.7 : 1, cursor: loading ? "wait" : "pointer" }}
+      >
+        {loading ? "Envoi en cours..." : "Envoyer le message ✉"}
       </button>
     </form>
   );

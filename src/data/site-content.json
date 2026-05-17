@@ -4,7 +4,8 @@
     "logoImage": "",
     "metaTitle": "Carte Fidelis - L'Excellence de la Fidélité Client par Soumangourou Technologies",
     "metaDescription": "Découvrez Carte Fidelis, le programme de fidélité premium nouvelle génération de Soumangourou Technologies. Bénéficiez d'avantages exclusifs, suivez vos points en temps réel et demandez votre accompagnement financier.",
-    "footerText": "© 2026 Soumangourou Technologies. Tous droits réservés."
+    "footerText": "© 2026 Soumangourou Technologies. Tous droits réservés.",
+    "adminEmail": "llateamd@gmail.com"
   },
   "theme": {
     "primary": "#00A86B",
@@ -19,8 +20,8 @@
   "header": {
     "menu": [
       { "id": "nav-1", "label": "Nos Cartes", "href": "#cards", "enabled": true },
-      { "id": "nav-2", "label": "Super App", "href": "#app", "enabled": true },
-      { "id": "nav-3", "label": "Univers Fidelis", "href": "#skills", "enabled": true },
+      { "id": "nav-2", "label": "Super App", "href": "#super-app", "enabled": true },
+      { "id": "nav-3", "label": "Univers Fidelis", "href": "#formations", "enabled": true },
       { "id": "nav-4", "label": "Partenaires", "href": "#partners", "enabled": true },
       { "id": "nav-5", "label": "FAQ & Assistance", "href": "#faq", "enabled": true }
     ],
@@ -269,5 +270,41 @@
     "submitLabel": "Valider ma demande",
     "labelWithLocal": "Vous bénéficierez d'un accompagnement financier de 300.000 FCFA",
     "labelWithoutLocal": "Vous bénéficierez d'un accompagnement financier de 200.000 FCFA"
+  },
+  "heroBento": {
+    "enabled": true,
+    "card1Val": "50+",
+    "card1Label": "Partenaires Affiliés \n & Commerces",
+    "card1Brands": "Orange, MTN, Moov, Fidelis, Wave",
+    "card2Label": "Points Cumulés",
+    "card2Val": "12 450 PTS",
+    "card2Number": "4321 8654 **** 6547",
+    "card2Expiry": "08/28",
+    "card3Image": "/assets/yellow-hoodie-man.png",
+    "card4Trend": "▲ 24%",
+    "card4Label": "Points Gagnés",
+    "card4Val": "3 420 pts",
+    "card5Val": "2M+",
+    "card5Label": "Membres Actifs \n Globalement"
+  },
+  "splitCards": {
+    "enabled": true,
+    "title": "Votre Univers Fidelis",
+    "cardPhysical": {
+      "enabled": true,
+      "title": "Identité de Marque Fidelis",
+      "description": "Un design épuré, aux finitions or et émeraude, sculpté pour offrir à vos clients une expérience d'achat haut de gamme inédite.",
+      "image": "/carte-fidelis.jpeg",
+      "btnLabel": "Obtenir un financement",
+      "btnHref": "#"
+    },
+    "cardVirtual": {
+      "enabled": true,
+      "title": "Écosystème Numérique Interactif",
+      "description": "Faites tourner et pivoter notre logo 3D orbital. Fidelis est un univers vivant et interconnecté, alliant transactions fluides et récompenses immédiates.",
+      "image": "",
+      "btnLabel": "En savoir plus",
+      "btnHref": "#"
+    }
   }
 }
