@@ -194,6 +194,7 @@ export function ModernLanding({ content }: ModernLandingProps) {
 
   return (
     <div 
+      id="accueil"
       className={styles.wrapper}
       style={{
         "--primary": content.theme.primary,
