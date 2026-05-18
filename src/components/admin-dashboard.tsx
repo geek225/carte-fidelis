@@ -231,6 +231,28 @@ export function AdminDashboard({ initialContent }: AdminDashboardProps) {
             {isPending ? "⏳ Patientez..." : "🚀 Publier les modifications"}
           </button>
           <a className={s.visitBtn} href="/" target="_blank" rel="noreferrer">👁 Voir le site live</a>
+          <button 
+            onClick={async () => {
+              if (confirm("Êtes-vous sûr de vouloir vous déconnecter ?")) {
+                const res = await fetch("/api/admin/logout", { method: "POST" });
+                if (res.ok) {
+                  window.location.href = "/admin/login";
+                }
+              }
+            }}
+            className={s.visitBtn}
+            style={{ 
+              marginTop: "8px", 
+              width: "100%", 
+              background: "rgba(239, 68, 68, 0.08)", 
+              color: "#ef4444", 
+              border: "1px dashed rgba(239, 68, 68, 0.3)",
+              fontWeight: "600",
+              fontSize: "13.5px"
+            }}
+          >
+            🚪 Se déconnecter
+          </button>
           <div className={`${s.statusBadge} ${s['statusBadge_'+status.tone]}`} style={{ marginTop: "12px" }}>
             {status.message}
           </div>
