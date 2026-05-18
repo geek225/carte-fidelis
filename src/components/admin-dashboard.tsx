@@ -109,6 +109,7 @@ export function AdminDashboard({ initialContent }: AdminDashboardProps) {
   const [activeTab, setActiveTab] = useState<"edit" | "messages">("edit");
   const [submissions, setSubmissions] = useState<SubmissionsData>({ contact: [], financing: [] });
   const [loadingSubmissions, setLoadingSubmissions] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const updateContent = (patch: Partial<SiteContent> | ((curr: SiteContent) => SiteContent)) => {
      if (typeof patch === "function") setContent(patch);
@@ -170,9 +171,22 @@ export function AdminDashboard({ initialContent }: AdminDashboardProps) {
 
   return (
     <div className={s.layout}>
+      {/* Mobile Sidebar Overlay Backdrop */}
+      {isSidebarOpen && (
+        <div className={s.sidebarBackdrop} onClick={() => setIsSidebarOpen(false)} />
+      )}
+
       {/* STICKY SIDEBAR */}
-      <aside className={s.sidebar}>
+      <aside className={`${s.sidebar} ${isSidebarOpen ? s.sidebarOpen : ""}`}>
         <div className={s.brandHeader}>
+          {/* Close Sidebar Button for Mobile */}
+          <button 
+            onClick={() => setIsSidebarOpen(false)} 
+            className={s.closeSidebarBtn} 
+            aria-label="Fermer le menu"
+          >
+            ✕
+          </button>
           <div className={s.kicker}>Studio CMS</div>
           <h1>{content.site.brandName}</h1>
           <p className={s.sidebarDesc}>
@@ -183,7 +197,10 @@ export function AdminDashboard({ initialContent }: AdminDashboardProps) {
         {/* Dynamic Navigation Tabs inside Sidebar */}
         <div style={{ marginTop: "24px", display: "flex", flexDirection: "column", gap: "8px", borderBottom: "1px solid rgba(15,23,42,0.08)", paddingBottom: "24px" }}>
           <button 
-            onClick={() => setActiveTab("edit")} 
+            onClick={() => {
+              setActiveTab("edit");
+              setIsSidebarOpen(false);
+            }} 
             style={{
               display: "flex",
               alignItems: "center",
@@ -204,7 +221,10 @@ export function AdminDashboard({ initialContent }: AdminDashboardProps) {
             🎨 Contenu du Site
           </button>
           <button 
-            onClick={() => setActiveTab("messages")} 
+            onClick={() => {
+              setActiveTab("messages");
+              setIsSidebarOpen(false);
+            }} 
             style={{
               display: "flex",
               alignItems: "center",
@@ -261,6 +281,13 @@ export function AdminDashboard({ initialContent }: AdminDashboardProps) {
 
       {/* MAIN SCROLLABLE STREAM */}
       <main className={s.main}>
+        {/* MOBILE HEADER FOR SIDEBAR TOGGLE */}
+        <div className={s.mobileHeader}>
+          <button onClick={() => setIsSidebarOpen(true)} className={s.hamburgerBtn} aria-label="Ouvrir le menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <span className={s.mobileBrandName}>{content.site.brandName}</span>
+        </div>
         {activeTab === "edit" ? (
           <>
             <div className={s.header}>

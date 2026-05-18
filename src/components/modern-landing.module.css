@@ -2077,3 +2077,108 @@
     padding: 24px 20px;
   }
 }
+
+/* Premium Responsive Hamburger & Mobile Menu */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 28px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1001;
+}
+
+.bar {
+  width: 100%;
+  height: 3px;
+  background-color: var(--dark);
+  border-radius: 2px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hamburgerActive .bar:first-child {
+  transform: translateY(8.5px) rotate(45deg);
+  background-color: var(--primary);
+}
+
+.hamburgerActive .bar:nth-child(2) {
+  opacity: 0;
+  width: 0;
+}
+
+.hamburgerActive .bar:last-child {
+  transform: translateY(-8.5px) rotate(-45deg);
+  background-color: var(--primary);
+}
+
+.mobileMenu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(239, 241, 240, 0.97);
+  backdrop-filter: blur(24px);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(-30px);
+}
+
+.mobileMenuOpen {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.mobileNavLinks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding: 40px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.mobileNavLink {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--dark);
+  transition: all 0.2s ease;
+  letter-spacing: -0.5px;
+}
+
+.mobileNavLink:hover {
+  color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.mobileCta {
+  width: 100%;
+  margin-top: 16px;
+  padding: 16px 28px !important;
+  font-size: 15px !important;
+  box-shadow: 0 10px 25px rgba(0, 168, 107, 0.25) !important;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+  .navbarCta {
+    display: none !important;
+  }
+  .navLinks {
+    display: none !important;
+  }
+}

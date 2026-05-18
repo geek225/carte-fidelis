@@ -144,6 +144,7 @@ export function ModernLanding({ content }: ModernLandingProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [cardTransform, setCardTransform] = useState("perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)");
   const [isFinancingOpen, setIsFinancingOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const bento = content.heroBento || {
     enabled: true,
@@ -228,6 +229,44 @@ export function ModernLanding({ content }: ModernLandingProps) {
               {content.header.ctaLabel}
             </button>
           )}
+
+          {/* HAMBURGER BUTTON FOR MOBILE */}
+          <button 
+            className={`${styles.hamburger} ${isMobileMenuOpen ? styles.hamburgerActive : ""}`} 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <span className={styles.bar}></span>
+            <span className={styles.bar}></span>
+            <span className={styles.bar}></span>
+          </button>
+        </div>
+
+        {/* MOBILE MENU DRAWER */}
+        <div className={`${styles.mobileMenu} ${isMobileMenuOpen ? styles.mobileMenuOpen : ""}`}>
+          <nav className={styles.mobileNavLinks}>
+            {content.header.menu.filter(m => m.enabled).map(item => (
+              <a 
+                key={item.id} 
+                href={item.href} 
+                className={styles.mobileNavLink}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {item.label}
+              </a>
+            ))}
+            {content.header.ctaEnabled && (
+              <button 
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsFinancingOpen(true);
+                }} 
+                className={`btn btn-primary ${styles.mobileCta}`}
+              >
+                {content.header.ctaLabel}
+              </button>
+            )}
+          </nav>
         </div>
       </header>
 
