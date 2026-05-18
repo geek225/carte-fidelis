@@ -6,11 +6,8 @@ import { siteContentSchema } from "@/lib/site-content-schema";
 import { getSiteContent, saveSiteContent } from "@/lib/site-content-store";
 
 function internalError(defaultMessage: string, error: unknown) {
-  if (process.env.NODE_ENV === "production") {
-    return NextResponse.json({ error: defaultMessage }, { status: 500 });
-  }
-
   const details = error instanceof Error ? error.message : "unknown";
+  console.error(`[API site-content error] ${defaultMessage}:`, error);
   return NextResponse.json({ error: `${defaultMessage} (${details})` }, { status: 500 });
 }
 

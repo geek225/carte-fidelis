@@ -161,11 +161,26 @@ export function AdminDashboard({ initialContent }: AdminDashboardProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(content)
       });
-      if (!res.ok) throw new Error();
-      const data = await res.json();
-      setStatus({ tone: "success", message: data.mode === "supabase" ? "Publié sur le Cloud !" : "Publié localement." });
-    } catch {
-      setStatus({ tone: "error", message: "Erreur de connexion." });
+      
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error("Impossible de lire la réponse du serveur.");
+      }
+
+      if (!res.ok) {
+        let msg = data.error || "Erreur de publication.";
+        if (data.details && Array.isArray(data.details)) {
+          const detailMsgs = data.details.map((d: any) => `${d.path}: ${d.message}`).join(", ");
+          msg += ` (${detailMsgs})`;
+        }
+        throw new Error(msg);
+      }
+
+      setStatus({ tone: "success", message: data.mode === "supabase" ? "🚀 Publié avec succès sur le Cloud !" : "💾 Publié localement avec succès !" });
+    } catch (err: any) {
+      setStatus({ tone: "error", message: err.message || "Erreur de connexion avec le serveur." });
     }
   }
 
@@ -583,7 +598,7 @@ export function AdminDashboard({ initialContent }: AdminDashboardProps) {
                   <div style={{ fontSize: "14px", fontWeight: "700", marginBottom: "12px", color: "#475569" }}>Couleurs Personnalisées des Onglets</div>
                   <div className={`${s.grid} ${s.grid4}`}>
                      <Field label="Fond (Normal)" type="color" value={content.partners?.tabBgColor || "#f3faf2"} onChange={v => updateContent(c => ({ ...c, partners: { ...c.partners, tabBgColor: v }}))} />
-                     <Field label="Texte (Normal)" type="color" value={content.partners?.tabTextColor || "#123227"} onChange={v => updateContent(c => ({ ...c, partners: { ...c.partners, tabBgColor: v }}))} />
+                     <Field label="Texte (Normal)" type="color" value={content.partners?.tabTextColor || "#123227"} onChange={v => updateContent(c => ({ ...c, partners: { ...c.partners, tabTextColor: v }}))} />
                      <Field label="Fond (Actif)" type="color" value={content.partners?.tabActiveBgColor || "#50B848"} onChange={v => updateContent(c => ({ ...c, partners: { ...c.partners, tabActiveBgColor: v }}))} />
                      <Field label="Texte (Actif)" type="color" value={content.partners?.tabActiveTextColor || "#ffffff"} onChange={v => updateContent(c => ({ ...c, partners: { ...c.partners, tabActiveTextColor: v }}))} />
                   </div>

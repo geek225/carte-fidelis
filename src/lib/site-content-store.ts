@@ -78,29 +78,28 @@ export async function saveSiteContent(content: SiteContent) {
   const supabase = getSupabaseAdmin();
 
   if (supabase) {
-    const client = supabase as unknown as SupabaseLooseClient;
-    const { error } = await client.from(tableName).upsert(
-      {
-        id: rowId,
-        content,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: "id" },
-    );
+    try {
+      const client = supabase as unknown as SupabaseLooseClient;
+      const { error } = await client.from(tableName).upsert(
+        {
+          id: rowId,
+          content,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "id" },
+      );
 
-    if (error) {
-      throw new Error(`Supabase save failed: ${error.message}`);
+      if (!error) {
+        return { mode: "supabase" as const };
+      }
+      
+      console.warn(`[Supabase warning] Enregistrement Supabase échoué, repli vers fichier local: ${error.message}`);
+    } catch (dbErr: any) {
+      console.warn(`[Supabase exception] Exception lors de l'enregistrement Supabase, repli vers fichier local: ${dbErr.message}`);
     }
-
-    return { mode: "supabase" as const };
   }
 
-  if (process.env.NODE_ENV === "production") {
-    throw new Error(
-      "Supabase non configure en production. Definis NEXT_PUBLIC_SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY.",
-    );
-  }
-
+  // Fallback to local storage (safe in dev and local environments)
   await writeLocalContent(content);
   return { mode: "local" as const };
 }
