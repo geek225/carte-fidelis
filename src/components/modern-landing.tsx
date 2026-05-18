@@ -751,7 +751,7 @@ export function ModernLanding({ content }: ModernLandingProps) {
       )}
 
       {/* CONTACT FORM */}
-      <section className="section-padding container" style={{ borderBottom: "1px solid var(--border-color)" }}>
+      <section id="contact" className="section-padding container" style={{ borderBottom: "1px solid var(--border-color)" }}>
         <div className={styles.contactFormContainer}>
           <Reveal className="text-center" style={{ marginBottom: "32px" }}>
             <h2>Contactez-nous<span className="dot">_</span></h2>
