@@ -288,12 +288,14 @@ export function ModernLanding({ content }: ModernLandingProps) {
               <div className={styles.ctaGroup}>
                 <button 
                   onClick={() => setIsFinancingOpen(true)} 
-                  className="btn btn-primary" 
-                  style={{ padding: "16px 32px", fontSize: "15px" }}
+                  className={`btn btn-primary ${styles.heroPrimaryBtn}`}
                 >
                   {content.hero.btnLabel}
                 </button>
-                <a href={content.hero.secondaryBtnHref || "#cards"} className="btn btn-outline" style={{ padding: "16px 32px", fontSize: "15px", display: "inline-flex", alignItems: "center", gap: "8px" }}>
+                <a 
+                  href={content.hero.secondaryBtnHref || "#cards"} 
+                  className={`btn btn-outline ${styles.heroSecondaryBtn}`}
+                >
                   {content.hero.secondaryBtnLabel || "Découvrir les avantages de FIDELIS"} <span style={{ fontSize: "16px", fontWeight: "bold" }}>↗</span>
                 </a>
               </div>
@@ -517,8 +519,7 @@ export function ModernLanding({ content }: ModernLandingProps) {
               {content.gridFeatures.bannerBtnLabel && (
                 <a 
                   href={content.gridFeatures.bannerBtnHref || "#"} 
-                  className="btn btn-primary" 
-                  style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "14px 28px" }}
+                  className={`btn btn-primary ${styles.bannerBtn}`}
                 >
                   {content.gridFeatures.bannerBtnLabel}
                   <span style={{ fontSize: "16px", fontWeight: "bold" }}>↗</span>
