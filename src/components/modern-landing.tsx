@@ -277,9 +277,23 @@ export function ModernLanding({ content }: ModernLandingProps) {
           <div className={`container ${styles.hero} fade-in`}>
             <div className={styles.heroContent}>
               <h1 style={{ whiteSpace: "pre-line" }}>
-                Au-delà des Limites <br />
-                Redéfinir la <br />
-                <span className={styles.serifItalic}>Fidélité Client</span>
+                {(() => {
+                  const title = content.hero.title || "Au-delà des Limites\nRedéfinir la\nFidélité Client";
+                  const lines = title.split("\n");
+                  if (lines.length >= 3) {
+                    return (
+                      <>
+                        {lines.slice(0, lines.length - 1).map((line, idx) => (
+                          <React.Fragment key={idx}>
+                            {line} <br />
+                          </React.Fragment>
+                        ))}
+                        <span className={styles.serifItalic}>{lines[lines.length - 1]}</span>
+                      </>
+                    );
+                  }
+                  return title;
+                })()}
               </h1>
               <p className={styles.heroSub}>
                 {content.hero.subtitle}
